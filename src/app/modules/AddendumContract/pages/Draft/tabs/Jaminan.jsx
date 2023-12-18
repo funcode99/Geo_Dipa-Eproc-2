@@ -9,6 +9,7 @@ import NewClause from "../../../pages/ContractDetail/components/FormAddendum/Com
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const Jaminan = ({
+  newData,
   newJson,
   jsonData,
   isDisable,
@@ -248,7 +249,6 @@ const Jaminan = ({
                   marginBottom: 40,
                 }}
               >
-                {/* jaminan kontrak awal */}
                 <div>
                   <span
                     style={{
@@ -259,83 +259,56 @@ const Jaminan = ({
                     Jaminan Kontrak Awal
                   </span>
                 </div>
-
-                {/* jaminan uang muka */}
                 {guaranteeBeforeAddendum &&
                   guaranteeBeforeAddendum?.map((data, index) => (
                     <>
-                      <div>
+                      <div className="container" key={index}>
+                        <div className="d-flex">
+                          <p className="mr-2 font-medium">{data.title}</p>
+                        </div>
                         <div
                           style={{
                             display: "flex",
-                            flexWrap: "wrap",
-                            gap: 30,
+                            gap: 14,
                             alignItems: "center",
                           }}
                         >
-                          {/* jaminan uang muka */}
-                          <p
+                          <label
                             style={{
-                              width: 150,
                               margin: 0,
-                            }}
-                          >
-                            {data.title}
-                          </p>
-                          <div
-                            style={{
                               display: "flex",
-                              gap: 14,
+                              flexWrap: "wrap",
                               alignItems: "center",
+                              columnGap: 8,
                             }}
                           >
-                            <label
-                              style={{
-                                margin: 0,
-                                display: "flex",
-                                flexWrap: "wrap",
-                                alignItems: "center",
-                                columnGap: 8,
-                              }}
-                            >
-                              <input
-                                type="radio"
-                                name={`${index}_down_payment_guarantee`}
-                                checked={data.radio == "1"}
-                              />
-                              <span>Ya</span>
-                            </label>
+                            <Field
+                              type="radio"
+                              name={`${index}_down_payment_guarantee`}
+                              checked={data.radio == "1"}
+                            />
+                            <span>Ya</span>
+                          </label>
 
-                            <label
-                              style={{
-                                margin: 0,
-                                display: "flex",
-                                flexWrap: "wrap",
-                                alignItems: "center",
-                                columnGap: 8,
-                              }}
-                            >
-                              <input
-                                type="radio"
-                                name={`${index}_down_payment_guarantee`}
-                                checked={data.radio == "0"}
-                              />
-                              <span>Tidak</span>
-                            </label>
-                          </div>
+                          <label
+                            style={{
+                              margin: 0,
+                              display: "flex",
+                              flexWrap: "wrap",
+                              alignItems: "center",
+                              columnGap: 8,
+                            }}
+                          >
+                            <Field
+                              type="radio"
+                              name={`${index}_down_payment_guarantee`}
+                              checked={data.radio == "0"}
+                            />
+                            <span>Tidak</span>
+                          </label>
                         </div>
-
-                        {/* tanggal mulai, selesai, evidence */}
-                        <div
-                          style={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            gap: 20,
-                            marginTop: 15,
-                          }}
-                        >
-                          {/* tanggal mulai */}
-                          <div className="col-sm-3">
+                        <div className="d-flex mt-6">
+                          <div className="tanggal-mulai mr-8 col-md-3">
                             <label
                               style={{
                                 margin: 0,
@@ -344,12 +317,12 @@ const Jaminan = ({
                               }}
                             >
                               <span>Tanggal Mulai</span>
-                              <input
+                              <Field
                                 type="date"
                                 style={{
                                   borderRadius: 4,
                                   padding: "10px 12px",
-                                  border: "none",
+                                  border: "1px solid black",
                                   display: "flex",
                                   flexDirection: "row-reverse",
                                   columnGap: 10,
@@ -359,9 +332,7 @@ const Jaminan = ({
                               />
                             </label>
                           </div>
-
-                          {/* tanggal selesai */}
-                          <div className="col-sm-3">
+                          <div className="tanggal-selesai mr-8 col-md-3">
                             <label
                               style={{
                                 margin: 0,
@@ -370,12 +341,12 @@ const Jaminan = ({
                               }}
                             >
                               <span>Tanggal Selesai</span>
-                              <input
+                              <Field
                                 type="date"
                                 style={{
                                   borderRadius: 4,
                                   padding: "10px 12px",
-                                  border: "none",
+                                  border: "1px solid black",
                                   display: "flex",
                                   flexDirection: "row-reverse",
                                   columnGap: 10,
@@ -385,217 +356,74 @@ const Jaminan = ({
                               />
                             </label>
                           </div>
-
-                          {/* evidence */}
-                          <div
-                            className="col-md-5"
-                            style={{
-                              padding: 0,
-                            }}
-                          >
-                            <label
+                          <div className="evidence col-md-6">
+                            <div
+                              className="col-md-12"
                               style={{
-                                margin: 0,
-                                display: "flex",
-                                flexDirection: "column",
+                                padding: 0,
                               }}
                             >
-                              <span>Evidence</span>
-                              <div>
-                                <label
-                                  htmlFor="upload"
-                                  className={`input-group mb-3 col-sm-12 pointer`}
-                                  style={{
-                                    padding: 0,
-                                  }}
-                                >
-                                  <span
-                                    className={`form-control text-truncate`}
+                              <label
+                                style={{
+                                  margin: 0,
+                                  display: "flex",
+                                  flexDirection: "column",
+                                }}
+                              >
+                                <span>Evidence</span>
+                                <div>
+                                  <label
+                                    htmlFor="upload"
+                                    className={`input-group mb-3 col-sm-12 pointer`}
                                     style={{
-                                      backgroundColor: "#e8f4fb",
-                                    }}
-                                    onClick={() => {
-                                      if (data.filename) {
-                                        window.open(
-                                          `${DEV_NODE}/${data.filename}`,
-                                          "_blank"
-                                        );
-                                      }
+                                      padding: 0,
                                     }}
                                   >
-                                    {data.filename ? data.filename : "Kosong"}
-                                  </span>
-                                  <div className="input-group-prepend">
                                     <span
-                                      className="input-group-text"
+                                      className={`form-control text-truncate`}
                                       style={{
                                         backgroundColor: "#e8f4fb",
                                       }}
+                                      onClick={() => {
+                                        if (data.filename) {
+                                          window.open(
+                                            `${DEV_NODE}/${data.filename}`,
+                                            "_blank"
+                                          );
+                                        }
+                                      }}
                                     >
-                                      <i className="fas fa-file-upload"></i>
+                                      {data.filename ? data.filename : "Kosong"}
                                     </span>
-                                  </div>
-                                </label>
-                                <input
-                                  type="file"
-                                  className="d-none"
-                                  id="upload"
-                                  style={{
-                                    backgroundColor: "#E8F4FB",
-                                  }}
-                                  disabled
-                                />
-                              </div>
-                            </label>
+                                    <div className="input-group-prepend">
+                                      <span
+                                        className="input-group-text"
+                                        style={{
+                                          backgroundColor: "#e8f4fb",
+                                        }}
+                                      >
+                                        <i className="fas fa-file-upload"></i>
+                                      </span>
+                                    </div>
+                                  </label>
+                                  <input
+                                    type="file"
+                                    className="d-none"
+                                    id="upload"
+                                    style={{
+                                      backgroundColor: "#E8F4FB",
+                                    }}
+                                    disabled
+                                  />
+                                </div>
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </>
                   ))}
-
-                {/* Addendum jaminan */}
-                {/* <div>
-                  <span
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 600,
-                    }}
-                  >
-                    A. Addendum Jaminan
-                  </span>
-                </div>
-                {addendumJaminan?.map((item, index) => (
-                  <>
-                    <div className="container" index={index}>
-                      <div className="d-flex">
-                        <p className="mr-2 font-medium">{item.judul}</p>
-                      </div>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: 14,
-                          alignItems: "center",
-                        }}
-                      >
-                        <label
-                          style={{
-                            margin: 0,
-                            display: "flex",
-                            flexWrap: "wrap",
-                            alignItems: "center",
-                            columnGap: 8,
-                          }}
-                        >
-                          <Field
-                            type="radio"
-                            value="1"
-                            name={item.nama_radio}
-                            onChange={(e) => {
-                              setInputDataGuarantee({
-                                ...inputDataGuarantee,
-                                [item.nama_radio]: e.target.value,
-                              });
-                            }}
-                          />
-                          <span>Ya</span>
-                        </label>
-
-                        <label
-                          style={{
-                            margin: 0,
-                            display: "flex",
-                            flexWrap: "wrap",
-                            alignItems: "center",
-                            columnGap: 8,
-                          }}
-                        >
-                          <Field
-                            type="radio"
-                            value="0"
-                            name={item.nama_radio}
-                            onChange={(e) => {
-                              setInputDataGuarantee({
-                                ...inputDataGuarantee,
-                                [item.nama_radio]: e.target.value,
-                              });
-                            }}
-                          />
-                          <span>Tidak</span>
-                        </label>
-                      </div>
-                      <div className="d-flex mt-6">
-                        <div className="tanggal-mulai mr-8">
-                          <label
-                            style={{
-                              margin: 0,
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <span>Tanggal Mulai</span>
-                            <Field
-                              type="date"
-                              style={{
-                                borderRadius: 4,
-                                padding: "10px 12px",
-                                border: "1px solid black",
-                                display: "flex",
-                                flexDirection: "row-reverse",
-                                columnGap: 10,
-                              }}
-                              value={
-                                inputDataGuarantee[
-                                  item.nama_radio + "_start_date"
-                                ] || ""
-                              }
-                              onChange={(e) => {
-                                setInputDataGuarantee({
-                                  ...inputDataGuarantee,
-                                  [`${item.nama_radio}_start_date`]: e.target
-                                    .value,
-                                });
-                              }}
-                            />
-                          </label>
-                        </div>
-                        <div className="tanggal-selesai mr-8">
-                          <label
-                            style={{
-                              margin: 0,
-                              display: "flex",
-                              flexDirection: "column",
-                            }}
-                          >
-                            <span>Tanggal Selesai</span>
-                            <Field
-                              type="date"
-                              style={{
-                                borderRadius: 4,
-                                padding: "10px 12px",
-                                border: "1px solid black",
-                                display: "flex",
-                                flexDirection: "row-reverse",
-                                columnGap: 10,
-                              }}
-                              value={
-                                inputDataGuarantee[
-                                  item.nama_radio + "_end_date"
-                                ] || ""
-                              }
-                              onChange={(e) => {
-                                setInputDataGuarantee({
-                                  ...inputDataGuarantee,
-                                  [`${item.nama_radio}_end_date`]: e.target
-                                    .value,
-                                });
-                              }}
-                            />
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                ))} */}
+                <h3>A. Addendum Jaminan</h3>
                 {addendumJaminan?.map((item, index) => (
                   <div className="container" key={index}>
                     <div className="d-flex">
@@ -669,7 +497,7 @@ const Jaminan = ({
                       </label>
                     </div>
                     <div className="d-flex mt-6">
-                      <div className="tanggal-mulai mr-8">
+                      <div className="tanggal-mulai mr-8 col-md-3">
                         <label
                           style={{
                             margin: 0,
@@ -707,7 +535,7 @@ const Jaminan = ({
                           />
                         </label>
                       </div>
-                      <div className="tanggal-selesai mr-8">
+                      <div className="tanggal-selesai mr-8 col-md-3">
                         <label
                           style={{
                             margin: 0,
@@ -744,6 +572,71 @@ const Jaminan = ({
                           />
                         </label>
                       </div>
+                      {newData?.status_code === "90" && (
+                        <div className="evidence col-md-6">
+                          <div
+                            className="col-md-12"
+                            style={{
+                              padding: 0,
+                            }}
+                          >
+                            <label
+                              style={{
+                                margin: 0,
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <span>Evidence</span>
+                              <div>
+                                <label
+                                  htmlFor="upload"
+                                  className={`input-group mb-3 col-sm-12 pointer`}
+                                  style={{
+                                    padding: 0,
+                                  }}
+                                >
+                                  <span
+                                    className={`form-control text-truncate`}
+                                    style={{
+                                      backgroundColor: "#e8f4fb",
+                                    }}
+                                    onClick={() => {
+                                      if (item.bukti) {
+                                        window.open(
+                                          `${DEV_NODE}/guarantee/${item.bukti}`,
+                                          "_blank"
+                                        );
+                                      }
+                                    }}
+                                  >
+                                    {item.bukti ? item.bukti : "Kosong"}
+                                  </span>
+                                  <div className="input-group-prepend">
+                                    <span
+                                      className="input-group-text"
+                                      style={{
+                                        backgroundColor: "#e8f4fb",
+                                      }}
+                                    >
+                                      <i className="fas fa-file-upload"></i>
+                                    </span>
+                                  </div>
+                                </label>
+                                <input
+                                  type="file"
+                                  className="d-none"
+                                  id="upload"
+                                  style={{
+                                    backgroundColor: "#E8F4FB",
+                                  }}
+                                  disabled
+                                />
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -767,8 +660,6 @@ const Jaminan = ({
     </div>
   );
 };
-
-// export default Jaminan;
 
 const mapState = (state) => ({
   dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
