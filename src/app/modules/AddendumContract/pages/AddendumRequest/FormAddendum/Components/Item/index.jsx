@@ -65,10 +65,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const Item = ({ handleClick, status, data, isData = false }) => {
-  console.log("isi data item", data.items);
-  console.log("isi data service", data.services);
-
+const Item = ({ handleClick, status }) => {
   const { dataContractById, dataSubmitItems } = useSelector(
     (state) => state.addendumContract
   );
@@ -197,6 +194,8 @@ const Item = ({ handleClick, status, data, isData = false }) => {
         }
       });
     }
+
+    // console.log(submitItems);
     dispatch({
       type: actionTypes.SetContractById,
       payload: tempContract,
@@ -205,11 +204,14 @@ const Item = ({ handleClick, status, data, isData = false }) => {
 
   const removeFromSubmitItem = (items, type) => {
     const tempSubmitItems = dataSubmitItems;
+    // console.log(items);
+    // console.log(tempSubmitItems);
 
     if (type === "barang") {
       tempSubmitItems.task_items = tempSubmitItems.task_items.filter(
         (item) => item.item_id !== items.id
       );
+      // console.log(tempSubmitItems.task_items);
     }
 
     if (type === "jasa") {
@@ -231,6 +233,8 @@ const Item = ({ handleClick, status, data, isData = false }) => {
     // const floatQtyAvailable = parseFloat(items.qty_available).toFixed(1);
     const floatQtyAvailable = parseFloat(items.qty_available);
     let minValue = 0.1;
+    // console.log(items);
+
     // if (type === "jasa") {
     //   minValue = 0.1;
     // } else if (type === "barang") {
@@ -242,6 +246,7 @@ const Item = ({ handleClick, status, data, isData = false }) => {
       floatQtyValue < minValue ||
       floatQtyValue > floatQtyAvailable
     ) {
+      // console.log('salah');
       removeFromSubmitItem(items, type);
       let temp = [...qtyErrors];
       const find = temp.find((item) => item === items.id);
@@ -263,6 +268,10 @@ const Item = ({ handleClick, status, data, isData = false }) => {
   };
 
   const handleInputQty = (qtyValue, items, type) => {
+    // console.log(qtyValue);
+    // console.log(items);
+    // console.log(type);
+
     if (type === "jasa") {
       addSubmitItems(
         {
@@ -488,7 +497,7 @@ const Item = ({ handleClick, status, data, isData = false }) => {
         classContainer={navActive !== "link-jasa" ? "d-none" : ""}
         withPagination={false}
         tableHeader={theadService}
-        dataRows={isData ? data.services : dataContractById.services}
+        dataRows={dataContractById.services}
         loading={loading}
         renderRows={({ item, index }) => {
           let el = item;
@@ -500,6 +509,7 @@ const Item = ({ handleClick, status, data, isData = false }) => {
             >
               {(item) => {
                 return item?.map((item2) => {
+                  console.log("iterm", item, item2);
                   return (
                     <TableRow
                       hover
@@ -509,6 +519,7 @@ const Item = ({ handleClick, status, data, isData = false }) => {
                       //       id: el.id,
                       //       type: "jasa",
                       //     })
+                      //   // console.log(e)
                       // }
                       key={item2?.id}
                     >
@@ -578,7 +589,7 @@ const Item = ({ handleClick, status, data, isData = false }) => {
         classContainer={navActive !== "link-barang" ? "d-none" : ""}
         withPagination={true}
         tableHeader={theadItem}
-        dataRows={isData ? data.items : dataContractById.items}
+        dataRows={dataContractById.items}
         loading={loading}
         renderRows={({ item, index }) => {
           return (

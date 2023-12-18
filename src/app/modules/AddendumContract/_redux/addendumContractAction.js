@@ -10,8 +10,11 @@ export const actionTypes = {
   SetDataUpdateOrderItems: "[Set Data Update Order Items] Action",
   SetDataClause: "[Set Data Clause] Action",
   SetDraftingClause: "[Set Drafting Clause] Action",
+  SetRequestClause: "[Set Request Clause] Action",
   SetIsAddJobPrice: "[Set Is Add Job Price] Action",
   SetConclusion: "[Set Conclusion] Action",
+  SetReactSelectAuthorizedOfficial:
+    "[Set React Select Authorized Official] Action",
   saveNotifDM: "SAVE_NOTIFICATION_DM",
 };
 

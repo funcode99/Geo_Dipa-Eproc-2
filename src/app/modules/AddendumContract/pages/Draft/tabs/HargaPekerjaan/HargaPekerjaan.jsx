@@ -128,7 +128,7 @@ const HargaPekerjaan = ({
                     id={"title.termtable"}
                     label={<FormattedMessage id="TITLE.ITEM_TABLE" />}
                   >
-                    <Item />
+                    <Item isData={true} data={data} />
                   </GRAccord>
                 </div>
 

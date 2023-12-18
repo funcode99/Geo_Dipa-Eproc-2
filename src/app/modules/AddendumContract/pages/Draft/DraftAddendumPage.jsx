@@ -34,10 +34,10 @@ import LainnyaTab from "./tabs/Lainnya";
 
 const DraftAddendumPage = ({
   loadings,
+  headerData,
   fetch_api_sg,
   loginStatus,
   rolesEproc,
-  headerData,
   purch_group,
   dataNewClause,
   dataNewClauseDrafting,
@@ -1831,6 +1831,7 @@ const DraftAddendumPage = ({
               dataAfterAdendum={data}
               contract_id={draft_id}
               currencies={currencies}
+              fromWhere={"job_price"}
               is_add_job_price={data?.is_add_job_price}
               jobPriceCurrent={data?.add_contract_job_price}
             />
@@ -1841,6 +1842,8 @@ const DraftAddendumPage = ({
               isAdmin={isAdmin}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              // isAdmin={isAdmin}
+              fromWhere={"time_period"}
               timePeriodData={dataContractById}
               is_add_time_period={data?.is_add_time_period}
               timePeriodAddendumCurrent={data?.add_contract_time_period}
@@ -1853,6 +1856,7 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
+              fromWhere={"payment_method"}
               is_add_payment_method={data?.is_add_payment_method}
               paymentMethodCurrent={data?.add_contract_payment_method}
               add_contract_payment_method={data?.add_contract_payment_method}
@@ -1875,6 +1879,7 @@ const DraftAddendumPage = ({
               contract_id={draft_id}
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
+              fromWhere={"guarantee"}
               isDisable={!data?.is_add_guarantee}
               is_add_guarantee={data?.is_add_guarantee}
               dataNewClauseDrafting={dataNewClauseDrafting}

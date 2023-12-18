@@ -5,15 +5,13 @@ import { Link } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { DEV_NODE } from "redux/BaseHost";
 import { API_EPROC } from "redux/BaseHost";
-
 import { useLocation, useParams, withRouter } from "react-router-dom";
 import { compose } from "redux";
-// useSelector,
-// shallowEqual,
 import { useDispatch, connect } from "react-redux";
-
 import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
+import { Col, Row } from "react-bootstrap";
+import { fetch_api_sg } from "redux/globalReducer";
 import * as addendumContract from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 import DialogGlobal from "app/components/modals/DialogGlobal";
@@ -24,25 +22,9 @@ import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 import UploadDokumenPendukung from "./UploadDokumenPendukung";
 
 import SVG from "react-inlinesvg";
-import { Col, Row } from "react-bootstrap";
-import { Grid } from "@material-ui/core";
-// import { FormStepper } from "./FormStepper";
-
-// import { Card, CardBody } from "_metronic/_partials/controls";
-// import FieldBuilder from "app/components/builder/FieldBuilder";
-// import FormBuilder from "app/components/builder/FormBuilder";
-
-// import { supportingDocumentDefault } from "app/modules/AddendumContract/pages/ContractDetail/components/ParaPihak/fieldData";
-
-import FormPermohonan from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormPermohonan";
-import FormParameter from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameter";
-
+import FormPermohonan from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormPermohonan";
+import FormParameter from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormParameter";
 import Steppers from "app/components/steppersCustom/Steppers";
-import { DUMMY_STEPPER_CONTRACT } from "app/modules/AddendumContract/pages/Termin/TerminPageNew/STATIC_DATA";
-
-import { fetch_api_sg } from "redux/globalReducer";
-
-// const { setFieldValue } = useFormikContext;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -115,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 
 // ]
 
-export const AddContractAddendum = ({
+export const DraftRequestPage = ({
   dataContractById,
   authStatus,
   fetch_api_sg,
@@ -129,10 +111,11 @@ export const AddContractAddendum = ({
     fetch: "get-data-contracts-header",
   };
 
+  // gak ada isi nya
+  // console.log('isi data contract by id di delivery monitoring', dataContractById)
   const classes = useStyles();
   const location = useLocation();
-
-  const { contract_id, tab: forceTabActive } = useParams();
+  const { contract_id, addendum_id, tab: forceTabActive } = useParams();
   const [Toast, setToast] = useToast();
   const dispatch = useDispatch();
   const [dataArr, setDataArr] = useState();
@@ -215,13 +198,16 @@ export const AddContractAddendum = ({
 
     {
       id: "others",
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
       label: "Lainnya",
-      // icon: <FeaturedPlayList className="mb-0 mr-2" />,
       addendum: false,
+      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+      // icon: <FeaturedPlayList className="mb-0 mr-2" />,
     },
   ]);
   const [checkedInitialValues, setCheckedInitialValues] = useState([]);
+  useEffect(() => {
+    console.log("checked initial values", checkedInitialValues);
+  }, [checkedInitialValues]);
   const [timePeriodData, setTimePeriodData] = useState();
   const [initialData, setInitialData] = useState();
 
@@ -296,16 +282,15 @@ export const AddContractAddendum = ({
     // kalo dipanggil bisa
     getContractById(contract_id);
     getDataContractHeader();
+    getDataContractHeaderAfter();
     getauthorizedOfficial();
     getJobDirector();
     getJobSupervisor();
     setInitialSubmitItems();
     getFinalDraftData();
     getAddContractDocument();
-    // setTimeout(, 1);
     const refresh = () => {
       let isRefresh = localStorage.getItem("isRefresh");
-
       if (isRefresh === "false") {
         localStorage.setItem("isRefresh", true);
         window.location.reload();
@@ -317,10 +302,13 @@ export const AddContractAddendum = ({
 
   // sengaja dikasih event biar yang diambil value nya
   function handleChangeTab(event, newTabActive) {
+    // isi nya urutan angka array sesuai dengan yang di klik
+    console.log("isi newTabActive", newTabActive);
     setTabActive(newTabActive);
   }
 
   const [finalDraftData, setFinalDraftData] = useState();
+  const [tabDisableLists, setTabDisableLists] = useState();
 
   const getFinalDraftData = async () => {
     fetch_api_sg({
@@ -329,6 +317,7 @@ export const AddContractAddendum = ({
       // url: `/adendum/contract-final-draft/${contract_id}/show`,
       url: `/adendum/contract-final-draft/d086f59c-838a-440f-a262-d8f21f8fc4e1/show`,
       onSuccess: (res) => {
+        console.log("isi respon 2.23", res.data);
         setFinalDraftData(res.data);
       },
     });
@@ -340,6 +329,7 @@ export const AddContractAddendum = ({
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
+        console.log("apakah menarik data", res?.data);
         setJsonData(res?.data);
         localStorage.setItem(
           "payment_method",
@@ -347,21 +337,22 @@ export const AddContractAddendum = ({
         );
         setDataArr({
           id: res.data.id,
-          contract_no: res.data.contract_no,
-          agreement_number: res.data.contract_no,
-          procurement_title: res.data.contract_name,
-          po_number: res.data.purch_order_no,
-          po_note: res.data.purch_order.name,
-          agreement_format: res.data?.contract_format?.name,
-          agreement_type: res.data?.contract_type?.name,
-          procurement_authority: res.data.authority.facility.name,
-          procurement_authority_group: res.data.authority_group.party.full_name,
-          user: res.data.user.facility.name,
-          user_group: res.data.user_group.party.full_name,
-          provider: res.data.vendor.party.full_name,
+          contract_no: res?.data?.contract_no,
+          agreement_number: res?.data?.contract_no,
+          procurement_title: res?.data?.contract_name,
+          po_number: res?.data?.purch_order_no,
+          po_note: res?.data?.purch_order.name,
+          agreement_format: res?.data?.contract_format?.name,
+          agreement_type: res?.data?.contract_type?.name,
+          procurement_authority: res?.data?.authority?.facility?.name,
+          procurement_authority_group:
+            res?.data?.authority_group?.party?.full_name,
+          user: res?.data?.user?.facility.name,
+          user_group: res?.data?.user_group?.party?.full_name,
+          provider: res?.data?.vendor?.party?.full_name,
 
-          initial_contract_value: res.data.contract_value,
-          latest_contract_value: res.data.after_addendum_job_price,
+          initial_contract_value: res?.data?.contract_value,
+          latest_contract_value: res?.data?.after_addendum_job_price,
           // salah, pake punya orang, harus nya null
           // doc_number: res.data.add_contracts[0].add_doc_number,
           doc_number: null,
@@ -405,12 +396,30 @@ export const AddContractAddendum = ({
     });
   };
 
+  const getDataContractHeaderAfter = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/add-contracts/${addendum_id}`,
+      onSuccess: (res) => {
+        console.log("apakah menarik data", res?.data);
+        setTabDisableLists(res?.data);
+        setStepper(res?.data?.steppers);
+      },
+    });
+  };
+
+  // if (res?.data?.is_add_parties === true) {
+  //   setCheckedInitialValues([...checkedInitialValues, "parties"]);
+  // }
+
   const getauthorizedOfficial = async () => {
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
       url: `/adendum/job-directors`,
       onSuccess: (res) => {
+        console.log("apakah menarik data direksi", res.data);
         setauthorizedOfficial(res.data);
       },
     });
@@ -422,6 +431,7 @@ export const AddContractAddendum = ({
       type: "get",
       url: `/adendum/refference/get-vendor/${id}`,
       onSuccess: (res) => {
+        console.log("apakah menarik data direksi", res.data);
         setSecondAuthorizedOfficial(res.data.officer_data);
         setPICData(res.data.pic_data);
         setAccountNumberBankData(res.data.bank_data);
@@ -435,6 +445,7 @@ export const AddContractAddendum = ({
       type: "get",
       url: `/adendum/direksi-pekerjaan`,
       onSuccess: (res) => {
+        console.log("apakah menarik data direksi", res.data);
         setJobDirector(res.data);
       },
     });
@@ -497,6 +508,9 @@ export const AddContractAddendum = ({
   };
 
   const assignTabLists = (values) => {
+    console.log("isi values", values);
+    console.log("isi tablists", TabLists);
+
     TabLists.map((Tabitem) => {
       Tabitem.addendum = false;
     });
@@ -513,6 +527,9 @@ export const AddContractAddendum = ({
   };
 
   const [supportDocumentFetch, setSupportDocumentFetch] = useState();
+  useEffect(() => {
+    console.log("data sekarang", supportDocumentFetch);
+  }, [supportDocumentFetch]);
 
   const getAddContractDocument = async () => {
     fetch_api_sg({
@@ -527,31 +544,8 @@ export const AddContractAddendum = ({
   };
 
   const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
+  const [stepper, setStepper] = useState();
 
-  const LOCAL_STEPPER_CONTRACT = [
-    {
-      label: "Isi form permohonan",
-      status: sequence === 0 ? "ON PROGRESS" : "COMPLETE",
-    },
-    {
-      label: "Isi form parameter",
-      status:
-        sequence < 1
-          ? "NO STARTED"
-          : sequence === 1
-          ? "ON PROGRESS"
-          : "COMPLETE",
-    },
-    {
-      label: "Upload dokumen pendukung",
-      status:
-        sequence < 2
-          ? "NO STARTED"
-          : sequence === 2
-          ? "ON PROGRESS"
-          : "COMPLETE",
-    },
-  ];
   return (
     <React.Fragment>
       <Toast />
@@ -694,8 +688,8 @@ export const AddContractAddendum = ({
             to: `/${authStatus}/addendum-contract/list-contract-po`,
           },
           {
-            label: "List of Contract & SPK",
-            to: `/${authStatus}/addendum-contract/list-contract-po`,
+            label: "List of Addendum Request",
+            to: `/${authStatus}/addendum-contract/list-addendum-request`,
           },
           {
             label: `${dataArr ? dataArr?.agreement_number : "x"}`,
@@ -704,7 +698,7 @@ export const AddContractAddendum = ({
         ]}
       />
 
-      <Steppers steps={LOCAL_STEPPER_CONTRACT} />
+      <Steppers steps={stepper} />
 
       {jsonData?.form_review ? (
         <div
@@ -735,9 +729,7 @@ export const AddContractAddendum = ({
             onChange={(e) => setFinalDraftSelectValue(e.target.value)}
           >
             <option value="Kontrak">Final Draft Kontrak</option>
-            {finalDraftData?.add_contracts.length > 0 && (
-              <option value="Addendum">Final Draft Addendum</option>
-            )}
+            <option value="Addendum">Final Draft Addendum</option>
           </select>
 
           {finalDraftSelectValue === "Kontrak" && (
@@ -841,7 +833,7 @@ export const AddContractAddendum = ({
                 marginTop: 14,
               }}
             >
-              <p>Perihal: {finalDraftData?.add_contracts[0]?.perihal}</p>
+              <p>Perihal: {finalDraftData.add_contracts[0].perihal}</p>
               <div
                 style={{
                   display: "flex",
@@ -868,12 +860,12 @@ export const AddContractAddendum = ({
                   }
                 >
                   {
-                    finalDraftData?.add_contracts[0]?.final_draft[0]
-                      ?.body_file_name
+                    finalDraftData.add_contracts[0].final_draft[0]
+                      .body_file_name
                   }
                 </a>
               </div>
-              {finalDraftData?.add_contracts[0]?.final_draft[0]?.lampiran_data?.map(
+              {finalDraftData.add_contracts[0].final_draft[0].lampiran_data.map(
                 (item) => {
                   return (
                     <div
@@ -901,7 +893,7 @@ export const AddContractAddendum = ({
                           )
                         }
                       >
-                        {item?.lampiran_file_name}
+                        {item.lampiran_file_name}
                       </a>
                     </div>
                   );
@@ -916,25 +908,23 @@ export const AddContractAddendum = ({
         </div>
       )}
 
-      {!location.pathname.includes("add-addendum") && (
-        <Link to={"/client/addendum-contract/draft/" + contract_id}>
-          <button
-            style={{
-              color: "white",
-              fontSize: 14,
-              fontWeight: "400",
-              padding: "8px 14px",
-              borderRadius: "8px",
-              backgroundColor: "#8c8a8a",
-              outline: "none",
-              border: "none",
-              marginBottom: 28,
-            }}
-          >
-            Lihat Detail Addendum
-          </button>
-        </Link>
-      )}
+      <Link to={"/client/addendum-contract/draft/" + contract_id}>
+        <button
+          style={{
+            color: "white",
+            fontSize: 14,
+            fontWeight: "400",
+            padding: "8px 14px",
+            borderRadius: "8px",
+            backgroundColor: "#8c8a8a",
+            outline: "none",
+            border: "none",
+            marginBottom: 28,
+          }}
+        >
+          Lihat Detail Addendum
+        </button>
+      </Link>
 
       <div
         style={{
@@ -1010,6 +1000,7 @@ export const AddContractAddendum = ({
             checkedLength={checkLength}
             assignTabLists={assignTabLists}
             checkedValues={checkedInitialValues}
+            getDataList={tabDisableLists}
           />
         </Paper>
       )}
@@ -1034,8 +1025,8 @@ export const AddContractAddendum = ({
             authorizedOfficial={authorizedOfficial}
             secondAuthorizedOfficial={secondAuthorizedOfficial}
             PICData={PICData}
-            tabLists={TabLists}
             accountNumberBankData={accountNumberBankData}
+            tabDisableLists={tabDisableLists}
           />
 
           <div
@@ -1089,7 +1080,6 @@ export const AddContractAddendum = ({
 
 // ngirim data
 const mapState = ({ auth, addendumContract }) => ({
-  // ini isi local storage nya ternyata ah elah goblok bat sih gue wkwkwkwwkwk
   authStatus: auth.user.data.status,
   dataContractById: addendumContract.dataContractById,
 });
@@ -1103,4 +1093,4 @@ const mapDispatch = {
 export default compose(
   withRouter,
   connect(mapState, mapDispatch)
-)(AddContractAddendum);
+)(DraftRequestPage);

@@ -26,7 +26,7 @@ import * as addendumContractCRUD from "../../../../service/AddendumContractCrudS
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { FormattedMessage } from "react-intl";
 
-import ParaPihak from "../ParaPihak";
+import ParaPihak from "../ParaPihak/ParaPihak";
 import ParaPihak2 from "../ParaPihak/ParaPihak2";
 import DokContract from "../DokContract";
 import HargaPekerjaan from "../HargaPekerjaan";
@@ -274,13 +274,11 @@ export const ContractAddendumDetail = ({
   return (
     <React.Fragment>
       <Toast />
-
       {loading ? (
         <div className="d-flex justify-content-center m-5 border-danger">
           <CircularProgress />
         </div>
       ) : null}
-
       <Subheader
         text={
           dataContractById
@@ -294,7 +292,6 @@ export const ContractAddendumDetail = ({
           />
         }
       />
-
       <SubBreadcrumbs
         items={[
           {
@@ -309,7 +306,6 @@ export const ContractAddendumDetail = ({
           },
         ]}
       />
-
       <Steppers
         steps={
           loading
@@ -320,7 +316,6 @@ export const ContractAddendumDetail = ({
               }))
         }
       />
-
       <Paper className={classes.root}>
         <Container>
           <Tabs
@@ -338,18 +333,20 @@ export const ContractAddendumDetail = ({
           refresh={old.needRefresh}
           contractId={contract_id}
         />
+        {/* ini yang error */}
         {tabActive === 2 && dataContractById?.contract_status === "PO" && (
           <ParaPihak />
         )}
-        {/* {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
+        {/* tidak error */}
+        {tabActive === 2 && dataContractById?.contract_status === "SPK" && (
           <ParaPihak2 />
-        )} */}
+        )}
         {tabActive === 3 && <DokContract />}
         {tabActive === 4 && <HargaPekerjaan />}
         {tabActive === 5 && <JangkaWaktu />}
         {tabActive === 6 && <Jaminan />}
         {tabActive === 7 && <Denda />}
-        {tabActive === 8 && <ListAddendum contract_id={contract_id} />}
+        {tabActive === 8 && <BAST />}
       </Paper>
     </React.Fragment>
   );
@@ -372,7 +369,7 @@ const mapState = ({ auth, deliveryMonitoring }) => ({
 
 export default connect(mapState, mapDispatch)(ContractAddendumDetail);
 
-// const ContractAddendumDetail = () => {
+// export const ContractAddendumDetail = () => {
 //     return (
 //         <>
 //             Contract Addendum Detail
@@ -382,5 +379,5 @@ export default connect(mapState, mapDispatch)(ContractAddendumDetail);
 
 // export default ContractAddendumDetail
 
-// kalo export default menjadi import function from 'blabla'
 // kalo export const menjadi import { function } from 'blabla'
+// kalo export default menjadi import function from 'blabla'

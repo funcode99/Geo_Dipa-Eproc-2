@@ -1,24 +1,23 @@
-import { compose } from "redux";
+import React, { useState, useEffect } from "react";
 import { Field, FieldArray } from "formik";
 import { withRouter } from "react-router-dom";
+import { compose } from "redux";
 import { useDispatch, connect } from "react-redux";
-import React, { useState, useEffect } from "react";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const PerubahanKlausulKontrak = ({
-  title,
-  subTitle,
-  isDisable,
-  fromWhere,
-  dataNewClause,
   showAddClause,
   showAddContract,
-  isDrafting = false,
-  // isDisable,
-  isMandatory = false,
+  title,
+  subTitle,
+  dataNewClause,
   dataNewClauseDrafting,
+  fromWhere,
+  isMandatory = false,
+  isDrafting = false,
 }) => {
   const dispatch = useDispatch();
+  console.log("current fromWhere", fromWhere);
 
   const changeOtherBodyClauseData = (fieldIndex, value, fieldType) => {
     let newArr = isDrafting
@@ -72,25 +71,11 @@ const PerubahanKlausulKontrak = ({
     });
   };
 
-  const bodyClauseData = !isDrafting
-    ? dataNewClause[fromWhere]?.bodyClauseData?.[0]
-    : dataNewClauseDrafting[fromWhere]?.bodyClauseData?.[0];
-
-  const isDisabled = !isDrafting
-    ? !bodyClauseData ||
-      bodyClauseData.after_clause_note === "" ||
-      bodyClauseData.before_clause_note === "" ||
-      bodyClauseData.clause_number === ""
-    : !bodyClauseData ||
-      bodyClauseData.after_clause_note === "" ||
-      bodyClauseData.before_clause_note === "" ||
-      bodyClauseData.clause_number === "";
-
   return (
     <>
       {/* Klausul Perubahan */}
       <div
-        className="clause-change-wrapper bg-white"
+        className="clause-change-wrapper"
         style={{
           display: "flex",
           flexDirection: "column",
@@ -100,6 +85,7 @@ const PerubahanKlausulKontrak = ({
           borderStyle: "solid",
           padding: 28,
           borderRadius: 14,
+          // marginTop: 40
         }}
       >
         <div>
@@ -143,7 +129,7 @@ const PerubahanKlausulKontrak = ({
             >
               {subTitle}.1 Body Kontrak
             </h1>
-            {/* <button
+            <button
               type="button"
               disabled={
                 !isDrafting
@@ -153,21 +139,13 @@ const PerubahanKlausulKontrak = ({
                       .before_clause_note === "" ||
                     dataNewClause[fromWhere].bodyClauseData[0].clause_number ===
                       ""
-                  : dataNewClauseDrafting[fromWhere]?.bodyClauseData[0]
-                      ?.after_clause_note === "" ||
-                    dataNewClauseDrafting[fromWhere]?.bodyClauseData[0]
-                      ?.before_clause_note === "" ||
+                  : dataNewClauseDrafting[fromWhere].bodyClauseData[0]
+                      .after_clause_note === "" ||
                     dataNewClauseDrafting[fromWhere].bodyClauseData[0]
-                      ?.clause_number === ""
+                      .before_clause_note === "" ||
+                    dataNewClauseDrafting[fromWhere].bodyClauseData[0]
+                      .clause_number === ""
               }
-              className="btn btn-primary text-white add-new-clause"
-              onClick={showAddContract}
-            >
-              Tambah Body Kontrak
-            </button> */}
-            <button
-              type="button"
-              disabled={isDisabled}
               className="btn btn-primary text-white add-new-clause"
               onClick={showAddContract}
             >
@@ -186,8 +164,8 @@ const PerubahanKlausulKontrak = ({
                   name={`body_data.clause_number`}
                   value={
                     isDrafting
-                      ? dataNewClauseDrafting[fromWhere]?.bodyClauseData
-                          ?.clause_number
+                      ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                          .clause_number
                       : dataNewClause[fromWhere].bodyClauseData.clause_number
                   }
                   onChange={(e) =>
@@ -199,11 +177,10 @@ const PerubahanKlausulKontrak = ({
                     borderRadius: 4,
                     minWidth: 400,
                   }}
-                  disabled={!isDisable}
                 />
                 {isDrafting
-                  ? dataNewClauseDrafting[fromWhere]?.bodyClauseData
-                      ?.clause_number === "" &&
+                  ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                      .clause_number === "" &&
                     isMandatory && (
                       <p>
                         <span style={{ color: "red" }}>*</span>Wajib Diisi
@@ -224,6 +201,7 @@ const PerubahanKlausulKontrak = ({
                   display: "flex",
                   flexDirection: "column",
                   gap: 14,
+                  // marginTop: 28
                 }}
               >
                 {/* pasal sebelum addendum */}
@@ -257,7 +235,6 @@ const PerubahanKlausulKontrak = ({
                       minWidth: 400,
                     }}
                     rows="4"
-                    disabled={!isDisable}
                   />
                   {isDrafting
                     ? dataNewClauseDrafting[fromWhere].bodyClauseData
@@ -307,7 +284,6 @@ const PerubahanKlausulKontrak = ({
                       minWidth: 400,
                     }}
                     rows="4"
-                    disabled={!isDisable}
                   />
                   {isDrafting
                     ? dataNewClauseDrafting[fromWhere].bodyClauseData
@@ -332,7 +308,7 @@ const PerubahanKlausulKontrak = ({
           {/* body kontrak di other */}
           {fromWhere === "other" &&
             isDrafting &&
-            dataNewClauseDrafting[fromWhere]?.bodyClauseData?.map(
+            dataNewClauseDrafting[fromWhere].bodyClauseData.map(
               (item, index) => {
                 return (
                   <>
@@ -355,7 +331,6 @@ const PerubahanKlausulKontrak = ({
                           borderRadius: 4,
                           minWidth: 400,
                         }}
-                        disabled={!isDisable}
                       />
                       {item.clause_number === "" && index === 0 && isMandatory && (
                         <p>
@@ -402,7 +377,6 @@ const PerubahanKlausulKontrak = ({
                             minWidth: 400,
                           }}
                           rows="4"
-                          disabled={!isDisable}
                         />
                         {item?.before_clause_note === "" &&
                           index === 0 &&
@@ -442,7 +416,6 @@ const PerubahanKlausulKontrak = ({
                             minWidth: 400,
                           }}
                           rows="4"
-                          disabled={!isDisable}
                         />
                         {item.after_clause_note === "" &&
                           index === 0 &&
@@ -482,7 +455,6 @@ const PerubahanKlausulKontrak = ({
                         borderRadius: 4,
                         minWidth: 400,
                       }}
-                      disabled={!isDisable}
                     />
                     {item.clause_number === "" && index === 0 && isMandatory && (
                       <p>
@@ -497,6 +469,7 @@ const PerubahanKlausulKontrak = ({
                       display: "flex",
                       flexDirection: "column",
                       gap: 14,
+                      // marginTop: 28
                     }}
                   >
                     {/* pasal sebelum addendum */}
@@ -528,7 +501,6 @@ const PerubahanKlausulKontrak = ({
                           minWidth: 400,
                         }}
                         rows="4"
-                        disabled={!isDisable}
                       />
                       {item?.before_clause_note === "" &&
                         index === 0 &&
@@ -568,7 +540,6 @@ const PerubahanKlausulKontrak = ({
                           minWidth: 400,
                         }}
                         rows="4"
-                        disabled={!isDisable}
                       />
                       {item.after_clause_note === "" &&
                         index === 0 &&
@@ -701,7 +672,6 @@ const PerubahanKlausulKontrak = ({
                   borderRadius: 4,
                   minWidth: 400,
                 }}
-                disabled={!isDisable}
               />
               {item.attachment_number === "" && index == 0 && isMandatory && (
                 <p>
@@ -728,7 +698,6 @@ const PerubahanKlausulKontrak = ({
                   borderRadius: 4,
                   minWidth: 400,
                 }}
-                disabled={!isDisable}
               />
               {item.clause_note === "" && index == 0 && isMandatory && (
                 <p>
@@ -737,6 +706,26 @@ const PerubahanKlausulKontrak = ({
               )}
             </>
           ))}
+
+        {/* Tambah klausul lampiran */}
+        {/* <div>
+          <button
+            type="button"
+            disabled={
+              dataNewClause[fromWhere].attachmentClauseData[0]
+                .attachment_number === "" ||
+              dataNewClause[fromWhere].attachmentClauseData[0].clause_note ===
+                ""
+            }
+            className="btn btn-primary text-white add-new-clause"
+            style={{
+              marginTop: 14,
+            }}
+            onClick={showAddClause}
+          >
+            Tambah Klausul Lampiran
+          </button>
+        </div> */}
       </div>
     </>
   );

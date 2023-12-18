@@ -13,7 +13,8 @@ const attachmentClauseDataTemplate = {
   clause_note: "",
 };
 
-const initialDelivMonitoringState = {
+const initialAddendumContractState = {
+  authorizedOfficialIndex: 0,
   isAddJobPrice: false,
   conclusion: "",
   dataDeverableDoc: null,
@@ -109,7 +110,7 @@ const initialDelivMonitoringState = {
 
 export const reducer = persistReducer(
   PERSIST_REDUCER,
-  (state = initialDelivMonitoringState, action) => {
+  (state = initialAddendumContractState, action) => {
     switch (action.type) {
       case actionTypes.SetDataDeverableDoc: {
         const { dataDeverableDoc } = action.payload;
@@ -827,6 +828,119 @@ export const reducer = persistReducer(
         }
       }
 
+      case actionTypes.SetRequestClause: {
+        if (action.fieldType === "refill_body_clause_data") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                bodyClauseData: action.payload,
+              },
+            },
+          };
+        }
+        if (action.fieldType === "refill_attachment_clause_data") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                attachmentClauseData: action.payload,
+              },
+            },
+          };
+        }
+        if (action.fieldType === "attachment_number") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                attachmentClauseData: action.payload,
+              },
+            },
+          };
+        }
+        if (action.fieldType === "clause_attachment") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                attachmentClauseData: [
+                  ...state.dataNewClauseDrafting[action.fromWhere]
+                    .attachmentClauseData,
+                  action.payload,
+                ],
+              },
+            },
+          };
+        }
+        if (action.fieldType === "clause_note") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                attachmentClauseData: action.payload,
+              },
+            },
+          };
+        }
+        if (action.fieldType === "clause number") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                bodyClauseData: {
+                  ...state.dataNewClauseDrafting[action.fromWhere]
+                    .bodyClauseData,
+                  clause_number: action.payload,
+                },
+              },
+            },
+          };
+        } else if (action.fieldType === "before clause note") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                bodyClauseData: {
+                  ...state.dataNewClauseDrafting[action.fromWhere]
+                    .bodyClauseData,
+                  before_clause_note: action.payload,
+                },
+              },
+            },
+          };
+        } else if (action.fieldType === "after clause note") {
+          return {
+            ...state,
+            dataNewClauseDrafting: {
+              ...state.dataNewClauseDrafting,
+              [action.fromWhere]: {
+                ...state.dataNewClauseDrafting[action.fromWhere],
+                bodyClauseData: {
+                  ...state.dataNewClauseDrafting[action.fromWhere]
+                    .bodyClauseData,
+                  after_clause_note: action.payload,
+                },
+              },
+            },
+          };
+        }
+      }
+
       case actionTypes.SetDraftingClause: {
         if (action.fieldType === "refill_body_clause_data") {
           return {
@@ -938,6 +1052,13 @@ export const reducer = persistReducer(
             },
           };
         }
+      }
+
+      case actionTypes.SetReactSelectAuthorizedOfficial: {
+        return {
+          ...state,
+          authorizedOfficialIndex: action.payload,
+        };
       }
 
       // kalo case di atas gagal return bakal turun kebawah case & masuk ke return nya

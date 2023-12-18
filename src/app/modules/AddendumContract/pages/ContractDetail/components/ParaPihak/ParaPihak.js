@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { FormattedMessage } from "react-intl";
-import Navs from "../../../../../../components/navs";
-import FormBuilder from "app/components/builder/FormBuilder";
-import { Card, CardBody } from "_metronic/_partials/controls";
-import FieldBuilder from "app/components/builder/FieldBuilder";
 import {
-  formData1,
-  formData2,
-} from "app/modules/DeliveryMonitoring/pages/ContractDetail/components/ParaPihak/fieldData";
+  Card,
+  CardBody,
+} from "../../../../../../../_metronic/_partials/controls";
+import FieldBuilder from "../../../../../../components/builder/FieldBuilder";
+import FormBuilder from "../../../../../../components/builder/FormBuilder";
+import Navs from "../../../../../../components/navs";
+import { FormattedMessage } from "react-intl";
+import { formData1, formData2 } from "./fieldData";
 
 const navLists = [
   {
@@ -21,12 +21,14 @@ const navLists = [
   },
 ];
 
-const ParaPihak = ({}) => {
+const ParaPihak = () => {
   const [navActive, setNavActive] = React.useState(navLists[0].id);
 
   const { contract_party, vendor } = useSelector(
     (state) => state.deliveryMonitoring.dataContractById
   );
+
+  // console.log(`dataContractById`, contract_party);
 
   const values = React.useMemo(
     () => ({
@@ -120,30 +122,28 @@ const ParaPihak = ({}) => {
   );
 
   return (
-    <>
-      <Card>
-        <CardBody>
-          <Navs
-            navLists={navLists}
-            handleSelect={(selectedKey) => setNavActive(selectedKey)}
-          />
-          <FormBuilder initial={values} withSubmit={false}>
-            {({}) => {
-              return (
-                <React.Fragment>
-                  {navActive === "pertama" && (
-                    <FieldBuilder readOnly formData={formData1} />
-                  )}
-                  {navActive === "kedua" && (
-                    <FieldBuilder readOnly formData={formData2} />
-                  )}
-                </React.Fragment>
-              );
-            }}
-          </FormBuilder>
-        </CardBody>
-      </Card>
-    </>
+    <Card>
+      <CardBody>
+        <Navs
+          navLists={navLists}
+          handleSelect={(selectedKey) => setNavActive(selectedKey)}
+        />
+        <FormBuilder initial={values} withSubmit={false}>
+          {({}) => {
+            return (
+              <React.Fragment>
+                {navActive === "pertama" && (
+                  <FieldBuilder readOnly formData={formData1} />
+                )}
+                {navActive === "kedua" && (
+                  <FieldBuilder readOnly formData={formData2} />
+                )}
+              </React.Fragment>
+            );
+          }}
+        </FormBuilder>
+      </CardBody>
+    </Card>
   );
 };
 

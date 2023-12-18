@@ -39,14 +39,14 @@ function getSteps() {
 
 const Steppers = (props) => {
   const { intl, steps = getSteps() } = props;
-//  const [activeStep, setActiveStep] = React.useState(null);
-//  React.useEffect(() => {
-//    setActiveStep(
-//      steps.findIndex((item) => {
-//        return item.status === "ON PROGRESS";
-//      })
-//    );
-//  }, [steps]);
+  //  const [activeStep, setActiveStep] = React.useState(null);
+  //  React.useEffect(() => {
+  //    setActiveStep(
+  //      steps.findIndex((item) => {
+  //        return item.status === "ON PROGRESS";
+  //      })
+  //    );
+  //  }, [steps]);
 
   return (
     <React.Fragment>
@@ -55,8 +55,16 @@ const Steppers = (props) => {
           {steps.map((item, index) => (
             <Step
               key={index.toString()}
-              completed={item.status === "COMPLETE" ? true : false}
-              active={item.status === "ON PROGRESS" ? true : false}
+              completed={
+                item.status === "COMPLETE" || item.status === "done"
+                  ? true
+                  : false
+              }
+              active={
+                item.status === "ON PROGRESS" || item.status === "on"
+                  ? true
+                  : false
+              }
             >
               <StepLabel>{item.label}</StepLabel>
             </Step>
