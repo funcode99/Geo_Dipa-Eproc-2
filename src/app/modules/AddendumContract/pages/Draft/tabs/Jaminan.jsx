@@ -28,14 +28,18 @@ const Jaminan = ({
   const [inputDataGuarantee, setInputDataGuarantee] = useState({
     down_payment_guarantee: add_contract_guarantee?.down_payment_guarantee,
     down_payment_guarantee_evidence_file_name:
-      add_contract_guarantee?.down_payment_guarantee_evidence_file_name,
+      add_contract_guarantee?.down_payment_guarantee_evidence_file_nam,
+    // down_payment_guarantee_evidence_file_name:
+    //   add_contract_guarantee?.down_payment_guarantee_evidence_file_name,
     down_payment_guarantee_start_date:
       add_contract_guarantee?.down_payment_guarantee_start_date,
     down_payment_guarantee_end_date:
       add_contract_guarantee?.down_payment_guarantee_end_date,
     implementation_guarantee: add_contract_guarantee?.implementation_guarantee,
     implementation_guarantee_evidence_file_name:
-      add_contract_guarantee?.implementation_guarantee_evidence_file_name,
+      add_contract_guarantee?.implementation_guarantee_evidence_file_n,
+    // implementation_guarantee_evidence_file_name:
+    //   add_contract_guarantee?.implementation_guarantee_evidence_file_name,
     implementation_guarantee_start_date:
       add_contract_guarantee?.implementation_guarantee_start_date,
     implementation_guarantee_end_date:
@@ -135,8 +139,7 @@ const Jaminan = ({
       nominal: inputDataGuarantee?.down_payment_guarantee,
       tanggal_mulai: inputDataGuarantee?.down_payment_guarantee_start_date,
       tanggal_selesai: inputDataGuarantee?.down_payment_guarantee_end_date,
-      // bukti: inputDataGuarantee?.down_payment_guarantee_evidence_file_name,
-      bukti: inputDataGuarantee?.down_payment_guarantee_evidence_file_nam,
+      bukti: inputDataGuarantee?.down_payment_guarantee_evidence_file_name,
     },
     {
       judul: "Jaminan Pelaksanaan",
@@ -144,8 +147,7 @@ const Jaminan = ({
       nominal: inputDataGuarantee?.implementation_guarantee,
       tanggal_mulai: inputDataGuarantee?.implementation_guarantee_start_date,
       tanggal_selesai: inputDataGuarantee?.implementation_guarantee_end_date,
-      // bukti: inputDataGuarantee?.implementation_guarantee_evidence_file_name,
-      bukti: inputDataGuarantee?.implementation_guarantee_evidence_file_n,
+      bukti: inputDataGuarantee?.implementation_guarantee_evidence_file_name,
     },
     {
       judul: "Jaminan Pemeliharaan",
