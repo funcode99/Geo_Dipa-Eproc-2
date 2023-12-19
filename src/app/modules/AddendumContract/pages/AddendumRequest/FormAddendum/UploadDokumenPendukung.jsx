@@ -10,16 +10,18 @@ import { withRouter } from "react-router-dom";
 const UploadDokumenPendukung = ({
   supportDocumentFetch,
   initialData,
-  isAddJobPrice,
   conclusion,
+  getDataList,
 }) => {
   // AARRGHGH PASS BY REFERENCE\
+
+  console.log("isi get data list upload", getDataList);
+
   console.log("isi supportDocumentFetch", supportDocumentFetch);
   supportDocumentFetch.map((item) => {
     if (
       item.document_name ===
         "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor" ||
-      // && isAddJobPrice
       item.document_name === "Berita Acara Kesepakatan Addendum" ||
       (item.document_name === "Justifikasi " &&
         conclusion ===
@@ -42,7 +44,7 @@ const UploadDokumenPendukung = ({
     }
   });
   const [supportingDocument, setSupportingDocument] = useState({
-    data: "",
+    data: getDataList?.add_support_document_data,
   });
   // disini SLICE TIDAK MENGHAPUS ARRAY YANG SUDAH ADA
   let kondisiA = supportDocumentFetch.slice(0, 4);
@@ -107,8 +109,8 @@ const UploadDokumenPendukung = ({
   const submitData = (values) => {
     console.log("isi values saat submit upload", supportingDocument?.data);
     let formDataNew = new FormData();
-    formDataNew.append("drafter_code", values.drafterCode);
-    formDataNew.append("add_drafter", values.addDrafter);
+    formDataNew.append("drafter_code", values.drafterSelectValue.drafterCode);
+    formDataNew.append("add_drafter", values.drafterSelectValue.addDrafter);
     if (
       supportingDocument?.data?.some(
         (item) =>
@@ -388,9 +390,10 @@ const UploadDokumenPendukung = ({
                                     padding: 8,
                                     width: "100%",
                                   }}
-                                  value={
-                                    supportingDocument.data[index].fileDokumen
-                                  }
+                                  // value={
+                                  //   supportingDocument.data[index]
+                                  //     .fileDokumen || ""
+                                  // }
                                   onChange={(event) => {
                                     setFieldValue(
                                       `supportDocumentData[${index}].fileDokumen`,
@@ -557,9 +560,7 @@ const UploadDokumenPendukung = ({
 // export default UploadDokumenPendukung;
 
 const mapState = ({ addendumContract }) => ({
-  // ini isi local storage nya ternyata ah elah goblok bat sih gue wkwkwkwwkwk
-  isAddJobPrice: addendumContract.isAddJobPrice,
-  conclusion: addendumContract.conclusion,
+  // conclusion: addendumContract.conclusion,
 });
 
 export default compose(

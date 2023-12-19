@@ -1070,7 +1070,8 @@ export const DraftRequestPage = ({
           openCloseAddDocument={openCloseAddDocument}
           showAddDocument={showAddDocument}
           initialData={initialData}
-          // conclusion={localStorage.getItem("conclusion")}
+          getDataList={tabDisableLists}
+          conclusion={tabDisableLists?.conclusion}
           // isAddJobPrice={localStorage.getItem("isAddJobPrice")}
         />
       )}
