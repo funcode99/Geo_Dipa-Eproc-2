@@ -398,6 +398,7 @@ const Lainnya = ({
                             borderRadius: 4,
                             minWidth: 400,
                           }}
+                          disabled={isDisable}
                         />
 
                         {item?.attachment_number === "" &&
@@ -427,6 +428,7 @@ const Lainnya = ({
                             borderRadius: 4,
                             minWidth: 400,
                           }}
+                          disabled={isDisable}
                         />
                         {item?.clause_note === "" &&
                           isMandatory &&
