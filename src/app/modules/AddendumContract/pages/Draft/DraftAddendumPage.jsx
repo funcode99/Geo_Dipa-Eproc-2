@@ -89,14 +89,16 @@ const DraftAddendumPage = ({
     });
   };
 
+  // api 1.2
   const getContractById = async (id) => {
+    console.log(id, "id 1.2");
     fetch_api_sg({
       key: keys.getAddendumDetail,
       type: "get",
       url: `/adendum/contract-released/${id}/show`,
       onSuccess: (res) => {
         setDataContractById(res?.data);
-        getSecondAuthorizedOfficial(res.data.vendor.id);
+        getSecondAuthorizedOfficial(res.data.vendor_id);
       },
     });
   };
@@ -232,6 +234,7 @@ const DraftAddendumPage = ({
         );
         // let timePeriodData = JSON.parse(localStorage.getItem("time_period"));
         // setTimePeriodData(timePeriodData);
+        // console.log(res, "res nya");
         // getSecondAuthorizedOfficial(res?.data?.vendor_id);
       },
     });
@@ -248,12 +251,15 @@ const DraftAddendumPage = ({
     });
   };
 
+  // api 2.17
   const getSecondAuthorizedOfficial = async (id) => {
+    console.log(id, "id");
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
       url: `/adendum/refference/get-vendor/${id}`,
       onSuccess: (res) => {
+        console.log(res, "response");
         setSecondAuthorizedOfficial(res.data.officer_data);
         setPICData(res.data.pic_data);
         setAccountNumberBankData(res.data.bank_data);
