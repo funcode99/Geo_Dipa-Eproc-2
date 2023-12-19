@@ -123,13 +123,7 @@ const Lainnya = ({
     if (add_contract_others?.body_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_others?.body_clause_data || [
-          {
-            clause_number: "",
-            before_clause_note: "",
-            after_clause_note: "",
-          },
-        ],
+        payload: add_contract_others?.body_clause_data,
         fieldType: "refill_body_clause_data",
         fromWhere: "other",
       });
@@ -137,17 +131,12 @@ const Lainnya = ({
     if (add_contract_others?.attachment_clause_data !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: add_contract_others?.attachment_clause_data || [
-          {
-            attachment_number: "",
-            clause_note: "",
-          },
-        ],
+        payload: add_contract_others?.attachment_clause_data,
         fieldType: "refill_attachment_clause_data",
         fromWhere: "other",
       });
     }
-  }, []);
+  }, [add_contract_others]);
 
   return (
     <>
@@ -398,6 +387,7 @@ const Lainnya = ({
                             borderRadius: 4,
                             minWidth: 400,
                           }}
+                          disabled={isDisable}
                         />
 
                         {item?.attachment_number === "" &&
@@ -427,6 +417,7 @@ const Lainnya = ({
                             borderRadius: 4,
                             minWidth: 400,
                           }}
+                          disabled={isDisable}
                         />
                         {item?.clause_note === "" &&
                           isMandatory &&

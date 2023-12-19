@@ -1,4 +1,5 @@
 import { Formik, Form } from "formik";
+import { DEV_NODE } from "redux/BaseHost";
 import { connect, useDispatch } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { ReactSelect } from "percobaan/ReactSelect";
@@ -18,6 +19,8 @@ const NomorRekening = ({
   is_add_account_number,
   add_contract_account_number,
 }) => {
+  console.log(accountNumberBankData, "accountNumberBankData");
+  console.log(add_contract_account_number, "add_contract_account_number");
   const dispatch = useDispatch();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -74,11 +77,6 @@ const NomorRekening = ({
   }, []);
   return (
     <div className="bg-white p-10">
-      {/* <NewClause
-        fromWhere={"account_number"}
-        fieldType={"clause_attachment"}
-        openCloseAddClause={openCloseAddClause}
-      /> */}
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -132,8 +130,6 @@ const NomorRekening = ({
                         return (
                           <div
                             style={{
-                              // display: 'grid',
-                              // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
                               display: "flex",
                               flexWrap: "wrap",
                               gap: 24,
@@ -200,7 +196,7 @@ const NomorRekening = ({
                                 flex: 1,
                               }}
                             >
-                              <span>Nama bank</span>
+                              <span>Nama bank pertama</span>
                               <input
                                 type="text"
                                 style={{
@@ -263,8 +259,6 @@ const NomorRekening = ({
 
                     <div
                       style={{
-                        // display: 'grid',
-                        // gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
                         display: "flex",
                         flexWrap: "wrap",
                         gap: 24,
@@ -310,7 +304,9 @@ const NomorRekening = ({
                           }}
                           disabled
                           value={
-                            jsonData?.data_bank[bankIndex]?.account_holder_name
+                            add_contract_account_number?.data_bank
+                              ?.account_holder_name
+                            // jsonData?.data_bank[bankIndex]?.account_holder_name
                           }
                         />
                       </div>
@@ -321,7 +317,7 @@ const NomorRekening = ({
                           flex: 1,
                         }}
                       >
-                        <span>Nama bank</span>
+                        <span>Nama bank kedua</span>
                         <input
                           type="text"
                           style={{
@@ -336,7 +332,10 @@ const NomorRekening = ({
                             marginTop: 4,
                           }}
                           disabled
-                          value={jsonData?.data_bank[bankIndex]?.bank.full_name}
+                          value={
+                            add_contract_account_number?.data_bank?.bank
+                              .full_name
+                          }
                         />
                       </div>
                       <div
@@ -362,15 +361,13 @@ const NomorRekening = ({
                           }}
                           disabled
                           value={
-                            jsonData?.data_bank[bankIndex]?.address
+                            add_contract_account_number?.data_bank?.address
                               ?.postal_address
                           }
                         />
                       </div>
                     </div>
                   </div>
-
-                  {/* surat pernyataan dari bank */}
                   <div
                     style={{
                       display: "grid",
@@ -388,9 +385,22 @@ const NomorRekening = ({
                         style={{
                           fontSize: 14,
                           fontWeight: 500,
+                          color: "blue",
+                          pointer: "cursor",
+                        }}
+                        onClick={() => {
+                          if (
+                            add_contract_account_number?.data_bank
+                              ?.bank_statement_file !== null
+                          ) {
+                            window.open(
+                              `${DEV_NODE}/${add_contract_account_number?.data_bank?.bank_statement_file}`,
+                              "_blank"
+                            );
+                          }
                         }}
                       >
-                        Surat pernyataan dari bank
+                        Download Surat pernyataan dari bank
                       </span>
                       <div
                         style={{
