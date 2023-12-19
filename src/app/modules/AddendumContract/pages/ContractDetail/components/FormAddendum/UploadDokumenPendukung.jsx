@@ -103,8 +103,8 @@ const UploadDokumenPendukung = ({
 
   const submitData = (values) => {
     let formDataNew = new FormData();
-    formDataNew.append("drafter_code", values.drafterCode);
-    formDataNew.append("add_drafter", values.addDrafter);
+    formDataNew.append("drafter_code", values.drafterSelectValue.drafterCode);
+    formDataNew.append("add_drafter", values.drafterSelectValue.addDrafter);
     if (
       supportingDocument?.data?.some(
         (item) =>
