@@ -57,6 +57,14 @@ const Jaminan = ({
     attachment_data: add_contract_guarantee?.attachment_clause_data,
   });
 
+  const handleFileChange = (e, radioName) => {
+    const file = e.target.files[0];
+    setInputDataGuarantee((prevInputData) => ({
+      ...prevInputData,
+      [`${radioName}_evidence_file_name`]: file.name,
+    }));
+  };
+
   const [data, setData] = useState({});
   useEffect(() => {
     let mapResult = jsonData?.contract_guarantees?.map((item) => {
@@ -580,12 +588,7 @@ const Jaminan = ({
                       </div>
                       {newData?.status_code === "90" && (
                         <div className="evidence col-md-6">
-                          <div
-                            className="col-md-12"
-                            style={{
-                              padding: 0,
-                            }}
-                          >
+                          <div className="col-md-12" style={{ padding: 0 }}>
                             <label
                               style={{
                                 margin: 0,
@@ -602,42 +605,17 @@ const Jaminan = ({
                                     padding: 0,
                                   }}
                                 >
-                                  <span
-                                    className={`form-control text-truncate`}
+                                  <input
+                                    type="file"
+                                    id={`upload_${index}`}
                                     style={{
-                                      backgroundColor: "#e8f4fb",
+                                      backgroundColor: "#E8F4FB",
                                     }}
-                                    onClick={() => {
-                                      if (item.bukti) {
-                                        window.open(
-                                          `${DEV_NODE}/guarantee/${item.bukti}`,
-                                          "_blank"
-                                        );
-                                      }
-                                    }}
-                                  >
-                                    {item.bukti ? item.bukti : "Kosong"}
-                                  </span>
-                                  <div className="input-group-prepend">
-                                    <span
-                                      className="input-group-text"
-                                      style={{
-                                        backgroundColor: "#e8f4fb",
-                                      }}
-                                    >
-                                      <i className="fas fa-file-upload"></i>
-                                    </span>
-                                  </div>
+                                    onChange={(e) =>
+                                      handleFileChange(e, item.nama_radio)
+                                    }
+                                  />
                                 </label>
-                                <input
-                                  type="file"
-                                  className="d-none"
-                                  id="upload"
-                                  style={{
-                                    backgroundColor: "#E8F4FB",
-                                  }}
-                                  disabled
-                                />
                               </div>
                             </label>
                           </div>
