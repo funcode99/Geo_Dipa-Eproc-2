@@ -14,7 +14,6 @@ const PerubahanKlausulKontrak = ({
   showAddClause,
   showAddContract,
   isDrafting = false,
-  // isDisable,
   isMandatory = false,
   dataNewClauseDrafting,
 }) => {
