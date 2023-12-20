@@ -89,6 +89,7 @@ const DraftAddendumPage = ({
     });
   };
 
+  // api 1.2
   const getContractById = async (id) => {
     fetch_api_sg({
       key: keys.getAddendumDetail,
@@ -96,7 +97,7 @@ const DraftAddendumPage = ({
       url: `/adendum/contract-released/${id}/show`,
       onSuccess: (res) => {
         setDataContractById(res?.data);
-        getSecondAuthorizedOfficial(res.data.vendor.id);
+        getSecondAuthorizedOfficial(res.data.vendor_id);
       },
     });
   };
@@ -248,6 +249,7 @@ const DraftAddendumPage = ({
     });
   };
 
+  // api 2.17
   const getSecondAuthorizedOfficial = async (id) => {
     fetch_api_sg({
       key: keys.fetch,
@@ -1813,7 +1815,6 @@ const DraftAddendumPage = ({
             <ParaPihakTab
               isDrafting={true}
               PICData={PICData}
-              // isDisable={isAdmin}
               isDisable={data?.is_add_parties}
               contract_id={draft_id}
               jobDirector={jobDirector}
@@ -1828,12 +1829,12 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 2 && (
             <HargaPekerjaanTab
-              isDisable={data?.is_add_job_price}
-              data={dataContractById}
-              dataAfterAdendum={data}
               contract_id={draft_id}
+              dataAfterAdendum={data}
               currencies={currencies}
+              data={dataContractById}
               fromWhere={"job_price"}
+              isDisable={data?.is_add_job_price}
               is_add_job_price={data?.is_add_job_price}
               jobPriceCurrent={data?.add_contract_job_price}
             />
@@ -1843,9 +1844,8 @@ const DraftAddendumPage = ({
               isDisable={data?.is_add_time_period}
               isAdmin={isAdmin}
               contract_id={draft_id}
-              dataNewClause={dataNewClause}
-              // isAdmin={isAdmin}
               fromWhere={"time_period"}
+              dataNewClause={dataNewClause}
               timePeriodData={dataContractById}
               is_add_time_period={data?.is_add_time_period}
               timePeriodAddendumCurrent={data?.add_contract_time_period}
@@ -1854,11 +1854,11 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 4 && (
             <MetodePembayaranTab
-              isDisable={!data?.is_add_payment_method}
               jsonData={dataContractById}
               contract_id={draft_id}
               dataNewClause={dataNewClause}
               fromWhere={"payment_method"}
+              isDisable={!data?.is_add_payment_method && !isAdmin}
               is_add_payment_method={data?.is_add_payment_method}
               paymentMethodCurrent={data?.add_contract_payment_method}
               add_contract_payment_method={data?.add_contract_payment_method}
@@ -1882,9 +1882,9 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
               fromWhere={"guarantee"}
-              isDisable={!data?.is_add_guarantee}
               is_add_guarantee={data?.is_add_guarantee}
               dataNewClauseDrafting={dataNewClauseDrafting}
+              isDisable={!data?.is_add_guarantee && !isAdmin}
               guaranteeCurrent={data?.add_contract_guarantee}
               add_contract_guarantee={data?.add_contract_guarantee}
             />
@@ -1894,8 +1894,8 @@ const DraftAddendumPage = ({
               contract_id={draft_id}
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
-              isDisable={!data?.is_add_account_number}
               accountNumberBankData={accountNumberBankData}
+              isDisable={!data?.is_add_account_number && !isAdmin}
               is_add_account_number={!data?.is_add_account_number}
               accountNumberCurrent={data?.add_contract_account_number}
               add_contract_account_number={data?.add_contract_account_number}
@@ -1903,11 +1903,15 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 8 && (
             <LainnyaTab
+              fromWhere="other"
+              isDrafting={true}
+              isMandatory={true}
               contract_id={draft_id}
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
               is_add_other={data?.is_add_other}
               otherCurrent={data?.add_contract_others}
+              isDisable={!data?.is_add_other && !isAdmin}
               add_contract_others={data?.add_contract_others}
             />
           )}

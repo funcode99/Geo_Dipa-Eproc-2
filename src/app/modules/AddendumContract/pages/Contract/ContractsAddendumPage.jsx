@@ -105,6 +105,12 @@ const tableHeaderContractsNew = [
     order: { active: true, status: false },
     filter: { active: true, type: "text" },
   },
+  {
+    name: "latest_status",
+    title: "Latest Addendum Status",
+    order: { active: true, status: false },
+    filter: { active: true, type: "text" },
+  },
   // kenapa action disini gak muncul ya?
   {
     name: "action",
@@ -249,6 +255,7 @@ export const ContractsAddendumPage = ({ fetch_api_sg, loadings, status }) => {
             group: item?.user_group?.party?.full_name,
             vendor: item?.vendor?.party?.full_name,
             status: item?.state,
+            latest_status: item?.add_contracts[0]?.add_status?.status,
             action: (
               <>
                 <ButtonAction
@@ -305,7 +312,7 @@ export const ContractsAddendumPage = ({ fetch_api_sg, loadings, status }) => {
       {/* komponen sudah muncul, tapi data tidak muncul */}
       <Subheader
         // text={isClient? "List of Contract & PO" : "List of Addendum Request"}
-        text="List of Contract & PO"
+        text="List of Contract & SPK"
       />
 
       <Paper className={classes.root}>
@@ -357,6 +364,7 @@ export const ContractsAddendumPage = ({ fetch_api_sg, loadings, status }) => {
                 <TableCell>{item?.group}</TableCell>
                 <TableCell>{item?.vendor}</TableCell>
                 <TableCell>{item.status}</TableCell>
+                <TableCell>{item?.latest_status}</TableCell>
                 <TableCell
                   style={{
                     position: "sticky",

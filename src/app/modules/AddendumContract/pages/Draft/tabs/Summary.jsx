@@ -11,7 +11,9 @@ const SummaryTab = ({ data }) => {
     <div className="bg-white p-10">
       <h4 className="mb-2">A. Tanggal Dokumen Permohonan</h4>
       <div className="mb-5">
-        {data?.add_request_date ? moment(data?.add_request_date).format("DD/MMM/yyyy") : "-"}
+        {data?.add_request_date
+          ? moment(data?.add_request_date).format("DD/MMM/yyyy")
+          : "-"}
       </div>
       <h4 className="mb-2">B. Perihal Addendum</h4>
       <Row className="mb-5">
@@ -148,8 +150,7 @@ const SummaryTab = ({ data }) => {
               {i + 1}. {document?.namaDokumen}
             </span>
             <small>
-              diupload :
-              {document?.tglUploadDokumen}
+              diupload :{document?.tglUploadDokumen}
               {/* {moment(document?.tglUploadDokumen).format("DD MMM yyyy hh:mm")} FIX: This line will be update after BE converting into UTC clock */}
             </small>
           </div>
