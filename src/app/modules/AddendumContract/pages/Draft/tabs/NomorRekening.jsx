@@ -393,7 +393,7 @@ const NomorRekening = ({
                               ?.bank_statement_file
                           ) {
                             window.open(
-                              `${DEV_NODE}/bank/${add_contract_account_number?.data_bank?.bank_statement_file}`,
+                              `${DEV_NODE}/add_bank/${add_contract_account_number?.data_bank?.bank_statement_file}`,
                               "_blank"
                             );
                           }
