@@ -19,8 +19,6 @@ const NomorRekening = ({
   is_add_account_number,
   add_contract_account_number,
 }) => {
-  console.log(accountNumberBankData, "accountNumberBankData");
-  console.log(add_contract_account_number, "add_contract_account_number");
   const dispatch = useDispatch();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -32,7 +30,7 @@ const NomorRekening = ({
     setAccountNumber(jsonData?.data_bank[num]);
   };
   const [accountNumber, setAccountNumber] = useState(
-    jsonData?.data_bank[bankIndex]
+    jsonData?.data_bank?.length > 0 ? jsonData?.data_bank[bankIndex] : []
   );
   const submitFormParameterAccountNumber = (values) => {
     let data_new = new FormData();
@@ -75,6 +73,7 @@ const NomorRekening = ({
       });
     }
   }, []);
+
   return (
     <div className="bg-white p-10">
       <Formik
@@ -391,10 +390,10 @@ const NomorRekening = ({
                         onClick={() => {
                           if (
                             add_contract_account_number?.data_bank
-                              ?.bank_statement_file !== null
+                              ?.bank_statement_file
                           ) {
                             window.open(
-                              `${DEV_NODE}/${add_contract_account_number?.data_bank?.bank_statement_file}`,
+                              `${DEV_NODE}/bank/${add_contract_account_number?.data_bank?.bank_statement_file}`,
                               "_blank"
                             );
                           }
