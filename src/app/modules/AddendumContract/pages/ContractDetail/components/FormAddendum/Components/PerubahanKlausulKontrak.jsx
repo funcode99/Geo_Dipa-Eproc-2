@@ -14,7 +14,6 @@ const PerubahanKlausulKontrak = ({
   showAddClause,
   showAddContract,
   isDrafting = false,
-  // isDisable,
   isMandatory = false,
   dataNewClauseDrafting,
 }) => {
@@ -73,8 +72,8 @@ const PerubahanKlausulKontrak = ({
   };
 
   const bodyClauseData = !isDrafting
-    ? dataNewClause[fromWhere]?.bodyClauseData?.[0]
-    : dataNewClauseDrafting[fromWhere]?.bodyClauseData?.[0];
+    ? dataNewClause[fromWhere]?.bodyClauseData[0]
+    : dataNewClauseDrafting[fromWhere]?.bodyClauseData[0];
 
   const isDisabled = !isDrafting
     ? !bodyClauseData ||
@@ -643,6 +642,7 @@ const PerubahanKlausulKontrak = ({
                     borderRadius: 4,
                     minWidth: 400,
                   }}
+                  disabled={!isDisable}
                 />
 
                 {item?.attachment_number === "" && isMandatory && index === 0 && (
@@ -671,6 +671,7 @@ const PerubahanKlausulKontrak = ({
                     borderRadius: 4,
                     minWidth: 400,
                   }}
+                  disabled={!isDisable}
                 />
                 {item?.clause_note === "" && isMandatory && index === 0 && (
                   <p>
@@ -746,9 +747,6 @@ const PerubahanKlausulKontrak = ({
 const mapState = ({ addendumContract }) => ({
   dataNewClause: addendumContract.dataNewClause,
   dataNewClauseDrafting: addendumContract.dataNewClauseDrafting,
-  // ini isi local storage nya ternyata ah elah goblok bat sih gue wkwkwkwwkwk
-  // authStatus: auth.user.data.status,
-  // dataContractById: addendumContract.dataContractById,
 });
 
 export default compose(

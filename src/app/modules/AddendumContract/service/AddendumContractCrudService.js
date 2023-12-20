@@ -92,6 +92,21 @@ export function uploadSuppDoc(params, contract_id) {
   return axios.post(`/adendum/add-contracts/${contract_id}/submitted`, params);
 }
 
+export function draftSuppDoc(params, contract_id) {
+  return axios.post(`/adendum/add-contracts/${contract_id}/save-draft`, params);
+}
+
+export function uploadSuppDoc2(params, contract_id) {
+  return axios.post(`/adendum/add-contracts/${contract_id}/submitted2`, params);
+}
+
+export function draftSuppDoc2(params, contract_id) {
+  return axios.post(
+    `/adendum/add-contracts/${contract_id}/save-draft2`,
+    params
+  );
+}
+
 // Tasks
 export function submitTask(values, update) {
   if (update) {

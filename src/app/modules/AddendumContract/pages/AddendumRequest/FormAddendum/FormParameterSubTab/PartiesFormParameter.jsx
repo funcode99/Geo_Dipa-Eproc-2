@@ -26,6 +26,7 @@ const PartiesFormParameter = ({
   contract_id,
   dataNewClause,
   partiesData,
+  isDisable,
 }) => {
   // const [authorizedOfficialIndex, setauthorizedOfficialIndex] = useState(0);
   const dispatch = useDispatch();
@@ -409,9 +410,6 @@ const PartiesFormParameter = ({
         enableReinitialize={true}
         initialValues={{
           official_username:
-            // partiesData?.add_contract_party !== null
-            //   ? partiesData?.add_contract_party?.party_1_autorized_username
-            //   :
             authorizedOfficial[authorizedOfficialIndex]
               ?.authorized_official_username !== null
               ? authorizedOfficial[authorizedOfficialIndex]
@@ -423,9 +421,6 @@ const PartiesFormParameter = ({
                   return newArr;
                 }),
           official_name:
-            // partiesData?.add_contract_party !== null
-            //   ? partiesData?.add_contract_party?.party_1_autorized_name
-            //   :
             authorizedOfficial[authorizedOfficialIndex]
               ?.authorized_official_name !== null
               ? authorizedOfficial[authorizedOfficialIndex]
@@ -550,7 +545,6 @@ const PartiesFormParameter = ({
                   ].authorized_official_sk_kemenkumham_date = "kosong";
                   return newArr;
                 }),
-          // firstAuthorizedOfficial: placeman.firstAuthorizedOfficial,
           jobDirector: placeman.workDirector,
           jobSupervisor: placeman.workSupervisor,
           secondAuthorizedOfficial: placeman?.secondAuthorizedOfficial,
@@ -1149,6 +1143,7 @@ const PartiesFormParameter = ({
                           labelName={`authorized_official_username`}
                           // kalo diganti jadi jalan? kok bisa?
                           nowSelect={authorizedOfficialIndex}
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -1483,13 +1478,15 @@ const PartiesFormParameter = ({
                         Addendum Direksi pekerjaan
                       </h1>
 
-                      <button
-                        type="button"
-                        className="btn btn-primary mx-1"
-                        onClick={showAddWorkDirector}
-                      >
-                        Tambah
-                      </button>
+                      {isDisable === true && (
+                        <button
+                          type="button"
+                          className="btn btn-primary mx-1"
+                          onClick={showAddWorkDirector}
+                        >
+                          Tambah
+                        </button>
+                      )}
                     </div>
 
                     {/* Direksi Pekerjaan */}
@@ -1504,45 +1501,47 @@ const PartiesFormParameter = ({
                                 gap: 14,
                               }}
                             >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: 10,
-                                }}
-                              >
-                                {/* <span>Username</span> */}
+                              {index > 0 && (
                                 <div
                                   style={{
                                     display: "flex",
-                                    justifyContent: "space-between",
+                                    flexDirection: "column",
+                                    gap: 10,
                                   }}
                                 >
-                                  <span>Username</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setPlaceman((placeman) => {
-                                        let data = { ...placeman };
-                                        data.workDirector.splice(index, 1);
-                                        return data;
-                                      });
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
                                     }}
                                   >
-                                    Hapus
-                                  </button>
+                                    <span>Username</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setPlaceman((placeman) => {
+                                          let data = { ...placeman };
+                                          data.workDirector.splice(index, 1);
+                                          return data;
+                                        });
+                                      }}
+                                    >
+                                      Hapus
+                                    </button>
+                                  </div>
+                                  <Field
+                                    name={`jobDirector[${index}].party_1_job_director_username`}
+                                    data={jobDirector}
+                                    func={changeDataJobDirectorDynamic}
+                                    labelName={"username"}
+                                    arrayIndex={index}
+                                    currentSelect={data.usernameSelectIndex}
+                                    type={"username"}
+                                    disabled={!isDisable}
+                                    component={ReactSelect}
+                                  />
                                 </div>
-                                <Field
-                                  name={`jobDirector[${index}].party_1_job_director_username`}
-                                  data={jobDirector}
-                                  func={changeDataJobDirectorDynamic}
-                                  labelName={"username"}
-                                  arrayIndex={index}
-                                  currentSelect={data.usernameSelectIndex}
-                                  type={"username"}
-                                  component={ReactSelect}
-                                />
-                              </div>
+                              )}
 
                               <Field
                                 className="form-control d-none"
@@ -1624,6 +1623,7 @@ const PartiesFormParameter = ({
                                     arrayIndex={index}
                                     currentSelect={data.facilityNameSelectIndex}
                                     type={"facilityName"}
+                                    disabled={!isDisable}
                                     component={ReactSelect}
                                   />
                                 </label>
@@ -1712,16 +1712,16 @@ const PartiesFormParameter = ({
                         Addendum Pengawas pekerjaan
                       </h1>
 
-                      <button
-                        type="button"
-                        className="btn btn-primary mx-1"
-                        onClick={showAddWorkSupervisor}
-                      >
-                        Tambah
-                      </button>
+                      {isDisable === true && (
+                        <button
+                          type="button"
+                          className="btn btn-primary mx-1"
+                          onClick={showAddWorkSupervisor}
+                        >
+                          Tambah
+                        </button>
+                      )}
                     </div>
-
-                    {/* Pengawas Pekerjaan Pihak Pertama */}
 
                     {/* Pengawas Pekerjaan Pihak Pertama */}
                     {placeman.workSupervisor &&
@@ -1743,18 +1743,20 @@ const PartiesFormParameter = ({
                                   }}
                                 >
                                   <span>Jabatan</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setPlaceman((placeman) => {
-                                        let data = { ...placeman };
-                                        data.workSupervisor.splice(index, 1);
-                                        return data;
-                                      });
-                                    }}
-                                  >
-                                    Hapus
-                                  </button>
+                                  {index > 0 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setPlaceman((placeman) => {
+                                          let data = { ...placeman };
+                                          data.workSupervisor.splice(index, 1);
+                                          return data;
+                                        });
+                                      }}
+                                    >
+                                      Hapus
+                                    </button>
+                                  )}
                                 </div>
                                 <Field
                                   type="text"
@@ -1763,6 +1765,7 @@ const PartiesFormParameter = ({
                                   onChange={(e) =>
                                     changeDataPosition(index, e.target.value)
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -1784,7 +1787,7 @@ const PartiesFormParameter = ({
                                   labelName={"address"}
                                   arrayIndex={index}
                                   currentSelect={data.currentIndex}
-                                  // type={"jobSupervisor"}
+                                  disabled={!isDisable}
                                   component={ReactSelect}
                                 />
                               </label>
@@ -2412,6 +2415,7 @@ const PartiesFormParameter = ({
                           }
                           func={changeDataSecondAuthorizedOfficial}
                           labelName={"full_name"}
+                          disabled={!isDisable}
                           component={ReactSelect}
                         />
                       </label>
@@ -2455,6 +2459,7 @@ const PartiesFormParameter = ({
                               "Address"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2497,6 +2502,7 @@ const PartiesFormParameter = ({
                               "FAX"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2527,6 +2533,7 @@ const PartiesFormParameter = ({
                                 "SK ASSIGN NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2539,6 +2546,7 @@ const PartiesFormParameter = ({
                                 "SK ASSIGN DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2563,6 +2571,7 @@ const PartiesFormParameter = ({
                               "NOTARY NAME"
                             )
                           }
+                          disabled={!isDisable}
                         />
                       </label>
                     </div>
@@ -2593,6 +2602,7 @@ const PartiesFormParameter = ({
                                 "ACT NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2605,6 +2615,7 @@ const PartiesFormParameter = ({
                                 "ACT DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2636,6 +2647,7 @@ const PartiesFormParameter = ({
                                 "SK KEMENKUMHAM NUMBER"
                               )
                             }
+                            disabled={!isDisable}
                           />
                           -
                           <Field
@@ -2648,6 +2660,7 @@ const PartiesFormParameter = ({
                                 "SK KEMENKUMHAM DATE"
                               )
                             }
+                            disabled={!isDisable}
                           />
                         </div>
                       </label>
@@ -2667,7 +2680,7 @@ const PartiesFormParameter = ({
                           data={PICData}
                           func={changeDataSecondAuthorizedOfficialPICEmail}
                           labelName={"email"}
-                          // currentSelect={data.usernameSelectIndex}
+                          disabled={!isDisable}
                           component={ReactSelect}
                         />
                       </label>
@@ -2696,13 +2709,15 @@ const PartiesFormParameter = ({
                       >
                         Addendum Direksi pekerjaan
                       </h1>
-                      <button
-                        type="button"
-                        className="btn btn-primary mx-1"
-                        onClick={showAddSecondWorkDirector}
-                      >
-                        Tambah
-                      </button>
+                      {isDisable === true && (
+                        <button
+                          type="button"
+                          className="btn btn-primary mx-1"
+                          onClick={showAddSecondWorkDirector}
+                        >
+                          Tambah
+                        </button>
+                      )}
                     </div>
                     {/* addendum direksi pekerjaan pihak kedua */}
                     {placeman.secondWorkDirector &&
@@ -2724,21 +2739,23 @@ const PartiesFormParameter = ({
                                   }}
                                 >
                                   <span>Jabatan</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setPlaceman((placeman) => {
-                                        let data = { ...placeman };
-                                        data.secondWorkDirector.splice(
-                                          index,
-                                          1
-                                        );
-                                        return data;
-                                      });
-                                    }}
-                                  >
-                                    Hapus
-                                  </button>
+                                  {index > 0 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setPlaceman((placeman) => {
+                                          let data = { ...placeman };
+                                          data.secondWorkDirector.splice(
+                                            index,
+                                            1
+                                          );
+                                          return data;
+                                        });
+                                      }}
+                                    >
+                                      Hapus
+                                    </button>
+                                  )}
                                 </div>
 
                                 <Field
@@ -2752,6 +2769,7 @@ const PartiesFormParameter = ({
                                       "Position"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2776,6 +2794,7 @@ const PartiesFormParameter = ({
                                       "Address"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2800,6 +2819,7 @@ const PartiesFormParameter = ({
                                       "Phone"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2824,6 +2844,7 @@ const PartiesFormParameter = ({
                                       "Fax"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2854,13 +2875,15 @@ const PartiesFormParameter = ({
                         Addendum Pengawas pekerjaan
                       </h1>
 
-                      <button
-                        type="button"
-                        className="btn btn-primary mx-1"
-                        onClick={showAddSecondWorkSupervisor}
-                      >
-                        Tambah
-                      </button>
+                      {isDisable === true && (
+                        <button
+                          type="button"
+                          className="btn btn-primary mx-1"
+                          onClick={showAddSecondWorkSupervisor}
+                        >
+                          Tambah
+                        </button>
+                      )}
                     </div>
 
                     {placeman.secondWorkSupervisor &&
@@ -2882,21 +2905,23 @@ const PartiesFormParameter = ({
                                   }}
                                 >
                                   <span>Jabatan</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setPlaceman((placeman) => {
-                                        let data = { ...placeman };
-                                        data.secondWorkSupervisor.splice(
-                                          index,
-                                          1
-                                        );
-                                        return data;
-                                      });
-                                    }}
-                                  >
-                                    Hapus
-                                  </button>
+                                  {index > 0 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setPlaceman((placeman) => {
+                                          let data = { ...placeman };
+                                          data.secondWorkSupervisor.splice(
+                                            index,
+                                            1
+                                          );
+                                          return data;
+                                        });
+                                      }}
+                                    >
+                                      Hapus
+                                    </button>
+                                  )}
                                 </div>
                                 <Field
                                   type="text"
@@ -2909,6 +2934,7 @@ const PartiesFormParameter = ({
                                       "Position"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2933,6 +2959,7 @@ const PartiesFormParameter = ({
                                       "Address"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2957,6 +2984,7 @@ const PartiesFormParameter = ({
                                       "Phone"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2981,6 +3009,7 @@ const PartiesFormParameter = ({
                                       "Fax"
                                     )
                                   }
+                                  disabled={!isDisable}
                                 />
                               </label>
                             </div>
@@ -2999,6 +3028,7 @@ const PartiesFormParameter = ({
               fromWhere={"parties"}
               values={values}
               isMandatory={true}
+              isDisable={isDisable}
             />
 
             <UpdateButton fromWhere={"parties"} />

@@ -908,23 +908,25 @@ export const DraftRequestPage = ({
         </div>
       )}
 
-      <Link to={"/client/addendum-contract/draft/" + contract_id}>
-        <button
-          style={{
-            color: "white",
-            fontSize: 14,
-            fontWeight: "400",
-            padding: "8px 14px",
-            borderRadius: "8px",
-            backgroundColor: "#8c8a8a",
-            outline: "none",
-            border: "none",
-            marginBottom: 28,
-          }}
-        >
-          Lihat Detail Addendum
-        </button>
-      </Link>
+      {tabDisableLists?.status_code >= 35 && (
+        <Link to={"/client/addendum-contract/draft/" + contract_id}>
+          <button
+            style={{
+              color: "white",
+              fontSize: 14,
+              fontWeight: "400",
+              padding: "8px 14px",
+              borderRadius: "8px",
+              backgroundColor: "#8c8a8a",
+              outline: "none",
+              border: "none",
+              marginBottom: 28,
+            }}
+          >
+            Lihat Detail Addendum
+          </button>
+        </Link>
+      )}
 
       <div
         style={{
