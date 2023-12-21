@@ -15,7 +15,7 @@ import { fetch_api_sg } from "redux/globalReducer";
 import * as addendumContract from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 import DialogGlobal from "app/components/modals/DialogGlobal";
-import TabsAddendum from "./Components/Tabs";
+import TabsAddendum from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/Components/Tabs";
 import useToast from "app/components/toast/index";
 import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
@@ -331,10 +331,6 @@ export const DraftRequestPage = ({
       onSuccess: (res) => {
         console.log("apakah menarik data", res?.data);
         setJsonData(res?.data);
-        localStorage.setItem(
-          "payment_method",
-          JSON.stringify(res?.data?.payment_method_data)
-        );
         setDataArr({
           id: res.data.id,
           contract_no: res?.data?.contract_no,
@@ -362,6 +358,10 @@ export const DraftRequestPage = ({
           // addendum_percentage: res.data.addendum_percentage,
           // conclusion: res.data.conclusion,
         });
+        localStorage.setItem(
+          "payment_method",
+          JSON.stringify(res?.data?.payment_method_data)
+        );
         localStorage.setItem(
           "fine",
           JSON.stringify(res?.data?.penalty_fine_data)
@@ -408,10 +408,6 @@ export const DraftRequestPage = ({
       },
     });
   };
-
-  // if (res?.data?.is_add_parties === true) {
-  //   setCheckedInitialValues([...checkedInitialValues, "parties"]);
-  // }
 
   const getauthorizedOfficial = async () => {
     fetch_api_sg({
@@ -1074,7 +1070,6 @@ export const DraftRequestPage = ({
           initialData={initialData}
           getDataList={tabDisableLists}
           conclusion={tabDisableLists?.conclusion}
-          // isAddJobPrice={localStorage.getItem("isAddJobPrice")}
         />
       )}
     </React.Fragment>

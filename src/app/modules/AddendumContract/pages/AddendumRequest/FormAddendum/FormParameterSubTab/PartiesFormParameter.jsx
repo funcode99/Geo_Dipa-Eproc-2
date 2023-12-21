@@ -202,12 +202,15 @@ const PartiesFormParameter = ({
       setPlaceman((placeman) => {
         let newArr = [...placeman.workSupervisor];
         newArr[arrIndex]["currentIndex"] = num;
-        newArr[arrIndex]["party_1_job_supervisor_address"] =
-          jobSupervisor2[num]?.address;
-        newArr[arrIndex]["party_1_job_supervisor_telp"] =
-          jobSupervisor2[num]?.phone;
-        newArr[arrIndex]["party_1_job_supervisor_fax"] =
-          jobSupervisor2[num]?.fax;
+        newArr[arrIndex]["party_1_job_supervisor_address"] = jobSupervisor2
+          ? jobSupervisor2[num]?.address
+          : "";
+        newArr[arrIndex]["party_1_job_supervisor_telp"] = jobSupervisor2
+          ? jobSupervisor2[num]?.phone
+          : "";
+        newArr[arrIndex]["party_1_job_supervisor_fax"] = jobSupervisor2
+          ? jobSupervisor2[num]?.fax
+          : "";
         return {
           ...placeman,
           workSupervisor: newArr,
@@ -227,12 +230,15 @@ const PartiesFormParameter = ({
         if (type === "username") {
           let newArr = [...placeman.workDirector];
           newArr[arrIndex]["usernameSelectIndex"] = num;
-          newArr[arrIndex]["party_1_job_director_username"] =
-            data[num]?.username;
-          newArr[arrIndex]["party_1_job_director_fullname"] =
-            data[num]?.full_name;
-          newArr[arrIndex]["party_1_job_director_position"] =
-            data[num]?.position_name;
+          newArr[arrIndex]["party_1_job_director_username"] = data
+            ? data[num]?.username
+            : "";
+          newArr[arrIndex]["party_1_job_director_fullname"] = data
+            ? data[num]?.full_name
+            : "";
+          newArr[arrIndex]["party_1_job_director_position"] = data
+            ? data[num]?.position_name
+            : "";
 
           // jobDirector.splice(num, 1);
 
@@ -244,10 +250,18 @@ const PartiesFormParameter = ({
         if (type === "facilityName") {
           let newArr = [...placeman.workDirector];
           newArr[arrIndex]["facilityNameSelectIndex"] = num;
-          newArr[arrIndex]["facility_name"] = data[num]?.facility_name;
-          newArr[arrIndex]["party_1_job_director_address"] = data[num]?.address;
-          newArr[arrIndex]["party_1_job_director_telp"] = data[num]?.phone;
-          newArr[arrIndex]["party_1_job_director_fax"] = data[num]?.fax;
+          newArr[arrIndex]["facility_name"] = data
+            ? data[num]?.facility_name
+            : "";
+          newArr[arrIndex]["party_1_job_director_address"] = data
+            ? data[num]?.address
+            : "";
+          newArr[arrIndex]["party_1_job_director_telp"] = data
+            ? data[num]?.phone
+            : "";
+          newArr[arrIndex]["party_1_job_director_fax"] = data
+            ? data[num]?.fax
+            : "";
           return {
             ...placeman,
             workDirector: newArr,
@@ -271,9 +285,9 @@ const PartiesFormParameter = ({
     setPlaceman((placeman) => {
       let newArr = [...placeman?.secondAuthorizedOfficial];
       newArr[0]["currentSelectIndex"] = num;
-      newArr[0]["fullname"] = data[num]?.full_name;
-      newArr[0]["position_title"] = data[num]?.position_title;
-      newArr[0]["phone_number"] = data[num]?.phone_number;
+      newArr[0]["fullname"] = data ? data[num]?.full_name : "";
+      newArr[0]["position_title"] = data ? data[num]?.position_title : "";
+      newArr[0]["phone_number"] = data ? data[num]?.phone_number : "";
       return {
         ...placeman,
         secondAuthorizedOfficial: newArr,
@@ -333,7 +347,7 @@ const PartiesFormParameter = ({
   const changeDataSecondAuthorizedOfficialPICEmail = (num, unused, data) => {
     setPlaceman((placeman) => {
       let newArr = [...placeman?.secondAuthorizedOfficial];
-      newArr[0]["PICEmail"] = data[num]?.email;
+      newArr[0]["PICEmail"] = data ? data[num]?.email : "";
       return {
         ...placeman,
         secondAuthorizedOfficial: newArr,
@@ -409,9 +423,9 @@ const PartiesFormParameter = ({
       <Formik
         enableReinitialize={true}
         initialValues={{
-          official_username:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.authorized_official_username !== null
+          official_username: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_username !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_username
               : setAuthorizedOfficial((previous) => {
@@ -419,10 +433,11 @@ const PartiesFormParameter = ({
                   newArr[authorizedOfficialIndex].authorized_official_username =
                     "kosong";
                   return newArr;
-                }),
-          official_name:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.authorized_official_name !== null
+                })
+            : "kosong",
+          official_name: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_name !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_name
               : setAuthorizedOfficial((previous) => {
@@ -430,10 +445,11 @@ const PartiesFormParameter = ({
                   newArr[authorizedOfficialIndex].authorized_official_name =
                     "kosong";
                   return newArr;
-                }),
-          official_position:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.authorized_official_position !== null
+                })
+            : "kosong",
+          official_position: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_position !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_position
               : setAuthorizedOfficial((previous) => {
@@ -441,43 +457,48 @@ const PartiesFormParameter = ({
                   newArr[authorizedOfficialIndex].authorized_official_position =
                     "kosong";
                   return newArr;
-                }),
-          official_address:
-            authorizedOfficial[authorizedOfficialIndex]?.address !== null
+                })
+            : "kosong",
+          official_address: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]?.address !== null
               ? authorizedOfficial[authorizedOfficialIndex]?.address
               : setAuthorizedOfficial((previous) => {
                   let newArr = [...previous];
                   newArr[authorizedOfficialIndex].address = "kosong";
                   return newArr;
-                }),
-          official_phone:
-            authorizedOfficial[authorizedOfficialIndex]?.phone !== null
+                })
+            : "kosong",
+          official_phone: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]?.phone !== null
               ? authorizedOfficial[authorizedOfficialIndex]?.phone
               : setAuthorizedOfficial((previous) => {
                   let newArr = [...previous];
                   newArr[authorizedOfficialIndex].phone = "kosong";
                   return newArr;
-                }),
-          official_fax:
-            authorizedOfficial[authorizedOfficialIndex]?.fax !== null
+                })
+            : "kosong",
+          official_fax: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]?.fax !== null
               ? authorizedOfficial[authorizedOfficialIndex]?.fax
               : setAuthorizedOfficial((previous) => {
                   let newArr = [...previous];
                   newArr[authorizedOfficialIndex].fax = "kosong";
                   return newArr;
-                }),
-          official_assignment_no:
-            authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_no !==
-            null
+                })
+            : "kosong",
+          official_assignment_no: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.assignment_deed_no !== null
               ? authorizedOfficial[authorizedOfficialIndex]?.assignment_deed_no
               : setAuthorizedOfficial((previous) => {
                   let newArr = [...previous];
                   newArr[authorizedOfficialIndex].assignment_deed_no = "kosong";
                   return newArr;
-                }),
-          official_assignment_date:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.assignment_deed_date !== null
+                })
+            : "kosong",
+          official_assignment_date: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.assignment_deed_date !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.assignment_deed_date
               : setAuthorizedOfficial((previous) => {
@@ -485,10 +506,11 @@ const PartiesFormParameter = ({
                   newArr[authorizedOfficialIndex].assignment_deed_date =
                     "kosong";
                   return newArr;
-                }),
-          official_notary:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.name_notary_deed_of_authorized_official !== null
+                })
+            : "kosong",
+          official_notary: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.name_notary_deed_of_authorized_official !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.name_notary_deed_of_authorized_official
               : setAuthorizedOfficial((previous) => {
@@ -497,10 +519,11 @@ const PartiesFormParameter = ({
                     authorizedOfficialIndex
                   ].name_notary_deed_of_authorized_official = "kosong";
                   return newArr;
-                }),
-          official_deed_no:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.authorized_official_deed_no !== null
+                })
+            : "kosong",
+          official_deed_no: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_deed_no !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_deed_no
               : setAuthorizedOfficial((previous) => {
@@ -508,10 +531,11 @@ const PartiesFormParameter = ({
                   newArr[authorizedOfficialIndex].authorized_official_deed_no =
                     "kosong";
                   return newArr;
-                }),
-          official_deed_date:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.authorized_official_deed_date !== null
+                })
+            : "kosong",
+          official_deed_date: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_deed_date !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_deed_date
               : setAuthorizedOfficial((previous) => {
@@ -520,10 +544,11 @@ const PartiesFormParameter = ({
                     authorizedOfficialIndex
                   ].authorized_official_deed_date = "kosong";
                   return newArr;
-                }),
-          official_sk_kemenkumham_no:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.authorized_official_sk_kemenkumham_no !== null
+                })
+            : "kosong",
+          official_sk_kemenkumham_no: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_sk_kemenkumham_no !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_sk_kemenkumham_no
               : setAuthorizedOfficial((previous) => {
@@ -532,10 +557,11 @@ const PartiesFormParameter = ({
                     authorizedOfficialIndex
                   ].authorized_official_sk_kemenkumham_no = "kosong";
                   return newArr;
-                }),
-          official_sk_kemenkumham_date:
-            authorizedOfficial[authorizedOfficialIndex]
-              ?.authorized_official_sk_kemenkumham_date !== null
+                })
+            : "kosong",
+          official_sk_kemenkumham_date: authorizedOfficial
+            ? authorizedOfficial[authorizedOfficialIndex]
+                ?.authorized_official_sk_kemenkumham_date !== null
               ? authorizedOfficial[authorizedOfficialIndex]
                   ?.authorized_official_sk_kemenkumham_date
               : setAuthorizedOfficial((previous) => {
@@ -544,7 +570,8 @@ const PartiesFormParameter = ({
                     authorizedOfficialIndex
                   ].authorized_official_sk_kemenkumham_date = "kosong";
                   return newArr;
-                }),
+                })
+            : "kosong",
           jobDirector: placeman.workDirector,
           jobSupervisor: placeman.workSupervisor,
           secondAuthorizedOfficial: placeman?.secondAuthorizedOfficial,
@@ -1163,8 +1190,10 @@ const PartiesFormParameter = ({
                             backgroundColor: "#e8f4fb",
                           }}
                           value={
-                            authorizedOfficial[authorizedOfficialIndex]
-                              ?.authorized_official_name
+                            authorizedOfficial
+                              ? authorizedOfficial[authorizedOfficialIndex]
+                                  ?.authorized_official_name
+                              : ""
                           }
                           disabled
                         />
@@ -1287,8 +1316,10 @@ const PartiesFormParameter = ({
                             value={
                               // authorizedOfficial
                               //   ?
-                              authorizedOfficial[authorizedOfficialIndex]
-                                ?.assignment_deed_no
+                              authorizedOfficial
+                                ? authorizedOfficial[authorizedOfficialIndex]
+                                    ?.assignment_deed_no
+                                : ""
                               // : setAuthorizedOfficial((previous) => {
                               //     let newArr = [...previous];
                               //     newArr[
@@ -1310,8 +1341,10 @@ const PartiesFormParameter = ({
                               // authorizedOfficial[authorizedOfficialIndex]
                               //       ?.assignment_deed_date
                               //   ?
-                              authorizedOfficial[authorizedOfficialIndex]
-                                ?.assignment_deed_date
+                              authorizedOfficial
+                                ? authorizedOfficial[authorizedOfficialIndex]
+                                    ?.assignment_deed_date
+                                : ""
                               // : setAuthorizedOfficial((previous) => {
                               //     let newArr = [...previous];
                               //     newArr[
@@ -1807,7 +1840,7 @@ const PartiesFormParameter = ({
                                   className="form-control"
                                   name={`jobSupervisor[${index}].party_1_job_supervisor_telp`}
                                   value={
-                                    jobSupervisor
+                                    jobSupervisor2
                                       ? jobSupervisor2[data.currentIndex]?.phone
                                       : null
                                   }
@@ -1831,7 +1864,7 @@ const PartiesFormParameter = ({
                                   className="form-control"
                                   name={`jobSupervisor[${index}].party_1_job_supervisor_fax`}
                                   value={
-                                    jobSupervisor
+                                    jobSupervisor2
                                       ? jobSupervisor2[data.currentIndex]?.fax
                                       : null
                                   }

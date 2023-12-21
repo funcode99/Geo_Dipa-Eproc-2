@@ -10,14 +10,23 @@ const PerubahanKlausulKontrak = ({
   subTitle,
   isDisable,
   fromWhere,
-  dataNewClause,
   showAddClause,
   showAddContract,
   isDrafting = false,
   isMandatory = false,
+  dataNewClause,
   dataNewClauseDrafting,
 }) => {
   const dispatch = useDispatch();
+
+  console.log(
+    "isi fromWhere sekarang",
+    fromWhere,
+    isDrafting,
+    isMandatory,
+    dataNewClause,
+    dataNewClauseDrafting
+  );
 
   const changeOtherBodyClauseData = (fieldIndex, value, fieldType) => {
     let newArr = isDrafting
@@ -187,7 +196,7 @@ const PerubahanKlausulKontrak = ({
                     isDrafting
                       ? dataNewClauseDrafting[fromWhere]?.bodyClauseData
                           ?.clause_number
-                      : dataNewClause[fromWhere].bodyClauseData.clause_number
+                      : dataNewClause[fromWhere]?.bodyClauseData?.clause_number
                   }
                   onChange={(e) =>
                     changeBodyClauseData(e.target.value, "clause number")
@@ -308,158 +317,42 @@ const PerubahanKlausulKontrak = ({
                     rows="4"
                     disabled={!isDisable}
                   />
-                  {isDrafting
-                    ? dataNewClauseDrafting[fromWhere].bodyClauseData
+                  {isDrafting ? (
+                    dataNewClauseDrafting ? (
+                      dataNewClauseDrafting[fromWhere].bodyClauseData
                         .after_clause_note === "" &&
                       isMandatory && (
                         <p>
                           <span style={{ color: "red" }}>*</span>Wajib Diisi
                         </p>
                       )
-                    : dataNewClause[fromWhere].bodyClauseData
-                        .after_clause_note === "" &&
-                      isMandatory && (
-                        <p>
-                          <span style={{ color: "red" }}>*</span>Wajib Diisi
-                        </p>
-                      )}
+                    ) : (
+                      <></>
+                    )
+                  ) : dataNewClause ? (
+                    dataNewClause[fromWhere]?.bodyClauseData
+                      ?.after_clause_note === "" &&
+                    isMandatory && (
+                      <></>
+                      // <p>
+                      //   <span style={{ color: "red" }}>*</span>Wajib Diisi
+                      // </p>
+                    )
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </>
           )}
 
-          {/* body kontrak di other */}
-          {fromWhere === "other" &&
-            isDrafting &&
-            dataNewClauseDrafting[fromWhere]?.bodyClauseData?.map(
-              (item, index) => {
-                return (
-                  <>
-                    {/* Nomor Pasal */}
-                    <div>
-                      <Field
-                        type="text"
-                        name={`body_data[${index}].clause_number`}
-                        value={item?.clause_number}
-                        onChange={(e) =>
-                          changeOtherBodyClauseData(
-                            index,
-                            e.target.value,
-                            "clause_number"
-                          )
-                        }
-                        placeholder="Masukkan Nomor Klausul"
-                        style={{
-                          padding: 8,
-                          borderRadius: 4,
-                          minWidth: 400,
-                        }}
-                        disabled={!isDisable}
-                      />
-                      {item.clause_number === "" && index === 0 && isMandatory && (
-                        <p>
-                          <span style={{ color: "red" }}>*</span>Wajib Diisi
-                        </p>
-                      )}
-                    </div>
+          {/* body kontrak di other kondisi drafting */}
 
-                    {/* Pasal */}
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 14,
-                        // marginTop: 28
-                      }}
-                    >
-                      {/* pasal sebelum addendum */}
-                      <div>
-                        <p
-                          style={{
-                            fontWeight: 500,
-                            marginBottom: 14,
-                          }}
-                        >
-                          Pasal Sebelum Addendum
-                        </p>
-                        <Field
-                          className="form-control"
-                          as="textarea"
-                          name={`body_data[${index}].before_clause_note`}
-                          value={item?.before_clause_note}
-                          onChange={(e) =>
-                            changeOtherBodyClauseData(
-                              index,
-                              e.target.value,
-                              "before_clause_note"
-                            )
-                          }
-                          placeholder="Masukkan Klausul Kontrak"
-                          style={{
-                            padding: 8,
-                            borderRadius: 4,
-                            minWidth: 400,
-                          }}
-                          rows="4"
-                          disabled={!isDisable}
-                        />
-                        {item?.before_clause_note === "" &&
-                          index === 0 &&
-                          isMandatory && (
-                            <p>
-                              <span style={{ color: "red" }}>*</span>Wajib Diisi
-                            </p>
-                          )}
-                      </div>
-
-                      {/* pasal setelah addendum */}
-                      <div>
-                        <p
-                          style={{
-                            fontWeight: 500,
-                            marginBottom: 14,
-                          }}
-                        >
-                          Pasal Setelah Addendum
-                        </p>
-                        <Field
-                          className="form-control"
-                          as="textarea"
-                          name={`body_data[${index}].after_clause_note`}
-                          value={item.after_clause_note}
-                          onChange={(e) =>
-                            changeOtherBodyClauseData(
-                              index,
-                              e.target.value,
-                              "after_clause_note"
-                            )
-                          }
-                          placeholder="Masukkan Klausul Kontrak"
-                          style={{
-                            padding: 8,
-                            borderRadius: 4,
-                            minWidth: 400,
-                          }}
-                          rows="4"
-                          disabled={!isDisable}
-                        />
-                        {item.after_clause_note === "" &&
-                          index === 0 &&
-                          isMandatory && (
-                            <p>
-                              <span style={{ color: "red" }}>*</span>Wajib Diisi
-                            </p>
-                          )}
-                      </div>
-                    </div>
-                  </>
-                );
-              }
-            )}
-
+          {/* body kontrak di other kondisi bukan drafting */}
           {fromWhere === "other" &&
             !isDrafting &&
-            dataNewClause[fromWhere].bodyClauseData.map((item, index) => {
+            dataNewClause &&
+            dataNewClause[fromWhere]?.bodyClauseData?.map((item, index) => {
               return (
                 <>
                   {/* Nomor Pasal */}
@@ -620,8 +513,10 @@ const PerubahanKlausulKontrak = ({
           </button>
         </div>
 
+        {/* klausul lampiran di other */}
         {isDrafting &&
-          dataNewClauseDrafting[fromWhere].attachmentClauseData.map(
+          dataNewClauseDrafting &&
+          dataNewClauseDrafting[fromWhere]?.attachmentClauseData?.map(
             (item, index) => (
               <>
                 <Field
@@ -683,7 +578,8 @@ const PerubahanKlausulKontrak = ({
           )}
 
         {!isDrafting &&
-          dataNewClause[fromWhere].attachmentClauseData.map((item, index) => (
+          dataNewClause &&
+          dataNewClause[fromWhere]?.attachmentClauseData?.map((item, index) => (
             <>
               <Field
                 onChange={(e) =>

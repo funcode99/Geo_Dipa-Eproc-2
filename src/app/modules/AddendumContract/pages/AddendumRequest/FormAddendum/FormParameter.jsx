@@ -2215,7 +2215,7 @@ const FormParameter = ({
                             </TableBody>
                             {addendumFine !== null && (
                               <TableBody>
-                                {addendumFine.map((row, index) => (
+                                {addendumFine?.map((row, index) => (
                                   <TableRow
                                     key={row.name}
                                     sx={{

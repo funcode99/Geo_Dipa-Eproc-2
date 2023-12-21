@@ -39,13 +39,13 @@ function RootClientAddendum() {
         exact={true}
       />
       <Route
-        path="/client/addendum-contract/approval/:approval_id"
-        component={UserApprovalAddendumPage}
+        path="/client/addendum-contract/draft/:draft_id"
+        component={DraftAddendumPage}
         exact={true}
       />
       <Route
-        path="/client/addendum-contract/draft/:draft_id"
-        component={DraftAddendumPage}
+        path="/client/addendum-contract/approval/:contract_id/:addendum_id"
+        component={UserApprovalAddendumPage}
         exact={true}
       />
       <Route

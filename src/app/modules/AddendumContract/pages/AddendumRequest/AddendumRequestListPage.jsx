@@ -228,11 +228,10 @@ export const AddendumRequestListPage = ({
                       },
                     },
                   },
-                  ,
                   {
                     label: "CONTRACT.TABLE_ACTION.APPROVAL_REQUEST",
                     to: {
-                      url: `/${status}/addendum-contract/approval/${item.contract_id}`,
+                      url: `/${status}/addendum-contract/approval/${item.contract_id}/${item.id}`,
                       style: {
                         color: "black",
                       },
