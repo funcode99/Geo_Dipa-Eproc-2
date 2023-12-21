@@ -636,7 +636,10 @@ const FormParameter = ({
     );
   };
 
-  const [fine, setFine] = useState(JSON.parse(localStorage.getItem("fine")));
+  const [fine, setFine] = useState(
+    // JSON.parse(localStorage.getItem("fine"))
+    tabDisableLists?.add_contract_fine
+  );
   const [addendumFine, setAddendumFine] = useState(
     tabDisableLists?.add_contract_fine
   );

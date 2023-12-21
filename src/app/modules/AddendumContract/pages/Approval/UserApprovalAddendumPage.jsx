@@ -668,7 +668,7 @@ const UserApprovalAddendumPage = ({
                       <a
                         onClick={() =>
                           window.open(
-                            `${API_EPROC}/${item?.fileDokumen}`,
+                            `${DEV_NODE}/support_document/${item?.fileDokumen}`,
                             "_blank"
                           )
                         }
