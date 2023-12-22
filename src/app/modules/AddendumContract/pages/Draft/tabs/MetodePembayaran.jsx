@@ -336,6 +336,7 @@ const MetodePembayaran = ({
                                     return data;
                                   });
                                 }}
+                                disabled={isDisable}
                               >
                                 Hapus
                               </button>
@@ -367,7 +368,8 @@ const MetodePembayaran = ({
                                     )
                                   }
                                   disabled={
-                                    addendumPaymentMethod !== "gradually"
+                                    addendumPaymentMethod !== "gradually" ||
+                                    isDisable
                                   }
                                 />
                               </div>
@@ -394,7 +396,8 @@ const MetodePembayaran = ({
                                     )
                                   }
                                   disabled={
-                                    addendumPaymentMethod !== "gradually"
+                                    addendumPaymentMethod !== "gradually" ||
+                                    isDisable
                                   }
                                 ></textarea>
                               </div>
