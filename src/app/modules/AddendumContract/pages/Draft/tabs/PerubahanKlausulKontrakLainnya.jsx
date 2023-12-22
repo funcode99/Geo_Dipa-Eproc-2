@@ -62,9 +62,6 @@ const PerubahanKlausulKontrakLainnya = ({
     bodyClauseData.before_clause_note === "" ||
     bodyClauseData.clause_number === "";
 
-  console.log(bodyClauseData, "bodyClauseData");
-  console.log(isDisable, "isDisable");
-
   return (
     <>
       <div
@@ -123,7 +120,6 @@ const PerubahanKlausulKontrakLainnya = ({
               (item, index) => {
                 return (
                   <>
-                    {console.log(item, "item nya")}
                     <div>
                       <Field
                         type="text"

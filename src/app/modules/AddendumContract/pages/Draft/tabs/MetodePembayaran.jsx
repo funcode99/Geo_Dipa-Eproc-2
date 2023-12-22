@@ -7,6 +7,9 @@ import { submitPaymentMethod } from "app/modules/AddendumContract/service/Addend
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const MetodePembayaran = ({
+  tes,
+  data,
+  isAdmin,
   jsonData,
   isDisable,
   contract_id,

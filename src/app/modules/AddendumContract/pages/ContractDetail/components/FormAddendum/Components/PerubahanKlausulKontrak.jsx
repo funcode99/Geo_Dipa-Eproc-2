@@ -607,7 +607,8 @@ const PerubahanKlausulKontrak = ({
                 ? dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
                     .attachment_number === "" ||
                   dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
-                    .clause_note === ""
+                    .clause_note === "" ||
+                  isDisable
                 : dataNewClause[fromWhere].attachmentClauseData[0]
                     .attachment_number === "" ||
                   dataNewClause[fromWhere].attachmentClauseData[0]
@@ -642,6 +643,7 @@ const PerubahanKlausulKontrak = ({
                     borderRadius: 4,
                     minWidth: 400,
                   }}
+                  disabled={!isDisable}
                 />
 
                 {item?.attachment_number === "" && isMandatory && index === 0 && (
@@ -670,6 +672,7 @@ const PerubahanKlausulKontrak = ({
                     borderRadius: 4,
                     minWidth: 400,
                   }}
+                  disabled={!isDisable}
                 />
                 {item?.clause_note === "" && isMandatory && index === 0 && (
                   <p>
