@@ -636,7 +636,13 @@ const FormParameter = ({
     );
   };
 
-  const [fine, setFine] = useState(JSON.parse(localStorage.getItem("fine")));
+  const [fine, setFine] = useState(
+    // JSON.parse(localStorage.getItem("fine"))
+    tabDisableLists?.add_contract_fine
+  );
+  const [addendumFine, setAddendumFine] = useState(
+    tabDisableLists?.add_contract_fine
+  );
 
   const deleteFine = (id) => {
     setFine(() => {
@@ -1195,7 +1201,7 @@ const FormParameter = ({
                 headerData={headerData}
                 jsonData={jsonData}
                 contract_id={contract_id}
-                isDisable={tabDisableLists?.is_job_price}
+                isDisable={tabDisableLists?.is_add_job_price}
                 jobPriceData={tabDisableLists}
               />
             </>
@@ -2037,7 +2043,7 @@ const FormParameter = ({
 
                   {/* 17:50 13 Desember 2023 */}
                   <PerubahanKlausulKontrak
-                    isDisable={!tabDisableLists?.is_add_payment_method}
+                    isDisable={tabDisableLists?.is_add_payment_method}
                     subTitle={"B"}
                     title={"Metode Pembayaran"}
                     fromWhere={"payment_method"}
@@ -2182,6 +2188,7 @@ const FormParameter = ({
                             >
                               A. Addendum Denda Pekerjaan
                             </h1>
+                            {}
                             <button
                               type="button"
                               className="btn btn-primary"
@@ -2189,6 +2196,7 @@ const FormParameter = ({
                                 maxHeight: 40,
                               }}
                               onClick={showAddFine}
+                              disabled={!tabDisableLists?.is_add_fine}
                             >
                               Denda
                             </button>
@@ -2208,49 +2216,41 @@ const FormParameter = ({
                                 <TableCell align="left">Tipe Nilai</TableCell>
                               </TableRow>
                             </TableBody>
-                            <TableBody>
-                              {fine.map((row, index) => (
-                                <TableRow
-                                  key={row.name}
-                                  sx={{
-                                    "&:last-child td, &:last-child th": {
-                                      border: 0,
-                                    },
-                                  }}
-                                >
-                                  <TableCell component="th">
-                                    {index + 1}
-                                  </TableCell>
-                                  {/* <TableCell align="left" scope="row">
-                                    {row.pinalty_name}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.value}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.max_day}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.value_type}
-                                  </TableCell> */}
-                                  <TableCell align="left" scope="row">
-                                    {row.pinalty_name}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.value}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.max_day}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.type === "1" ? "%" : "Nilai"}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {actionButton(row.id, deleteFine)}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
+                            {addendumFine !== null && (
+                              <TableBody>
+                                {addendumFine?.map((row, index) => (
+                                  <TableRow
+                                    key={row.name}
+                                    sx={{
+                                      "&:last-child td, &:last-child th": {
+                                        border: 0,
+                                      },
+                                    }}
+                                  >
+                                    <TableCell component="th">
+                                      {index + 1}
+                                    </TableCell>
+                                    <TableCell align="left" scope="row">
+                                      {row?.pinalty_name}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      {row?.value}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      {row?.max_day}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      {row?.type === "1" ? "%" : "Nilai"}
+                                    </TableCell>
+                                    {tabDisableLists?.is_add_fine === true && (
+                                      <TableCell align="left">
+                                        {actionButton(row.id, deleteFine)}
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            )}
                           </Table>
                         </TableContainer>
                       </div>
@@ -2263,7 +2263,7 @@ const FormParameter = ({
                       showAddClause={showAddClause}
                       values={values}
                       isMandatory={true}
-                      isDisable={!tabDisableLists?.is_add_fine}
+                      isDisable={tabDisableLists?.is_add_fine}
                       isDrafting={true}
                     />
 
@@ -2831,7 +2831,7 @@ const FormParameter = ({
                         showAddClause={showAddClause}
                         values={values}
                         isMandatory={true}
-                        isDisable={!tabDisableLists?.is_add_guarantee}
+                        isDisable={tabDisableLists?.is_add_guarantee}
                         isDrafting={true}
                       />
 
@@ -3054,6 +3054,9 @@ const FormParameter = ({
                                   data={jsonData?.data_bank}
                                   func={changeDataBankIndex}
                                   labelName={`account_number`}
+                                  disabled={
+                                    !tabDisableLists?.is_add_account_number
+                                  }
                                 />
                               </div>
                               <div
@@ -3221,6 +3224,9 @@ const FormParameter = ({
                                       event.target.files[0]
                                     );
                                   }}
+                                  disabled={
+                                    !tabDisableLists?.is_add_account_number
+                                  }
                                 />
                               </div>
                             </div>
@@ -3236,7 +3242,7 @@ const FormParameter = ({
                         showAddClause={showAddClause}
                         values={values}
                         isMandatory={true}
-                        isDisable={!tabDisableLists?.is_add_account_number}
+                        isDisable={tabDisableLists?.is_add_account_number}
                         isDrafting={true}
                       />
 
@@ -3273,7 +3279,9 @@ const FormParameter = ({
                       values={values}
                       isMandatory={true}
                       isDrafting={true}
-                      // isDisable={!tabDisableLists?.is_add_other}
+                      isDisable={
+                        !tabDisableLists?.other_note !== null ? true : false
+                      }
                     />
 
                     <UpdateButton fromWhere={"other"} />

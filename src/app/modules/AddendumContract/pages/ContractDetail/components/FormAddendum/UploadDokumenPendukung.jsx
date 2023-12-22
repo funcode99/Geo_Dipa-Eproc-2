@@ -102,9 +102,29 @@ const UploadDokumenPendukung = ({
   }, []);
 
   const submitData = (values) => {
+    console.log("isi values saat submit upload", values);
+
     let formDataNew = new FormData();
-    formDataNew.append("drafter_code", values.drafterSelectValue.drafterCode);
-    formDataNew.append("add_drafter", values.drafterSelectValue.addDrafter);
+    if (
+      values.drafterSelectValue === "Supply Chain Management (SCM) Division"
+    ) {
+      formDataNew.append("drafter_code", 1);
+      formDataNew.append("add_drafter", values.drafterSelectValue);
+    } else if (
+      values.drafterSelectValue === "Corporate Legal & Compliance Division"
+    ) {
+      formDataNew.append("drafter_code", 2);
+      formDataNew.append("add_drafter", values.drafterSelectValue);
+    } else if (values.drafterSelectValue === "Pengguna (Direksi Pekerjaan)") {
+      formDataNew.append("drafter_code", 3);
+      formDataNew.append("add_drafter", values.drafterSelectValue);
+    } else {
+      formDataNew.append("drafter_code", 1);
+      formDataNew.append(
+        "add_drafter",
+        "Supply Chain Management (SCM) Division"
+      );
+    }
     if (
       supportingDocument?.data?.some(
         (item) =>
@@ -117,27 +137,43 @@ const UploadDokumenPendukung = ({
     ) {
       alert("Silahkan isi form mandatory yang masih kosong");
     } else {
+      let initValue = 0;
       const a = supportingDocument?.data?.map((item, index) => {
-        formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
-        formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
-        formDataNew.append(`fileDokumen[${index}]`, item.fileDokumenKirim);
-        formDataNew.append(`perihal[${index}]`, item.perihal);
-        formDataNew.append(
-          `idDokumen[${index}]`,
-          typeof item.id === "0" ? null : item.id
-        );
-        formDataNew.append(`seq[${index}]`, item.seq);
-        formDataNew.append(
-          `tipeDokumen[${index}]`,
-          typeof item.document_type === "undefined" ? null : item.document_type
-        );
-        formDataNew.append(`namaDokumen[${index}]`, item.document_name);
-        formDataNew.append(
-          `namaDokumenEng[${index}]`,
-          typeof item.document_name_eng === "undefined"
-            ? null
-            : item.document_name_eng
-        );
+        if (
+          typeof item.noDokumen === "undefined" ||
+          typeof item.tglDokumen === "undefined" ||
+          typeof item.fileDokumenKirim === "undefined" ||
+          typeof item.perihal === "undefined"
+        ) {
+          console.log("kosong");
+        } else {
+          formDataNew.append(`noDokumen[${initValue}]`, item.noDokumen);
+          formDataNew.append(`tglDokumen[${initValue}]`, item.tglDokumen);
+          formDataNew.append(
+            `fileDokumen[${initValue}]`,
+            item.fileDokumenKirim
+          );
+          formDataNew.append(`perihal[${initValue}]`, item.perihal);
+          formDataNew.append(
+            `idDokumen[${initValue}]`,
+            typeof item.id === "0" ? null : item.id
+          );
+          formDataNew.append(`seq[${initValue}]`, item.seq);
+          formDataNew.append(
+            `tipeDokumen[${initValue}]`,
+            typeof item.document_type === "undefined"
+              ? null
+              : item.document_type
+          );
+          formDataNew.append(`namaDokumen[${initValue}]`, item.document_name);
+          formDataNew.append(
+            `namaDokumenEng[${initValue}]`,
+            typeof item.document_name_eng === "undefined"
+              ? null
+              : item.document_name_eng
+          );
+          initValue += 1;
+        }
       });
     }
     uploadSuppDoc(formDataNew, localStorage.getItem("add_contract_id"));
@@ -186,10 +222,7 @@ const UploadDokumenPendukung = ({
             enableReinitialize={true}
             initialValues={{
               supportDocumentData: supportingDocument?.data,
-              drafterSelectValue: {
-                drafterCode: "",
-                addDrafter: "",
-              },
+              drafterSelectValue: "",
             }}
             onSubmit={(values) => {
               submitData(values);
@@ -468,29 +501,38 @@ const UploadDokumenPendukung = ({
                         backgroundColor: "#e8f4fb",
                         borderRadius: 4,
                       }}
-                      value={values.drafterSelectValue.drafterCode}
+                      value={values.drafterSelectValue}
                     >
                       <option
-                        value={{
-                          drafterCode: "Supply Chain Management (SCM) Division",
-                          addDrafter: 1,
-                        }}
+                        value={
+                          // drafterCode:
+                          "Supply Chain Management (SCM) Division"
+                          // ,
+                          // addDrafter: 1,
+                        }
                       >
                         Supply Chain Management (SCM) Division
                       </option>
                       <option
-                        value={{
-                          drafterCode: "Corporate Legal & Compliance Division",
-                          addDrafter: 2,
-                        }}
+                        value={
+                          // {
+                          // drafterCode:
+                          "Corporate Legal & Compliance Division"
+                          // addDrafter: 2,
+                          // }
+                        }
                       >
                         Corporate Legal & Compliance Division
                       </option>
                       <option
-                        value={{
-                          drafterCode: "Pengguna (Direksi Pekerjaan)",
-                          addDrafter: 3,
-                        }}
+                        value={
+                          // {
+                          // drafterCode:
+                          "Pengguna (Direksi Pekerjaan)"
+                          // ,
+                          // addDrafter: 3,
+                          // }
+                        }
                       >
                         Pengguna (Direksi Pekerjaan)
                       </option>

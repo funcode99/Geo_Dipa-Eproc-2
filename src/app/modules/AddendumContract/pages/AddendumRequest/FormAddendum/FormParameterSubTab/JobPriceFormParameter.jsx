@@ -34,6 +34,7 @@ const JobPriceFormParameter = ({
   dataNewClause,
   contract_id,
   jobPriceData,
+  isDisable,
 }) => {
   console.log("isi json data", jsonData);
 
@@ -410,6 +411,7 @@ const JobPriceFormParameter = ({
                         type="button"
                         className="btn btn-primary text-white"
                         onClick={showAddDetail}
+                        disabled={!isDisable}
                       >
                         + Tambah Rincian
                       </button>
@@ -433,6 +435,8 @@ const JobPriceFormParameter = ({
                 fromWhere={"job_price"}
                 values={values}
                 isMandatory={true}
+                isDrafting={true}
+                isDisable={isDisable}
               />
             </div>
 

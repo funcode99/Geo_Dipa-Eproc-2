@@ -406,7 +406,7 @@ const JobPriceFormParameter = ({
                         type="button"
                         className="btn btn-primary text-white"
                         onClick={showAddDetail}
-                        disabled={isDisable}
+                        // disabled={isDisable}
                       >
                         + Tambah Rincian
                       </button>

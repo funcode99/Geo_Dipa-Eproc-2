@@ -15,7 +15,7 @@ import { fetch_api_sg } from "redux/globalReducer";
 import * as addendumContract from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 import DialogGlobal from "app/components/modals/DialogGlobal";
-import TabsAddendum from "./Components/Tabs";
+import TabsAddendum from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/Components/Tabs";
 import useToast from "app/components/toast/index";
 import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
@@ -326,10 +326,6 @@ export const DraftRequestPage = ({
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
         setJsonData(res?.data);
-        localStorage.setItem(
-          "payment_method",
-          JSON.stringify(res?.data?.payment_method_data)
-        );
         setDataArr({
           id: res.data.id,
           contract_no: res?.data?.contract_no,
@@ -357,6 +353,10 @@ export const DraftRequestPage = ({
           // addendum_percentage: res.data.addendum_percentage,
           // conclusion: res.data.conclusion,
         });
+        localStorage.setItem(
+          "payment_method",
+          JSON.stringify(res?.data?.payment_method_data)
+        );
         localStorage.setItem(
           "fine",
           JSON.stringify(res?.data?.penalty_fine_data)
@@ -402,10 +402,6 @@ export const DraftRequestPage = ({
       },
     });
   };
-
-  // if (res?.data?.is_add_parties === true) {
-  //   setCheckedInitialValues([...checkedInitialValues, "parties"]);
-  // }
 
   const getauthorizedOfficial = async () => {
     fetch_api_sg({
@@ -901,23 +897,25 @@ export const DraftRequestPage = ({
         </div>
       )}
 
-      <Link to={"/client/addendum-contract/draft/" + contract_id}>
-        <button
-          style={{
-            color: "white",
-            fontSize: 14,
-            fontWeight: "400",
-            padding: "8px 14px",
-            borderRadius: "8px",
-            backgroundColor: "#8c8a8a",
-            outline: "none",
-            border: "none",
-            marginBottom: 28,
-          }}
-        >
-          Lihat Detail Addendum
-        </button>
-      </Link>
+      {tabDisableLists?.status_code >= 35 && (
+        <Link to={"/client/addendum-contract/draft/" + contract_id}>
+          <button
+            style={{
+              color: "white",
+              fontSize: 14,
+              fontWeight: "400",
+              padding: "8px 14px",
+              borderRadius: "8px",
+              backgroundColor: "#8c8a8a",
+              outline: "none",
+              border: "none",
+              marginBottom: 28,
+            }}
+          >
+            Lihat Detail Addendum
+          </button>
+        </Link>
+      )}
 
       <div
         style={{
@@ -1065,7 +1063,6 @@ export const DraftRequestPage = ({
           initialData={initialData}
           getDataList={tabDisableLists}
           conclusion={tabDisableLists?.conclusion}
-          // isAddJobPrice={localStorage.getItem("isAddJobPrice")}
         />
       )}
     </React.Fragment>

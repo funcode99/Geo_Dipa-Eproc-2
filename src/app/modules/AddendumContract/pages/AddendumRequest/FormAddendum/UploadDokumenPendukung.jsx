@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Paper, makeStyles } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 import { Button } from "react-bootstrap";
-import { uploadSuppDoc } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import {
+  uploadSuppDoc2,
+  draftSuppDoc2,
+} from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -13,10 +16,7 @@ const UploadDokumenPendukung = ({
   conclusion,
   getDataList,
 }) => {
-  // AARRGHGH PASS BY REFERENCE\
-
-  console.log("isi get data list upload", getDataList);
-
+  console.log("isi getDataList", getDataList.add_drafter);
   console.log("isi supportDocumentFetch", supportDocumentFetch);
   supportDocumentFetch.map((item) => {
     if (
@@ -43,6 +43,9 @@ const UploadDokumenPendukung = ({
       item.required = false;
     }
   });
+
+  console.log("isi document data", getDataList?.add_support_document_data);
+
   const [supportingDocument, setSupportingDocument] = useState({
     data: getDataList?.add_support_document_data,
   });
@@ -104,61 +107,105 @@ const UploadDokumenPendukung = ({
         };
       });
     }
+    const fill = getDataList?.add_support_document_data.map((item) => {
+      item.isChangeFile = false;
+    });
   }, []);
 
   const submitData = (values) => {
-    console.log("isi values saat submit upload", supportingDocument?.data);
-    let formDataNew = new FormData();
-    formDataNew.append("drafter_code", values.drafterSelectValue.drafterCode);
-    formDataNew.append("add_drafter", values.drafterSelectValue.addDrafter);
+    // let formDataNew = new FormData();
+    let formDataNew;
     if (
-      supportingDocument?.data?.some(
-        (item) =>
-          item.required === true &&
-          (typeof item.noDokumen === "undefined" ||
-            typeof item.tglDokumen === "undefined" ||
-            typeof item.fileDokumenKirim === "undefined" ||
-            typeof item.perihal === "undefined")
-      )
+      values.drafterSelectValue === "Supply Chain Management (SCM) Division"
     ) {
-      alert("Silahkan isi form mandatory yang masih kosong");
+      // formDataNew.append("drafter_code", 1);
+      // formDataNew.append("add_drafter", values.drafterSelectValue);
+      formDataNew = {
+        drafter_code: 1,
+        add_drafter: values.drafterSelectValue,
+      };
+    } else if (
+      values.drafterSelectValue === "Corporate Legal & Compliance Division"
+    ) {
+      // formDataNew.append("drafter_code", 2);
+      // formDataNew.append("add_drafter", values.drafterSelectValue);
+      formDataNew = {
+        drafter_code: 2,
+        add_drafter: values.drafterSelectValue,
+      };
+    } else if (values.drafterSelectValue === "Pengguna (Direksi Pekerjaan)") {
+      // formDataNew.append("drafter_code", 3);
+      // formDataNew.append("add_drafter", values.drafterSelectValue);
+      formDataNew = {
+        drafter_code: 3,
+        add_drafter: values.drafterSelectValue,
+      };
     } else {
-      let a = supportingDocument?.data?.map((item, index) => {
-        if (
-          typeof item.noDokumen === "undefined" ||
-          typeof item.tglDokumen === "undefined" ||
-          typeof item.fileDokumenKirim === "undefined" ||
-          typeof item.perihal === "undefined"
-        ) {
-          console.log("kosong");
-        } else {
-          formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
-          formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
-          formDataNew.append(`fileDokumen[${index}]`, item.fileDokumenKirim);
-          formDataNew.append(`perihal[${index}]`, item.perihal);
-          formDataNew.append(
-            `idDokumen[${index}]`,
-            typeof item.id === "0" ? null : item.id
-          );
-          formDataNew.append(`seq[${index}]`, item.seq);
-          formDataNew.append(
-            `tipeDokumen[${index}]`,
-            typeof item.document_type === "undefined"
-              ? null
-              : item.document_type
-          );
-          formDataNew.append(`namaDokumen[${index}]`, item.document_name);
-          formDataNew.append(
-            `namaDokumenEng[${index}]`,
-            typeof item.document_name_eng === "undefined"
-              ? null
-              : item.document_name_eng
-          );
-        }
-      });
+      // formDataNew.append("drafter_code", 1);
+      // formDataNew.append(
+      //   "add_drafter",
+      //   "Supply Chain Management (SCM) Division"
+      // );
+      formDataNew = {
+        drafter_code: 1,
+        add_drafter: "Supply Chain Management (SCM) Division",
+      };
     }
 
-    uploadSuppDoc(formDataNew, localStorage.getItem("add_contract_id"));
+    // if (
+    //   supportingDocument?.data?.some(
+    //     (item) =>
+    //       item.required === true &&
+    //       (typeof item.noDokumen === "undefined" ||
+    //         typeof item.tglDokumen === "undefined" ||
+    //         typeof item.fileDokumenKirim === "undefined" ||
+    //         typeof item.perihal === "undefined")
+    //   )
+    // ) {
+    //   alert("Silahkan isi form mandatory yang masih kosong");
+    // } else {
+    //   let initValue = 0;
+    //   const a = supportingDocument?.data?.map((item, index) => {
+    //     if (
+    //       typeof item.noDokumen === "undefined" ||
+    //       typeof item.tglDokumen === "undefined" ||
+    //       typeof item.fileDokumenKirim === "undefined" ||
+    //       typeof item.perihal === "undefined"
+    //     ) {
+    //       console.log("kosong");
+    //     } else {
+    //       formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
+    //       formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
+    //       formDataNew.append(`fileDokumen[${index}]`, item.fileDokumenKirim);
+    //       formDataNew.append(`perihal[${index}]`, item.perihal);
+    //       formDataNew.append(
+    //         `idDokumen[${index}]`,
+    //         typeof item.id === "0" ? null : item.id
+    //       );
+    //       formDataNew.append(`seq[${index}]`, item.seq);
+    //       formDataNew.append(
+    //         `tipeDokumen[${index}]`,
+    //         typeof item.document_type === "undefined"
+    //           ? null
+    //           : item.document_type
+    //       );
+    //       formDataNew.append(`namaDokumen[${index}]`, item.document_name);
+    //       formDataNew.append(
+    //         `namaDokumenEng[${index}]`,
+    //         typeof item.document_name_eng === "undefined"
+    //           ? null
+    //           : item.document_name_eng
+    //       );
+    //       initValue += 1;
+    //     }
+    //   });
+    // }
+
+    if (values.type === "Submit") {
+      uploadSuppDoc2(formDataNew, getDataList?.id);
+    } else {
+      draftSuppDoc2(formDataNew, getDataList?.id);
+    }
   };
   function resizeTextArea(textarea) {
     const { style } = textarea;
@@ -204,10 +251,8 @@ const UploadDokumenPendukung = ({
             enableReinitialize={true}
             initialValues={{
               supportDocumentData: supportingDocument?.data,
-              drafterSelectValue: {
-                drafterCode: "",
-                addDrafter: "",
-              },
+              drafterSelectValue: getDataList.add_drafter || "",
+              type: "Submit",
             }}
             onSubmit={(values) => {
               submitData(values);
@@ -334,6 +379,7 @@ const UploadDokumenPendukung = ({
                                     padding: 8,
                                     width: "100%",
                                   }}
+                                  disabled
                                 />
                               </div>
                               <div
@@ -366,6 +412,7 @@ const UploadDokumenPendukung = ({
                                     padding: 8,
                                     width: "100%",
                                   }}
+                                  disabled
                                 />
                               </div>
                               <div
@@ -373,15 +420,80 @@ const UploadDokumenPendukung = ({
                                   flex: 1,
                                 }}
                               >
-                                <p
+                                <div
                                   style={{
-                                    marginBottom: 4,
+                                    display: "flex",
+                                    justifyContent: "space-between",
                                   }}
                                 >
-                                  Upload Dokumen
-                                </p>
+                                  <p
+                                    style={{
+                                      marginBottom: 0,
+                                    }}
+                                  >
+                                    Upload Dokumen
+                                  </p>
+                                  <div>
+                                    {/* {!item.isChangeFile && (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setFieldValue(
+                                            `supportDocumentData[${index}].isChangeFile`,
+                                            (supportingDocument.data[
+                                              index
+                                            ].isChangeFile = !supportingDocument
+                                              .data[index].isChangeFile)
+                                          );
+                                        }}
+                                      >
+                                        Ganti file
+                                      </button>
+                                    )} */}
+                                    {/* {item.isChangeFile && (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setFieldValue(
+                                            `supportDocumentData[${index}].isChangeFile`,
+                                            (supportingDocument.data[
+                                              index
+                                            ].isChangeFile = !supportingDocument
+                                              .data[index].isChangeFile)
+                                          );
+                                        }}
+                                      >
+                                        Batal
+                                      </button>
+                                    )} */}
+                                  </div>
+                                </div>
+                                {/* {item.isChangeFile && (
+                                  <input
+                                    type="file"
+                                    style={{
+                                      border: 1,
+                                      borderColor: "black",
+                                      borderStyle: "solid",
+                                      borderRadius: 4,
+                                      padding: 8,
+                                      width: "100%",
+                                    }}
+                                    onChange={(event) => {
+                                      setFieldValue(
+                                        `supportDocumentData[${index}].fileDokumen`,
+                                        event.currentTarget.files[0]
+                                      );
+                                      setNewDocumentValue(
+                                        index,
+                                        event.currentTarget.files[0],
+                                        "fileDokumenKirim"
+                                      );
+                                    }}
+                                  />
+                                )} */}
                                 <input
-                                  type="file"
+                                  type="text"
                                   style={{
                                     border: 1,
                                     borderColor: "black",
@@ -390,21 +502,8 @@ const UploadDokumenPendukung = ({
                                     padding: 8,
                                     width: "100%",
                                   }}
-                                  // value={
-                                  //   supportingDocument.data[index]
-                                  //     .fileDokumen || ""
-                                  // }
-                                  onChange={(event) => {
-                                    setFieldValue(
-                                      `supportDocumentData[${index}].fileDokumen`,
-                                      event.currentTarget.files[0]
-                                    );
-                                    setNewDocumentValue(
-                                      index,
-                                      event.currentTarget.files[0],
-                                      "fileDokumenKirim"
-                                    );
-                                  }}
+                                  value={item.fileDokumen}
+                                  disabled
                                 />
                               </div>
                             </div>
@@ -436,6 +535,7 @@ const UploadDokumenPendukung = ({
                                     width: "100%",
                                     padding: 8,
                                   }}
+                                  disabled
                                 />
                               </div>
                             </div>
@@ -487,7 +587,7 @@ const UploadDokumenPendukung = ({
                         backgroundColor: "#e8f4fb",
                         borderRadius: 4,
                       }}
-                      value={values.drafterSelectValue.drafterCode}
+                      value={values.drafterSelectValue}
                     >
                       <option
                         // style={{
@@ -496,26 +596,29 @@ const UploadDokumenPendukung = ({
                         //   backgroundColor: '#e8f4fb',
                         //   borderRadius: 4
                         // }}
-                        value={{
-                          drafterCode: "Supply Chain Management (SCM) Division",
-                          addDrafter: 1,
-                        }}
+                        value={
+                          // drafterCode:
+                          "Supply Chain Management (SCM) Division"
+                          // addDrafter: 1,
+                        }
                       >
                         Supply Chain Management (SCM) Division
                       </option>
                       <option
-                        value={{
-                          drafterCode: "Corporate Legal & Compliance Division",
-                          addDrafter: 2,
-                        }}
+                        value={
+                          // drafterCode:
+                          "Corporate Legal & Compliance Division"
+                          // addDrafter: 2,
+                        }
                       >
                         Corporate Legal & Compliance Division
                       </option>
                       <option
-                        value={{
-                          drafterCode: "Pengguna (Direksi Pekerjaan)",
-                          addDrafter: 3,
-                        }}
+                        value={
+                          // drafterCode:
+                          "Pengguna (Direksi Pekerjaan)"
+                          // addDrafter: 3,
+                        }
                       >
                         Pengguna (Direksi Pekerjaan)
                       </option>
@@ -531,14 +634,21 @@ const UploadDokumenPendukung = ({
                     }}
                   >
                     <Button
-                      className="text-primary btn btn-white border border-primary"
+                      onClick={() => {
+                        setFieldValue("type", "Draft");
+                      }}
+                      type="submit"
                       style={{
                         minWidth: 100,
                       }}
+                      className="text-primary btn btn-white border border-primary"
                     >
                       Save Draft
                     </Button>
                     <Button
+                      onClick={() => {
+                        setFieldValue("type", "Submit");
+                      }}
                       type="submit"
                       style={{
                         minWidth: 100,

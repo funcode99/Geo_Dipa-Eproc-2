@@ -35,7 +35,7 @@ function RootVendorAddendum(props) {
         exact={true}
       />
       <Route
-        path="/vendor/addendum-contract/approval/:approval_id"
+        path="/vendor/addendum-contract/approval/:contract_id/:addendum_id"
         component={UserApprovalAddendumPage}
         exact={true}
       />

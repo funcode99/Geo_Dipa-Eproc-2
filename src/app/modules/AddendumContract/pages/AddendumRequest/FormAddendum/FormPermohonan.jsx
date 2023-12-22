@@ -787,12 +787,19 @@ const FormPermohonan = (props) => {
                                 className="form-control"
                                 type="text"
                                 // di parseInt auto number jir
-                                value={`${rupiah(
-                                  typeof props?.headerData
-                                    ?.latest_contract_value !== "number"
-                                    ? 0
-                                    : props?.headerData?.latest_contract_value
-                                )}`}
+                                // value={`${rupiah(
+                                //   typeof props?.headerData
+                                //     ?.latest_contract_value !== "number"
+                                //     ? 0
+                                //     : props?.headerData?.latest_contract_value
+                                // )}`}
+                                value={
+                                  props?.getDataList
+                                    ?.latest_addendum_job_price !== null
+                                    ? props?.getDataList
+                                        ?.latest_addendum_job_price
+                                    : rupiah(0)
+                                }
                                 disabled
                               />
                             </div>
@@ -945,7 +952,8 @@ const FormPermohonan = (props) => {
                           <input
                             className="form-control"
                             type="text"
-                            value={`${adnm_percentage}%`}
+                            // value={`${adnm_percentage}%`}
+                            value={`${props?.getDataList?.addendum_percentage}%`}
                             disabled
                           />
                           <input

@@ -204,14 +204,11 @@ const Item = ({ handleClick, status }) => {
 
   const removeFromSubmitItem = (items, type) => {
     const tempSubmitItems = dataSubmitItems;
-    // console.log(items);
-    // console.log(tempSubmitItems);
 
     if (type === "barang") {
       tempSubmitItems.task_items = tempSubmitItems.task_items.filter(
         (item) => item.item_id !== items.id
       );
-      // console.log(tempSubmitItems.task_items);
     }
 
     if (type === "jasa") {
@@ -220,7 +217,6 @@ const Item = ({ handleClick, status }) => {
       );
     }
 
-    // setSubmitItems(tempSubmitItems);
     dispatch({
       type: actionTypes.SetSubmitItemsByContractId,
       payload: tempSubmitItems,
