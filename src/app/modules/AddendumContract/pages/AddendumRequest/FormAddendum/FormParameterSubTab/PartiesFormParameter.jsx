@@ -224,7 +224,6 @@ const PartiesFormParameter = ({
   };
   const changeDataJobDirectorDynamic = (num, arrIndex, data, type) => {
     // berjalan sebanyak banyak nya fungsi yang dipanggil dari react select
-    // console.log("fungsi berjalan di awal");
 
     if (!isSubmit) {
       setPlaceman((placeman) => {
@@ -582,7 +581,6 @@ const PartiesFormParameter = ({
           attachment_data: dataNewClause.parties.attachmentClauseData,
         }}
         onSubmit={(values) => {
-          console.log("isi values parties", values);
           submitFormParameterContractParties(values);
         }}
       >

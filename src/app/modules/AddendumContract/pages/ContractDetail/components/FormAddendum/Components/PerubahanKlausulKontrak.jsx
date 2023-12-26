@@ -628,7 +628,8 @@ const PerubahanKlausulKontrak = ({
                 ? dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
                     .attachment_number === "" ||
                   dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
-                    .clause_note === ""
+                    .clause_note === "" ||
+                  isDisable
                 : dataNewClause[fromWhere].attachmentClauseData[0]
                     .attachment_number === "" ||
                   dataNewClause[fromWhere].attachmentClauseData[0]

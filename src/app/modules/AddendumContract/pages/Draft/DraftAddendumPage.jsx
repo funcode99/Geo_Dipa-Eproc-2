@@ -1815,14 +1815,15 @@ const DraftAddendumPage = ({
             <ParaPihakTab
               isDrafting={true}
               PICData={PICData}
-              isDisable={data?.is_add_parties}
               contract_id={draft_id}
               jobDirector={jobDirector}
               jsonData={dataContractById}
               jobSupervisor={jobSupervisor}
               jobSupervisor2={jobSupervisor2}
+              // isDisable={data?.is_add_parties}
               is_add_parties={data?.is_add_parties}
               authorizedOfficialData={authorizedOfficial}
+              isDisable={!data?.is_add_parties && !isAdmin}
               add_contract_party={data?.add_contract_party}
               secondAuthorizedOfficial={secondAuthorizedOfficial}
             />
@@ -1834,19 +1835,21 @@ const DraftAddendumPage = ({
               currencies={currencies}
               data={dataContractById}
               fromWhere={"job_price"}
-              isDisable={data?.is_add_job_price}
+              // isDisable={data?.is_add_job_price}
               is_add_job_price={data?.is_add_job_price}
+              isDisable={!data?.is_add_job_price && !isAdmin}
               jobPriceCurrent={data?.add_contract_job_price}
             />
           )}
           {tabActive === 3 && (
             <JangkaWaktuTab
-              isDisable={data?.is_add_time_period}
               isAdmin={isAdmin}
               contract_id={draft_id}
               fromWhere={"time_period"}
               dataNewClause={dataNewClause}
               timePeriodData={dataContractById}
+              // isDisable={data?.is_add_time_period}
+              isDisable={!data?.is_add_time_period && !isAdmin}
               is_add_time_period={data?.is_add_time_period}
               timePeriodAddendumCurrent={data?.add_contract_time_period}
               add_contract_time_period={data?.add_contract_time_period}
@@ -1854,12 +1857,16 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 4 && (
             <MetodePembayaranTab
-              jsonData={dataContractById}
+              // isDisable={true}
+              data={data}
+              tes="ini tes"
+              isAdmin={isAdmin}
               contract_id={draft_id}
+              jsonData={dataContractById}
               dataNewClause={dataNewClause}
               fromWhere={"payment_method"}
-              isDisable={!data?.is_add_payment_method && !isAdmin}
               is_add_payment_method={data?.is_add_payment_method}
+              isDisable={!data?.is_add_payment_method || !isAdmin}
               paymentMethodCurrent={data?.add_contract_payment_method}
               add_contract_payment_method={data?.add_contract_payment_method}
             />
@@ -1872,6 +1879,7 @@ const DraftAddendumPage = ({
               dataNewClause={dataNewClause}
               is_add_fine={data?.is_add_fine}
               fineCurrent={data?.add_contract_fine}
+              isDisable={!data?.is_add_fine && !isAdmin}
             />
           )}
           {tabActive === 6 && (
@@ -1884,7 +1892,7 @@ const DraftAddendumPage = ({
               fromWhere={"guarantee"}
               is_add_guarantee={data?.is_add_guarantee}
               dataNewClauseDrafting={dataNewClauseDrafting}
-              isDisable={!data?.is_add_guarantee && !isAdmin}
+              isDisable={!data?.is_add_guarantee || !isAdmin}
               guaranteeCurrent={data?.add_contract_guarantee}
               add_contract_guarantee={data?.add_contract_guarantee}
             />
@@ -1895,7 +1903,7 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
               accountNumberBankData={accountNumberBankData}
-              isDisable={!data?.is_add_account_number && !isAdmin}
+              isDisable={!data?.is_add_account_number || !isAdmin}
               is_add_account_number={!data?.is_add_account_number}
               accountNumberCurrent={data?.add_contract_account_number}
               add_contract_account_number={data?.add_contract_account_number}
@@ -1911,7 +1919,7 @@ const DraftAddendumPage = ({
               dataNewClause={dataNewClause}
               is_add_other={data?.is_add_other}
               otherCurrent={data?.add_contract_others}
-              isDisable={!data?.is_add_other && !isAdmin}
+              isDisable={!data?.is_add_other || !isAdmin}
               add_contract_others={data?.add_contract_others}
             />
           )}

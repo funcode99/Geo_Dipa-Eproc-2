@@ -7,6 +7,9 @@ import { submitPaymentMethod } from "app/modules/AddendumContract/service/Addend
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 
 const MetodePembayaran = ({
+  tes,
+  data,
+  isAdmin,
   jsonData,
   isDisable,
   contract_id,
@@ -333,6 +336,7 @@ const MetodePembayaran = ({
                                     return data;
                                   });
                                 }}
+                                disabled={isDisable}
                               >
                                 Hapus
                               </button>
@@ -364,7 +368,8 @@ const MetodePembayaran = ({
                                     )
                                   }
                                   disabled={
-                                    addendumPaymentMethod !== "gradually"
+                                    addendumPaymentMethod !== "gradually" ||
+                                    isDisable
                                   }
                                 />
                               </div>
@@ -391,7 +396,8 @@ const MetodePembayaran = ({
                                     )
                                   }
                                   disabled={
-                                    addendumPaymentMethod !== "gradually"
+                                    addendumPaymentMethod !== "gradually" ||
+                                    isDisable
                                   }
                                 ></textarea>
                               </div>

@@ -111,8 +111,7 @@ export const DraftRequestPage = ({
     fetch: "get-data-contracts-header",
   };
 
-  // gak ada isi nya
-  // console.log('isi data contract by id di delivery monitoring', dataContractById)
+  // gak ada isi nyadataContractById)
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, addendum_id, tab: forceTabActive } = useParams();
@@ -205,9 +204,8 @@ export const DraftRequestPage = ({
     },
   ]);
   const [checkedInitialValues, setCheckedInitialValues] = useState([]);
-  useEffect(() => {
-    console.log("checked initial values", checkedInitialValues);
-  }, [checkedInitialValues]);
+  // useEffect(() => {
+  // }, [checkedInitialValues]);
   const [timePeriodData, setTimePeriodData] = useState();
   const [initialData, setInitialData] = useState();
 
@@ -303,7 +301,6 @@ export const DraftRequestPage = ({
   // sengaja dikasih event biar yang diambil value nya
   function handleChangeTab(event, newTabActive) {
     // isi nya urutan angka array sesuai dengan yang di klik
-    console.log("isi newTabActive", newTabActive);
     setTabActive(newTabActive);
   }
 
@@ -317,7 +314,6 @@ export const DraftRequestPage = ({
       // url: `/adendum/contract-final-draft/${contract_id}/show`,
       url: `/adendum/contract-final-draft/d086f59c-838a-440f-a262-d8f21f8fc4e1/show`,
       onSuccess: (res) => {
-        console.log("isi respon 2.23", res.data);
         setFinalDraftData(res.data);
       },
     });
@@ -329,7 +325,6 @@ export const DraftRequestPage = ({
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
-        console.log("apakah menarik data", res?.data);
         setJsonData(res?.data);
         setDataArr({
           id: res.data.id,
@@ -402,7 +397,6 @@ export const DraftRequestPage = ({
       type: "get",
       url: `/adendum/add-contracts/${addendum_id}`,
       onSuccess: (res) => {
-        console.log("apakah menarik data", res?.data);
         setTabDisableLists(res?.data);
         setStepper(res?.data?.steppers);
       },
@@ -441,7 +435,6 @@ export const DraftRequestPage = ({
       type: "get",
       url: `/adendum/direksi-pekerjaan`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setJobDirector(res.data);
       },
     });

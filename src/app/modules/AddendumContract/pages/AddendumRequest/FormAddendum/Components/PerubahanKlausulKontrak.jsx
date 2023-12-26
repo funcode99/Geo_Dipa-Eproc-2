@@ -17,7 +17,6 @@ const PerubahanKlausulKontrak = ({
   isDrafting = false,
 }) => {
   const dispatch = useDispatch();
-  console.log("current fromWhere", fromWhere);
 
   const changeOtherBodyClauseData = (fieldIndex, value, fieldType) => {
     let newArr = isDrafting
