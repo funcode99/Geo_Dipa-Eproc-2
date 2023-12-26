@@ -92,12 +92,16 @@ const FormParameter = ({
   dataNewClause,
   dataNewClauseDrafting,
   tabDisableLists,
+  disableUpdate = false,
+  fromApproval = false,
+  selectedTabLists,
 }) => {
   // console.log("isi pihak kedua", secondAuthorizedOfficial);
   // console.log("isi auth official", authorizedOfficial);
   // console.log("isi direksi pekerjaan", jobDirector);
   // console.log("isi pengawas pekerjaan", jobSupervisor);
   // console.log("isi jsonData", jsonData);
+  console.log("selectedTabLists", selectedTabLists);
 
   const bodyClauseDataTemplate = {
     clause_number: "",
@@ -258,9 +262,9 @@ const FormParameter = ({
     if (tabDisableLists?.add_contract_others !== null) {
       dispatch({
         type: actionTypes.SetRequestClause,
-        payload:
-          tabDisableLists?.add_contract_others?.body_clause_data ||
+        payload: tabDisableLists?.add_contract_others?.body_clause_data || [
           bodyClauseDataTemplate,
+        ],
 
         fieldType: "refill_body_clause_data",
         fromWhere: "other",
@@ -345,13 +349,8 @@ const FormParameter = ({
     });
   }, [guaranteeBeforeAddendum]);
 
-  // console.log("data hasil looping", data);
-
   const guaranteeBeforeAddendum = [
     {
-      // startDate: `${jsonData?.guarantee_start_date}`,
-      // endDate: `${jsonData?.guarantee_end_date}`,
-      // radio: `${jsonData?.down_payment_guarantee}`,
       title: "Jaminan Uang Muka",
       startDate: ``,
       endDate: ``,
@@ -363,9 +362,6 @@ const FormParameter = ({
       nameEvidence: "dp_guarantee_evidence_file",
     },
     {
-      // startDate: `${jsonData?.implementation_start_date}`,
-      // endDate: `${jsonData?.implementation_end_date}`,
-      // radio: `${jsonData?.implementation_guarantee}`,
       title: "Jaminan Pelaksanaan",
       startDate: ``,
       endDate: ``,
@@ -377,9 +373,6 @@ const FormParameter = ({
       nameEvidence: "implementation_guarantee_evidence_file",
     },
     {
-      // startDate: `${jsonData?.maintenance_start_date}`,
-      // endDate: `${jsonData?.maintenance_end_date}`,
-      // radio: `${jsonData?.maintenance_guarantee}`,
       title: "Jaminan Pemeliharaan",
       startDate: ``,
       endDate: ``,
@@ -1176,7 +1169,7 @@ const FormParameter = ({
       <Card>
         <CardBody>
           {/* Para Pihak */}
-          {currentActiveTab === 0 && (
+          {fromApproval && selectedTabLists === "Para Pihak" && (
             <>
               <PartiesFormParameter
                 jsonData={jsonData}
@@ -1189,12 +1182,13 @@ const FormParameter = ({
                 contract_id={contract_id}
                 isDisable={tabDisableLists?.is_add_parties}
                 partiesData={tabDisableLists}
+                disableUpdate={disableUpdate}
               />
             </>
           )}
 
           {/* Harga Pekerjaan */}
-          {currentActiveTab === 1 && (
+          {fromApproval && selectedTabLists === "Harga Pekerjaan" && (
             <>
               <JobPriceFormParameter
                 currencies={currencies}
@@ -1203,12 +1197,13 @@ const FormParameter = ({
                 contract_id={contract_id}
                 isDisable={tabDisableLists?.is_add_job_price}
                 jobPriceData={tabDisableLists}
+                disableUpdate={disableUpdate}
               />
             </>
           )}
 
           {/* Jangka Waktu */}
-          {currentActiveTab === 2 && (
+          {fromApproval && selectedTabLists === "Jangka Waktu" && (
             <>
               <Formik
                 enableReinitialize={true}
@@ -1701,8 +1696,9 @@ const FormParameter = ({
                       isMandatory={true}
                       isDrafting={true}
                     />
-
-                    <UpdateButton fromWhere={"time_period"} />
+                    {!disableUpdate && (
+                      <UpdateButton fromWhere={"time_period"} />
+                    )}
                   </Form>
                 )}
               </Formik>
@@ -1710,7 +1706,7 @@ const FormParameter = ({
           )}
 
           {/* Metode Pembayaran */}
-          {currentActiveTab === 3 && (
+          {fromApproval && selectedTabLists === "Metode Pembayaran" && (
             <Formik
               enableReinitialize={true}
               initialValues={{
@@ -2052,15 +2048,16 @@ const FormParameter = ({
                     isMandatory={true}
                     isDrafting={true}
                   />
-
-                  <UpdateButton fromWhere={"payment_method"} />
+                  {!disableUpdate && (
+                    <UpdateButton fromWhere={"payment_method"} />
+                  )}
                 </Form>
               )}
             </Formik>
           )}
 
           {/* Denda */}
-          {currentActiveTab === 4 && (
+          {fromApproval && selectedTabLists === "Denda" && (
             <>
               <Formik
                 enableReinitialize={true}
@@ -2266,8 +2263,7 @@ const FormParameter = ({
                       isDisable={tabDisableLists?.is_add_fine}
                       isDrafting={true}
                     />
-
-                    <UpdateButton fromWhere={"fine"} />
+                    {!disableUpdate && <UpdateButton fromWhere={"fine"} />}
                   </Form>
                 )}
               </Formik>
@@ -2275,7 +2271,7 @@ const FormParameter = ({
           )}
 
           {/* jaminan */}
-          {currentActiveTab === 5 && (
+          {fromApproval && selectedTabLists === "Jaminan" && (
             <>
               <Formik
                 enableReinitialize={true}
@@ -2834,8 +2830,9 @@ const FormParameter = ({
                         isDisable={tabDisableLists?.is_add_guarantee}
                         isDrafting={true}
                       />
-
-                      <UpdateButton fromWhere={"guarantee"} />
+                      {!disableUpdate && (
+                        <UpdateButton fromWhere={"guarantee"} />
+                      )}
                     </Form>
                   );
                 }}
@@ -2844,7 +2841,7 @@ const FormParameter = ({
           )}
 
           {/* nomor rekening */}
-          {currentActiveTab === 6 && (
+          {fromApproval && selectedTabLists === "Nomor Rekening" && (
             <>
               <Formik
                 enableReinitialize={true}
@@ -3245,8 +3242,9 @@ const FormParameter = ({
                         isDisable={tabDisableLists?.is_add_account_number}
                         isDrafting={true}
                       />
-
-                      <UpdateButton fromWhere={"account_number"} />
+                      {!disableUpdate && (
+                        <UpdateButton fromWhere={"account_number"} />
+                      )}
                     </Form>
                   );
                 }}
@@ -3283,8 +3281,7 @@ const FormParameter = ({
                         !tabDisableLists?.other_note !== null ? true : false
                       }
                     />
-
-                    <UpdateButton fromWhere={"other"} />
+                    {!disableUpdate && <UpdateButton fromWhere={"other"} />}
                   </Form>
                 )}
               </Formik>

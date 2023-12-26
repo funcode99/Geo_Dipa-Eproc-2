@@ -35,6 +35,7 @@ const JobPriceFormParameter = ({
   contract_id,
   jobPriceData,
   isDisable,
+  disableUpdate,
 }) => {
   console.log("isi json data", jsonData);
 
@@ -439,8 +440,7 @@ const JobPriceFormParameter = ({
                 isDisable={isDisable}
               />
             </div>
-
-            <UpdateButton fromWhere={"job_price"} />
+            {!disableUpdate && <UpdateButton fromWhere={"job_price"} />}
           </Form>
         )}
       </Formik>

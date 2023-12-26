@@ -14,14 +14,14 @@ import { Col, Row } from "react-bootstrap";
 import { fetch_api_sg } from "redux/globalReducer";
 import * as addendumContract from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import TabsAddendum from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/Components/Tabs";
+// import { alphabet } from "./alphabet";
 
+import Subheader from "app/components/subheader";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import useToast from "app/components/toast/index";
-import Subheader from "app/components/subheader";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 
 import SVG from "react-inlinesvg";
-// import FormParameter from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormParameter";
 import FormParameter from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormParameter";
 import Steppers from "app/components/steppersCustom/Steppers";
 
@@ -46,9 +46,96 @@ const UserApprovalAddendumPage = ({
   //   openCloseAddDocument.current.open();
   // };
 
+  const alphabet = [
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+  ];
+
+  const addendumPrefix = [
+    "No Kontrak",
+    "Jenis Kontrak",
+    "Judul Pengadaan",
+    "Penyedia",
+    "Tanggal Permohonan Addendum",
+  ];
+
+  const addendumSuffix = [
+    "Dokumen Pendukung",
+    "Detail Addendum",
+    "Permintaan Penerbitan Draft Addendum Kepada",
+    "Catatan Addendum (Opsional)",
+  ];
+
+  const [addendumAdditional, setAddendumAdditional] = useState([]);
+  const addendumCombine = [...addendumAdditional, ...addendumSuffix];
+  console.log("kombinasi", addendumCombine);
+
   const keys = {
     fetch: "get-data-contracts-approval",
   };
+
+  const approvalStepper0 = [
+    {
+      label: "Approval Direksi Pekerjaan",
+      status: "wait",
+    },
+    {
+      label: "Approval Pejabat Berwenang",
+      status: "wait",
+    },
+  ];
+
+  const approvalStepper1 = [
+    {
+      label: "Approval Direksi Pekerjaan",
+      status: "on",
+    },
+    {
+      label: "Approval Pejabat Berwenang",
+      status: "wait",
+    },
+  ];
+
+  const approvalStepper2 = [
+    {
+      label: "Approval Direksi Pekerjaan",
+      status: "done",
+    },
+    {
+      label: "Approval Pejabat Berwenang",
+      status: "on",
+    },
+  ];
+
+  const approvalStepper3 = [
+    {
+      label: "Approval Direksi Pekerjaan",
+      status: "done",
+    },
+    {
+      label: "Approval Pejabat Berwenang",
+      status: "done",
+    },
+  ];
 
   // gak ada isi nya
   // console.log('isi data contract by id di delivery monitoring', dataContractById)
@@ -79,71 +166,67 @@ const UserApprovalAddendumPage = ({
     path: "",
   });
   const [TabLists, setTabLists] = React.useState([
-    {
-      id: "parties",
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
-      label: "Para Pihak",
-      // icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
-      addendum: false,
-    },
-
-    {
-      id: "job_price",
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
-      label: "Harga Pekerjaan",
-      // icon: <FindInPage className="mb-0 mr-2" />,
-      addendum: false,
-    },
-
-    {
-      id: "time_period",
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
-      label: "Jangka Waktu",
-      // icon: <PeopleAlt className="mb-0 mr-2" />,
-      addendum: false,
-    },
-
-    {
-      id: "payment_method",
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
-      label: "Metode Pembayaran",
-      // icon: <Assignment className="mb-0 mr-2" />,
-      addendum: false,
-    },
-
-    {
-      id: "fine",
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
-      label: "Denda",
-      // icon: <MonetizationOn className="mb-0 mr-2" />,
-      addendum: false,
-    },
-
-    {
-      id: "guarantee",
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
-      label: "Jaminan",
-      // icon: <QueryBuilderSharp className="mb-0 mr-2" />,
-      addendum: false,
-    },
-
-    {
-      id: "account_number",
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
-      label: "Nomor Rekening",
-      // icon: <FeaturedPlayList className="mb-0 mr-2" />,
-      addendum: false,
-    },
-
-    {
-      id: "others",
-      label: "Lainnya",
-      addendum: false,
-      // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
-      // icon: <FeaturedPlayList className="mb-0 mr-2" />,
-    },
+    // {
+    //   id: "parties",
+    //   // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+    //   label: "Para Pihak",
+    //   // icon: <PlayCircleOutlineIcon className="mb-0 mr-2" />,
+    //   addendum: false,
+    // },
+    // {
+    //   id: "job_price",
+    //   // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DETAIL" />,
+    //   label: "Harga Pekerjaan",
+    //   // icon: <FindInPage className="mb-0 mr-2" />,
+    //   addendum: false,
+    // },
+    // {
+    //   id: "time_period",
+    //   // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PARTIES" />,
+    //   label: "Jangka Waktu",
+    //   // icon: <PeopleAlt className="mb-0 mr-2" />,
+    //   addendum: false,
+    // },
+    // {
+    //   id: "payment_method",
+    //   // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.DOK_CONT" />,
+    //   label: "Metode Pembayaran",
+    //   // icon: <Assignment className="mb-0 mr-2" />,
+    //   addendum: false,
+    // },
+    // {
+    //   id: "fine",
+    //   // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PRICE" />,
+    //   label: "Denda",
+    //   // icon: <MonetizationOn className="mb-0 mr-2" />,
+    //   addendum: false,
+    // },
+    // {
+    //   id: "guarantee",
+    //   // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.PERIOD" />,
+    //   label: "Jaminan",
+    //   // icon: <QueryBuilderSharp className="mb-0 mr-2" />,
+    //   addendum: false,
+    // },
+    // {
+    //   id: "account_number",
+    //   // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+    //   label: "Nomor Rekening",
+    //   // icon: <FeaturedPlayList className="mb-0 mr-2" />,
+    //   addendum: false,
+    // },
+    // {
+    //   id: "others",
+    //   label: "Lainnya",
+    //   addendum: false,
+    //   // label: <FormattedMessage id="CONTRACT_DETAIL.TAB.GUARANTEE" />,
+    //   // icon: <FeaturedPlayList className="mb-0 mr-2" />,
+    // },
   ]);
-  const [checkedInitialValues, setCheckedInitialValues] = useState([]);
+  const [selectedTabLists, setSelectedTabLists] = useState(
+    TabLists[0]?.label ? TabLists[0]?.label : []
+  );
+  const [checkedInitialValues, setCheckedInitialValues] = useState();
   useEffect(() => {
     console.log("checked initial values", checkedInitialValues);
   }, [checkedInitialValues]);
@@ -243,6 +326,7 @@ const UserApprovalAddendumPage = ({
     // isi nya urutan angka array sesuai dengan yang di klik
     console.log("isi newTabActive", newTabActive);
     setTabActive(newTabActive);
+    setSelectedTabLists(TabLists[newTabActive]?.label);
   }
 
   const [finalDraftData, setFinalDraftData] = useState();
@@ -342,7 +426,92 @@ const UserApprovalAddendumPage = ({
       onSuccess: (res) => {
         console.log("apakah menarik data 2.3", res?.data);
         setTabDisableLists(res?.data);
-        setStepper(res?.data?.steppers);
+        if (res?.data?.status_code === "15") {
+          setStepper(approvalStepper1);
+        } else if (res?.data?.status_code === "30") {
+          setStepper(approvalStepper2);
+        } else if (res?.data?.status_code === "35") {
+          setStepper(approvalStepper3);
+        } else {
+          setStepper(approvalStepper0);
+        }
+        if (res?.data?.is_add_parties) {
+          setAddendumAdditional((current) => [...current, "Para Pihak"]);
+          setTabLists((current) => [
+            ...current,
+            {
+              id: "parties",
+              label: "Para Pihak",
+              addendum: true,
+            },
+          ]);
+        }
+        if (res?.data?.is_add_job_price) {
+          setAddendumAdditional((current) => [...current, "Harga Pekerjaan"]);
+          setTabLists((current) => [
+            ...current,
+            {
+              id: "job_price",
+              label: "Harga Pekerjaan",
+              addendum: true,
+            },
+          ]);
+        }
+        if (res?.data?.is_add_time_period) {
+          setAddendumAdditional((current) => [...current, "Jangka Waktu"]);
+          setTabLists((current) => [
+            ...current,
+            {
+              id: "time_period",
+              label: "Jangka Waktu",
+              addendum: true,
+            },
+          ]);
+        }
+        if (res?.data?.is_add_payment_method) {
+          setAddendumAdditional((current) => [...current, "Metode Pembayaran"]);
+          setTabLists((current) => [
+            ...current,
+            {
+              id: "payment_method",
+              label: "Metode Pembayaran",
+              addendum: true,
+            },
+          ]);
+        }
+        if (res?.data?.is_add_fine === true) {
+          setAddendumAdditional((current) => [...current, "Denda"]);
+          setTabLists((current) => [
+            ...current,
+            {
+              id: "fine",
+              label: "Denda",
+              addendum: true,
+            },
+          ]);
+        }
+        if (res?.data?.is_add_guarantee) {
+          setAddendumAdditional((current) => [...current, "Jaminan"]);
+          setTabLists((current) => [
+            ...current,
+            {
+              id: "guarantee",
+              label: "Jaminan",
+              addendum: true,
+            },
+          ]);
+        }
+        if (res?.data?.is_add_account_number === true) {
+          setAddendumAdditional((current) => [...current, "Nomor Rekening"]);
+          setTabLists((current) => [
+            ...current,
+            {
+              id: "account_number",
+              label: "Nomor Rekening",
+              addendum: true,
+            },
+          ]);
+        }
       },
     });
   };
@@ -478,6 +647,11 @@ const UserApprovalAddendumPage = ({
   };
 
   const [stepper, setStepper] = useState();
+  const [initialValues, setInitialValues] = useState(0);
+  if (typeof TabLists[0]?.label !== "undefined" && initialValues === 0) {
+    setSelectedTabLists(TabLists[0].label);
+    setInitialValues(1);
+  }
 
   return (
     <>
@@ -485,6 +659,7 @@ const UserApprovalAddendumPage = ({
         Formulir Permohonan Addendum Perjanjian:{" "}
         {tabDisableLists?.add_request_number}
       </h1>
+
       <SubBreadcrumbs
         items={[
           {
@@ -501,192 +676,406 @@ const UserApprovalAddendumPage = ({
           },
         ]}
       />
-      <h1>Form Persetujuan Addendum</h1>
-      {/* <div
-        style={{
-          display: "flex",
-          rowGap: 93,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
+      <Steppers steps={stepper} />
+
+      <Paper>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
+            padding: "2rem 2.25rem",
+          }}
+        >
+          <h1
+            style={{
+              fontWeight: 700,
+              fontSize: 24,
+              marginTop: 52,
+            }}
+          >
+            Form Persetujuan Addendum
+          </h1>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              rowGap: 14,
+              marginTop: 33,
+            }}
+          >
+            {/* No Kontrak */}
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
+              <div
+                style={{
+                  minWidth: 350,
+                }}
+              >
+                <h3
+                  style={{
+                    fontWeight: 500,
+                    fontSize: 14,
+                  }}
+                >
+                  A. No Kontrak
+                </h3>
+              </div>
+              <div>: {tabDisableLists?.contract?.contract_no}</div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
+              <div
+                style={{
+                  minWidth: 350,
+                }}
+              >
+                <h3
+                  style={{
+                    fontWeight: 500,
+                    fontSize: 14,
+                  }}
+                >
+                  B. Jenis Kontrak
+                </h3>
+              </div>
+              <div>: {tabDisableLists?.contract?.contract_type?.name}</div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
+              <div
+                style={{
+                  minWidth: 350,
+                }}
+              >
+                <h3
+                  style={{
+                    fontWeight: 500,
+                    fontSize: 14,
+                  }}
+                >
+                  C. Judul Pengadaan
+                </h3>
+              </div>
+              <div>: {tabDisableLists?.contract?.contract_name}</div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
+              <div
+                style={{
+                  minWidth: 350,
+                }}
+              >
+                <h3
+                  style={{
+                    fontWeight: 500,
+                    fontSize: 14,
+                  }}
+                >
+                  D. Penyedia
+                </h3>
+              </div>
+              <div>: {tabDisableLists?.contract?.vendor?.party?.full_name}</div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
+              <div
+                style={{
+                  minWidth: 350,
+                }}
+              >
+                <h3
+                  style={{
+                    fontWeight: 500,
+                    fontSize: 14,
+                  }}
+                >
+                  E. Tanggal Permohonan Addendum
+                </h3>
+              </div>
+              <div>: {tabDisableLists?.add_request_date}</div>
+            </div>
+          </div>
+
+          {addendumCombine.map((item, index) => {
+            return (
+              <>
+                {/* Bagian addendum */}
+                <div
+                  style={{
+                    marginTop: 14,
+                  }}
+                >
+                  <h3
+                    style={{
+                      fontWeight: 500,
+                      fontSize: 14,
+                    }}
+                  >
+                    {alphabet[index]}. {item}
+                  </h3>
+                  <div
+                    style={{
+                      display: "flex",
+                    }}
+                  >
+                    {item === "Para Pihak" && (
+                      <table>
+                        <tr>
+                          <th>Sebelum Addendum</th>
+                          <th>Setelah Addendum</th>
+                          <th>Keterangan</th>
+                        </tr>
+                        <tr>
+                          <td>Herdian</td>
+                          <td>Herdian</td>
+                          <td>Pejabat Berwenang</td>
+                        </tr>
+                      </table>
+                    )}
+                    {item === "Harga Pekerjaan" && (
+                      <table>
+                        <tr>
+                          <th>Sebelum Addendum</th>
+                          <th>Setelah Addendum</th>
+                          <th>Keterangan</th>
+                        </tr>
+                        <tr>
+                          <td>Rp 7.422.000.000,00</td>
+                          <td>Rp 9.500.000.000,00</td>
+                          <td></td>
+                        </tr>
+                      </table>
+                    )}
+                    {item === "Jangka Waktu" && (
+                      <table>
+                        <tr>
+                          <th>Sebelum Addendum</th>
+                          <th>Setelah Addendum</th>
+                          <th>Keterangan</th>
+                        </tr>
+                        <tr>
+                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {tabDisableLists?.add_contract_time_period
+                              ?.from_time || "x"}{" "}
+                            -{" "}
+                            {tabDisableLists?.add_contract_time_period
+                              ?.thru_time || "x"}
+                          </td>
+                          <td>Jangka Waktu Perjanjian</td>
+                        </tr>
+                        <tr>
+                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {tabDisableLists?.add_contract_time_period
+                              ?.worked_start_date || "x"}{" "}
+                            -{" "}
+                            {tabDisableLists?.add_contract_time_period
+                              ?.worked_end_date || "x"}
+                          </td>
+                          <td>Jangka Waktu Pelaksanaan Pekerjaan</td>
+                        </tr>
+                        <tr>
+                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {tabDisableLists?.add_contract_time_period
+                              ?.guarantee_start_date || "x"}{" "}
+                            -{" "}
+                            {tabDisableLists?.add_contract_time_period
+                              ?.guarantee_end_date || "x"}
+                          </td>
+                          <td>Jangka Waktu Masa Garansi</td>
+                        </tr>
+                        <tr>
+                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {tabDisableLists?.add_contract_time_period
+                              ?.maintenance_start_date || "x"}{" "}
+                            -{" "}
+                            {tabDisableLists?.add_contract_time_period
+                              ?.maintenance_end_date || "x"}
+                          </td>
+                          <td>Jangka Waktu Masa Pemeliharaan</td>
+                        </tr>
+                      </table>
+                    )}
+                    {item === "Metode Pembayaran" && (
+                      <table>
+                        <tr>
+                          <th>Sebelum Addendum</th>
+                          <th>Setelah Addendum</th>
+                          <th>Keterangan</th>
+                        </tr>
+                        <tr>
+                          <td>Full Pembayaran</td>
+                          <td>Pembayaran Bertahap</td>
+                          <td></td>
+                        </tr>
+                      </table>
+                    )}
+                    {item === "Denda" && (
+                      <table>
+                        <tr>
+                          <th>Sebelum Addendum</th>
+                          <th>Setelah Addendum</th>
+                          <th>Keterangan</th>
+                        </tr>
+                        <tr>
+                          <td></td>
+                          <td>Pembayaran Bertahap</td>
+                          <td></td>
+                        </tr>
+                      </table>
+                    )}
+                    {item === "Jaminan" && (
+                      <table>
+                        <tr>
+                          <th>Sebelum Addendum</th>
+                          <th>Setelah Addendum</th>
+                          <th>Keterangan</th>
+                        </tr>
+                        <tr>
+                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {tabDisableLists?.add_contract_guarantee
+                              ?.down_payment_guarantee_start_date || "x"}{" "}
+                            -{" "}
+                            {tabDisableLists?.add_contract_guarantee
+                              ?.down_payment_guarantee_end_date || "x"}
+                          </td>
+                          <td>Jaminan Uang Muka</td>
+                        </tr>
+                        <tr>
+                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {tabDisableLists?.add_contract_guarantee
+                              ?.implementation_guarantee_start_date || "x"}{" "}
+                            -{" "}
+                            {tabDisableLists?.add_contract_guarantee
+                              ?.implementation_guarantee_end_date || "x"}
+                          </td>
+                          <td>Jaminan Pelaksanaan</td>
+                        </tr>
+                        <tr>
+                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {tabDisableLists?.add_contract_guarantee
+                              ?.maintenance_guarantee_start_date || "x"}{" "}
+                            -{" "}
+                            {tabDisableLists?.add_contract_guarantee
+                              ?.maintenance_guarantee_end_date || "x"}
+                          </td>
+                          <td>Jaminan Pemeliharaan</td>
+                        </tr>
+                      </table>
+                    )}
+                    {item === "Nomor Rekening" && (
+                      <table>
+                        <tr>
+                          <th>Sebelum Addendum</th>
+                          <th>Setelah Addendum</th>
+                          <th>Keterangan</th>
+                        </tr>
+                        <tr>
+                          <td>Full Pembayaran</td>
+                          <td>Pembayaran Bertahap</td>
+                          <td></td>
+                        </tr>
+                      </table>
+                    )}
+                  </div>
+                </div>
+              </>
+            );
+          })}
+
+          {/* Dokumen pendukung */}
+          <div
+            style={{
+              marginTop: 14,
+            }}
+          >
+            <h3
+              style={{
+                fontWeight: 500,
+                fontSize: 14,
+              }}
+            >
+              {alphabet[addendumCombine.length]}. Dokumen Pendukung
+            </h3>
+            <table>
+              <tr>
+                <th>No</th>
+                <th>Nama Dokumen</th>
+                <th>No Dokumen</th>
+                <th>Tanggal Dokumen</th>
+                <th>Dokumen</th>
+              </tr>
+
+              {tabDisableLists?.add_support_document_data &&
+                tabDisableLists?.add_support_document_data.map(
+                  (item, index) => {
+                    return (
+                      <>
+                        <tr>
+                          <td>{index + 1}</td>
+                          <td>{item?.namaDokumen}</td>
+                          <td>{item?.noDokumen}</td>
+                          <td>{item?.tglDokumen}</td>
+                          <td>
+                            <a
+                              onClick={() =>
+                                window.open(
+                                  `${DEV_NODE}/support_document/${item?.fileDokumen}`,
+                                  "_blank"
+                                )
+                              }
+                              style={{
+                                color: "#3699ff",
+                              }}
+                            >
+                              {item?.fileDokumen}
+                            </a>
+                          </td>
+                        </tr>
+                      </>
+                    );
+                  }
+                )}
+            </table>
+          </div>
+        </div>
+      </Paper>
+
+      {/* Detail Addendum */}
+      <div
+        style={{
+          marginTop: 28,
+        }}
+      >
+        <h3
+          style={{
+            fontWeight: 500,
             fontSize: 14,
+            padding: "0 2.25rem",
           }}
         >
-          <h3>A. No Kontrak</h3>
-          <h3>B. Jenis Kontrak</h3>
-          <h3>C. Judul Pengadaan</h3>
-          <h3>D. Penyedia</h3>
-          <h3>E. Tanggal Permohonan Addendum</h3>
-        </div>
-        <div>
-          <h3>: </h3>
-          <h3>: </h3>
-          <h3>: </h3>
-          <h3>: </h3>
-          <h3>: </h3>
-        </div>
-      </div> */}
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          rowGap: 14,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              minWidth: 350,
-            }}
-          >
-            A. No Kontrak
-          </div>
-          <div>{tabDisableLists?.contract?.contract_no}</div>
-          <div></div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              minWidth: 350,
-            }}
-          >
-            B. Jenis Kontrak
-          </div>
-          <div>{tabDisableLists?.contract?.contract_type?.name}</div>
-          <div></div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              minWidth: 350,
-            }}
-          >
-            C. Judul Pengadaan
-          </div>
-          <div>{tabDisableLists?.contract?.contract_name}</div>
-          <div></div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              minWidth: 350,
-            }}
-          >
-            D. Penyedia
-          </div>
-          <div>{tabDisableLists?.contract?.vendor?.party?.full_name}</div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <div
-            style={{
-              minWidth: 350,
-            }}
-          >
-            E. Tanggal Permohonan Addendum
-          </div>
-          <div>{tabDisableLists?.add_request_date}</div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: 14,
-        }}
-      >
-        <h3>F. Addendum Harga Pekerjaan</h3>
-        <div
-          style={{
-            display: "flex",
-          }}
-        >
-          <table>
-            <tr>
-              <th>Sebelum Addendum</th>
-              <th>Setelah Addendum</th>
-              <th>Keterangan</th>
-            </tr>
-            <tr>
-              <td>Rp 7.422.000.000,00</td>
-              <td>Rp 9.500.000.000,00</td>
-              <td></td>
-            </tr>
-          </table>
-        </div>
-      </div>
-      <div
-        style={{
-          marginTop: 14,
-        }}
-      >
-        <h3>G. Dokumen Pendukung</h3>
-        <table>
-          <tr>
-            <th>No</th>
-            <th>Nama Dokumen</th>
-            <th>No Dokumen</th>
-            <th>Tanggal Dokumen</th>
-            <th>Dokumen</th>
-          </tr>
-
-          {tabDisableLists?.add_support_document_data &&
-            tabDisableLists?.add_support_document_data.map((item, index) => {
-              return (
-                <>
-                  <tr>
-                    <td>{index + 1}</td>
-                    <td>{item?.namaDokumen}</td>
-                    <td>{item?.noDokumen}</td>
-                    <td>{item?.tglDokumen}</td>
-                    <td>
-                      <a
-                        onClick={() =>
-                          window.open(
-                            `${DEV_NODE}/support_document/${item?.fileDokumen}`,
-                            "_blank"
-                          )
-                        }
-                        style={{
-                          color: "#3699ff",
-                        }}
-                      >
-                        {item?.fileDokumen}
-                      </a>
-                    </td>
-                  </tr>
-                </>
-              );
-            })}
-        </table>
-      </div>
-      <div>
-        <h3>H. Detail Addendum</h3>
+          {alphabet[addendumCombine.length + 1]}. Detail Addendum
+        </h3>
         <Paper className={classes.root}>
           <TabsAddendum
             tabActive={tabActive}
@@ -708,42 +1097,135 @@ const UserApprovalAddendumPage = ({
             PICData={PICData}
             accountNumberBankData={accountNumberBankData}
             tabDisableLists={tabDisableLists}
+            disableUpdate={true}
+            fromApproval={true}
+            selectedTabLists={selectedTabLists}
           />
 
           {/* <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: 28,
-              padding: "2rem 2.25rem",
-            }}
-          >
-            <button
-              className="btn btn-outline-primary"
-              style={{
-                minWidth: 100,
-              }}
-              onClick={() =>
-                tabActive > 0 ? setTabActive(tabActive - 1) : setSequence(0)
-              }
-            >
-              {`<< Back`}
-            </button>
-            <Button
-              style={{
-                minWidth: 100,
-              }}
-              onClick={() =>
-                tabActive < TabLists.length - 1
-                  ? setTabActive(tabActive + 1)
-                  : setTabActive(tabActive)
-              }
-            >
-              {`Next >>`}
-            </Button>
-          </div> */}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: 28,
+                    padding: "2rem 2.25rem",
+                  }}
+                >
+                  <button
+                    className="btn btn-outline-primary"
+                    style={{
+                      minWidth: 100,
+                    }}
+                    onClick={() =>
+                      tabActive > 0 ? setTabActive(tabActive - 1) : setSequence(0)
+                    }
+                  >
+                    {`<< Back`}
+                  </button>
+                  <Button
+                    style={{
+                      minWidth: 100,
+                    }}
+                    onClick={() =>
+                      tabActive < TabLists.length - 1
+                        ? setTabActive(tabActive + 1)
+                        : setTabActive(tabActive)
+                    }
+                  >
+                    {`Next >>`}
+                  </Button>
+                </div> */}
         </Paper>
       </div>
+
+      <Paper>
+        <div
+          style={{
+            padding: "0 2.25rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: 28,
+          }}
+        >
+          <div>
+            <div>
+              <p
+                style={{
+                  fontWeight: 500,
+                }}
+              >
+                {alphabet[addendumCombine.length + 2]}. Permintaan Penerbitan
+                Draft Addendum Kepada:
+              </p>
+            </div>
+            <div>
+              <input
+                style={{
+                  padding: 8,
+                  borderRadius: 4,
+                  minWidth: 400,
+                }}
+                value={tabDisableLists?.add_drafter}
+                disabled
+              />
+            </div>
+          </div>
+          <div>
+            <div>
+              <p
+                style={{
+                  fontWeight: 500,
+                }}
+              >
+                {alphabet[addendumCombine.length + 3]}. Catatan Addendum
+                (Opsional)
+              </p>
+            </div>
+            <div>
+              <textarea
+                style={{
+                  padding: 8,
+                  borderRadius: 4,
+                  minWidth: "100%",
+                }}
+                rows="4"
+                disabled
+                placeholder="Berisi catatan addendum baik di approve / reject"
+                value={tabDisableLists?.request_note}
+              />
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button>Download Memo to PDF</Button>
+            <div
+              style={{
+                display: "flex",
+                gap: 20,
+              }}
+            >
+              <Button
+                className="text-danger btn btn-white border border-danger"
+                style={{
+                  minWidth: 100,
+                }}
+              >
+                Reject
+              </Button>
+              <Button
+                style={{
+                  minWidth: 100,
+                }}
+              >
+                Approve
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Paper>
     </>
   );
 };

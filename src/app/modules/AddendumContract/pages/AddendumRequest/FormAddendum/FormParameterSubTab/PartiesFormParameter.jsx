@@ -27,6 +27,7 @@ const PartiesFormParameter = ({
   dataNewClause,
   partiesData,
   isDisable,
+  disableUpdate = false,
 }) => {
   // const [authorizedOfficialIndex, setauthorizedOfficialIndex] = useState(0);
   const dispatch = useDispatch();
@@ -3063,8 +3064,7 @@ const PartiesFormParameter = ({
               isMandatory={true}
               isDisable={isDisable}
             />
-
-            <UpdateButton fromWhere={"parties"} />
+            {!disableUpdate && <UpdateButton fromWhere={"parties"} />}
           </Form>
         )}
       </Formik>
