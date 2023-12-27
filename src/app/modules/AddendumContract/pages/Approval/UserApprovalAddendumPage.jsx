@@ -155,6 +155,7 @@ const UserApprovalAddendumPage = ({
   const [sequence, setSequence] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [firstTime, setfirstTime] = React.useState(0);
+  const [selectedTabLists, setSelectedTabLists] = useState();
   const [tempProps, setTempProps] = React.useState({
     task_id: "",
     tab: 0,
