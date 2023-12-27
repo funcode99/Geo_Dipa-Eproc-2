@@ -1,13 +1,19 @@
-import { Formik, Form } from "formik";
+import { Formik, Form, Field } from "formik";
+import { useDispatch, connect } from "react-redux";
 import React, { useState, useEffect } from "react";
+import Tables from "app/components/tableCustomV1/table";
+import DialogGlobal from "app/components/modals/DialogGlobal";
+import { fetch_api_sg, getLoading } from "redux/globalReducer";
+import ButtonAction from "app/components/buttonAction/ButtonAction";
+import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
+import { submitFine } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import {
   getSorting,
   searchFindMulti,
   stableSort,
 } from "app/components/tables/TablePagination/TablePaginationCustom";
-import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
-import Tables from "app/components/tableCustomV1/table";
-import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import {
   Table,
   TableBody,
@@ -17,10 +23,6 @@ import {
   Paper,
   makeStyles,
 } from "@material-ui/core";
-import { submitFine } from "app/modules/AddendumContract/service/AddendumContractCrudService";
-import ButtonAction from "app/components/buttonAction/ButtonAction";
-import { useDispatch, connect } from "react-redux";
-import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const Denda = ({
   jsonData,
@@ -32,6 +34,41 @@ const Denda = ({
   is_add_fine,
 }) => {
   const dispatch = useDispatch();
+  const [dataArr, setDataArr] = useState([]);
+  const [dataArrFine, setDataArrFine] = useState([]);
+
+  const getDataPenalties = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/refference/get-all-pinalties`,
+      onSuccess: (res) => {
+        setDataArr(
+          res.data.map((item) => ({
+            id: item.id,
+            name: item.pinalty_name,
+          }))
+        );
+      },
+    });
+  };
+
+  const getDataBankAccounts = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/refference/get-party-bank/${contract_id}`,
+      onSuccess: (res) => {
+        setDataArrFine(
+          res.data.map((item) => ({
+            id: item.id,
+            name: item.pinalty_name,
+          }))
+        );
+      },
+    });
+  };
+
   useEffect(() => {
     if (fineCurrent !== null) {
       dispatch({
@@ -58,6 +95,11 @@ const Denda = ({
         fromWhere: fromWhere,
       });
     }
+  }, []);
+
+  useEffect(() => {
+    getDataPenalties();
+    getDataBankAccounts();
   }, []);
 
   function handleChangePage(newPage) {
@@ -92,7 +134,6 @@ const Denda = ({
     openCloseAddFine.current.open();
   };
   const classes = useStyles();
-  // const [fine, setFine] = useState(JSON.parse(localStorage.getItem("fine")));
   const [fine, setFine] = useState(fineCurrent?.penalty_fine_data);
   const handleFilter = (data, data2) => {
     const sort = JSON.parse(data2.sort);
@@ -171,8 +212,227 @@ const Denda = ({
     });
   };
 
+  const createData = (id, pinalty_name, value, max_day, value_type) => {
+    return { id, pinalty_name, value, max_day, value_type };
+  };
+
   return (
     <div className="bg-white p-10">
+      <DialogGlobal
+        ref={openCloseAddFine}
+        isCancel={false}
+        isSubmit={false}
+        yesButton={false}
+        noButton={false}
+        maxWidth={"sm"}
+      >
+        <Formik
+          initialValues={{
+            pinalty_name: "",
+            value: "",
+            max_day: "",
+            value_type: "",
+          }}
+          onSubmit={(values) => {
+            setFine((data) => {
+              return [
+                ...data,
+                createData(
+                  fine.length + 1,
+                  values.pinalty_name,
+                  values.value,
+                  values.max_day,
+                  values.value_type
+                ),
+              ];
+            });
+            openCloseAddFine.current.close();
+          }}
+        >
+          {({ values }) => (
+            <>
+              <Form>
+                <div
+                  style={{
+                    padding: "0 17%",
+                  }}
+                >
+                  <h1
+                    style={{
+                      marginBottom: 40,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      textAlign: "center",
+                    }}
+                  >
+                    Tambah Denda
+                  </h1>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Jenis Denda
+                      </span>
+                      <Field
+                        as="select"
+                        name="pinalty_name"
+                        style={{
+                          padding: "10px 0",
+                          backgroundColor: "#e8f4fb",
+                          borderRadius: 4,
+                        }}
+                      >
+                        {dataArrFine.length > 0 &&
+                          dataArr.map((data) => {
+                            return (
+                              <>
+                                <option
+                                  style={{
+                                    display: "none",
+                                  }}
+                                ></option>
+                                <option
+                                  key={data.id}
+                                  style={{
+                                    padding: "10px 12px",
+                                    backgroundColor: "white",
+                                    borderRadius: 4,
+                                  }}
+                                  value={data.name}
+                                >
+                                  {data.name}
+                                </option>
+                              </>
+                            );
+                          })}
+                      </Field>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Nilai
+                      </span>
+                      <Field
+                        type="text"
+                        name="value"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Maksimal Hari
+                      </span>
+                      <Field
+                        type="text"
+                        name="max_day"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 600,
+                        }}
+                      >
+                        Type Nilai
+                      </span>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 20,
+                        }}
+                      >
+                        <label>
+                          <Field type="radio" name="value_type" value="%" />%
+                        </label>
+                        <label>
+                          <Field type="radio" name="value_type" value="nilai" />
+                          Nilai
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: 52,
+                    padding: "0 7%",
+                  }}
+                >
+                  <button type="submit" className="btn btn-primary">
+                    Save
+                  </button>
+                </div>
+              </Form>
+            </>
+          )}
+        </Formik>
+      </DialogGlobal>
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -278,8 +538,6 @@ const Denda = ({
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      // marginTop: 34,
-                      // marginBottom: 20
                     }}
                   >
                     <h1
@@ -323,20 +581,7 @@ const Denda = ({
                           }}
                         >
                           <TableCell component="th">{index + 1}</TableCell>
-                          {/* <TableCell align="left" scope="row">
-                                    {row.pinalty_name}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.value}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.max_day}
-                                  </TableCell>
-                                  <TableCell align="left">
-                                    {row.value_type}
-                                  </TableCell> */}
                           <TableCell align="left" scope="row">
-                            {/* {row.pinalty_name} */}
                             {row.jenis_denda}
                           </TableCell>
                           <TableCell align="left">{row.nilai}</TableCell>
@@ -377,4 +622,21 @@ const Denda = ({
   );
 };
 
-export default Denda;
+const keys = {
+  fetch: "get-data-penalties",
+};
+
+const mapState = (state) => ({
+  loadings: {
+    fetch: getLoading(state, keys.fetch),
+  },
+  status: state.auth.user.data.status,
+  dataNewClause: state.addendumContract.dataNewClause,
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
+});
+
+const mapDispatch = {
+  fetch_api_sg,
+};
+
+export default connect(mapState, mapDispatch)(Denda);
