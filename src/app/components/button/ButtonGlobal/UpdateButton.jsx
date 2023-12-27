@@ -7,7 +7,9 @@ const UpdateButton = ({
   fromWhere,
   isDrafting = false,
   isMandatory = false,
+  isDisable,
 }) => {
+  console.log(isDisable, "isDisable");
   return (
     <div
       style={{
@@ -41,7 +43,8 @@ const UpdateButton = ({
               dataNewClauseDrafting[fromWhere].bodyClauseData[0]
                 .before_clause_note === "" ||
               dataNewClauseDrafting[fromWhere].bodyClauseData[0]
-                .clause_number === ""
+                .clause_number === "" ||
+              isDisable
             : fromWhere !== "other" && isDrafting === false
             ? dataNewClause[fromWhere].attachmentClauseData[0]
                 .attachment_number === "" ||

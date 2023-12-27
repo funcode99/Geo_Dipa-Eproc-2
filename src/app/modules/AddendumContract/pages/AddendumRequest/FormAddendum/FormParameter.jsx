@@ -93,12 +93,6 @@ const FormParameter = ({
   dataNewClauseDrafting,
   tabDisableLists,
 }) => {
-  // console.log("isi pihak kedua", secondAuthorizedOfficial);
-  // console.log("isi auth official", authorizedOfficial);
-  // console.log("isi direksi pekerjaan", jobDirector);
-  // console.log("isi pengawas pekerjaan", jobSupervisor);
-  // console.log("isi jsonData", jsonData);
-
   const bodyClauseDataTemplate = {
     clause_number: "",
     before_clause_note: "",
@@ -344,8 +338,6 @@ const FormParameter = ({
       }
     });
   }, [guaranteeBeforeAddendum]);
-
-  // console.log("data hasil looping", data);
 
   const guaranteeBeforeAddendum = [
     {
@@ -710,7 +702,6 @@ const FormParameter = ({
       type: "get",
       url: `/adendum/currencies`,
       onSuccess: (res) => {
-        console.log("response currencies", res);
         setDataCurrencies(res);
       },
     });
@@ -721,11 +712,6 @@ const FormParameter = ({
     getDataBankAccounts();
     getCurrencies();
   }, []);
-
-  React.useEffect(() => {
-    console.log("isi dataArr", dataArr);
-    console.log("isi currencies", currencies);
-  }, [dataArr, currencies]);
 
   const [addendumPaymentMethod, setAddendumPaymentMethod] = useState(
     // jsonData?.payment_method
@@ -1001,7 +987,6 @@ const FormParameter = ({
           }}
           onSubmit={(values) => {
             setStagePayment((data) => {
-              console.log("isi submit data", data);
               return {
                 ...data,
                 payment: [
@@ -1236,7 +1221,6 @@ const FormParameter = ({
                   add_work_period_type: timePeriodAddendum[1]?.radio,
                 }}
                 onSubmit={(values) => {
-                  console.log("isi jangka waktu", values);
                   submitFormParameterTimePeriod(values);
                 }}
               >
@@ -1721,7 +1705,6 @@ const FormParameter = ({
                   dataNewClauseDrafting.payment_method.attachmentClauseData,
               }}
               onSubmit={(values) => {
-                console.log("submit di metode pembayaran", values);
                 submitFormParameterPaymentMethod(values);
               }}
             >
@@ -2072,7 +2055,6 @@ const FormParameter = ({
                 }}
                 onSubmit={(values) => {
                   submitFormParameterFine(values);
-                  console.log("isi submit", values);
                 }}
               >
                 {({ values }) => (
@@ -2591,10 +2573,6 @@ const FormParameter = ({
                                         name={data.nameTitle}
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee",
-                                              data.nameTitle
-                                            );
                                             let fieldName = data.nameTitle;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2620,9 +2598,6 @@ const FormParameter = ({
                                         name={data.nameTitle}
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee"
-                                            );
                                             let fieldName = data.nameTitle;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2673,10 +2648,6 @@ const FormParameter = ({
                                         name={data.nameStart}
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee",
-                                              data.nameTitle
-                                            );
                                             let fieldName = data.nameStart;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2717,9 +2688,6 @@ const FormParameter = ({
                                         }
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee"
-                                            );
                                             let fieldName = data.nameEnd;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2805,14 +2773,9 @@ const FormParameter = ({
                                         event.target.files[0]
                                       );
                                       setInputDataGuarantee((state) => {
-                                        console.log("state sekarang", state);
                                         let fieldName = data.nameEvidence;
                                         let a = { ...state };
                                         // a[fieldName] = event.target.files[0];
-                                        // console.log(
-                                        //   "isi file",
-                                        //   event.target.files[0]
-                                        // );
                                         a[fieldName] = formData;
                                         return a;
                                       });
@@ -2859,7 +2822,6 @@ const FormParameter = ({
                 }}
                 onSubmit={(values) => {
                   submitFormParameterAccountNumber(values);
-                  console.log("values account number", values);
                 }}
               >
                 {(props) => {
@@ -3215,10 +3177,6 @@ const FormParameter = ({
                                     width: "100%",
                                   }}
                                   onChange={(event) => {
-                                    console.log(
-                                      "isi currentTarget",
-                                      event.target.files
-                                    );
                                     setFieldValue(
                                       "bank_statement_file",
                                       event.target.files[0]

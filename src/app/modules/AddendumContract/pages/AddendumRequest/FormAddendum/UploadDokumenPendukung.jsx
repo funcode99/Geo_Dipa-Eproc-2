@@ -16,8 +16,6 @@ const UploadDokumenPendukung = ({
   conclusion,
   getDataList,
 }) => {
-  console.log("isi getDataList", getDataList.add_drafter);
-  console.log("isi supportDocumentFetch", supportDocumentFetch);
   supportDocumentFetch.map((item) => {
     if (
       item.document_name ===
@@ -43,9 +41,6 @@ const UploadDokumenPendukung = ({
       item.required = false;
     }
   });
-
-  console.log("isi document data", getDataList?.add_support_document_data);
-
   const [supportingDocument, setSupportingDocument] = useState({
     data: getDataList?.add_support_document_data,
   });
@@ -172,7 +167,6 @@ const UploadDokumenPendukung = ({
     //       typeof item.fileDokumenKirim === "undefined" ||
     //       typeof item.perihal === "undefined"
     //     ) {
-    //       console.log("kosong");
     //     } else {
     //       formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
     //       formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
@@ -231,7 +225,6 @@ const UploadDokumenPendukung = ({
   const setNewDocumentValue = (index, event, name) => {
     setSupportingDocument((previous) => {
       let newState = [...previous.data];
-      console.log("newState", newState);
       newState[index][name] = event;
       return {
         data: newState,

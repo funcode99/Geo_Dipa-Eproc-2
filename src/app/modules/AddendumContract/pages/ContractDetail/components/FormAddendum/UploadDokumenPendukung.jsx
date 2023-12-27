@@ -102,8 +102,6 @@ const UploadDokumenPendukung = ({
   }, []);
 
   const submitData = (values) => {
-    console.log("isi values saat submit upload", values);
-
     let formDataNew = new FormData();
     if (
       values.drafterSelectValue === "Supply Chain Management (SCM) Division"

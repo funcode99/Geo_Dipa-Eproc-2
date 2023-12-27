@@ -19,15 +19,6 @@ const PerubahanKlausulKontrak = ({
 }) => {
   const dispatch = useDispatch();
 
-  console.log(
-    "isi fromWhere sekarang",
-    fromWhere,
-    isDrafting,
-    isMandatory,
-    dataNewClause,
-    dataNewClauseDrafting
-  );
-
   const changeOtherBodyClauseData = (fieldIndex, value, fieldType) => {
     let newArr = isDrafting
       ? [...dataNewClauseDrafting[fromWhere].bodyClauseData]

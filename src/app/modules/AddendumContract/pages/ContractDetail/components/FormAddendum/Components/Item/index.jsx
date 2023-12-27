@@ -66,9 +66,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const Item = ({ handleClick, status, data, isData = false }) => {
-  // console.log("isi data item", data?.items);
-  // console.log("isi data service", data?.services);
-
   const { dataContractById, dataSubmitItems } = useSelector(
     (state) => state.addendumContract
   );

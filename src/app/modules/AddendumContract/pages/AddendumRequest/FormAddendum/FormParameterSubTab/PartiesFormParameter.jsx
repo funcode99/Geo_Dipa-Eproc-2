@@ -274,13 +274,8 @@ const PartiesFormParameter = ({
   };
 
   // di option data nya sudah di hapus, tapi di select nya masih belum
-  useEffect(() => {
-    console.log("job Director sekarang", jobDirector);
-  }, [jobDirector]);
 
   const changeDataSecondAuthorizedOfficial = (num, unused, data) => {
-    console.log("isi data data", data);
-
     setPlaceman((placeman) => {
       let newArr = [...placeman?.secondAuthorizedOfficial];
       newArr[0]["currentSelectIndex"] = num;
@@ -375,10 +370,6 @@ const PartiesFormParameter = ({
 
   const [jobDirectorIndex, setJobDirectorIndex] = useState(0);
   const [jobSupervisorIndex, setJobSupervisorIndex] = useState(0);
-
-  useEffect(() => {
-    console.log("placeman sekarang", placeman);
-  }, [placeman]);
 
   const [authorizedOfficial, setAuthorizedOfficial] = useState(
     authorizedOfficialData

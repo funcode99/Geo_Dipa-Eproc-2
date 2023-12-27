@@ -37,6 +37,7 @@ const HargaPekerjaan = ({
   };
   const [item, setItem] = useState([]);
   const [grandTotal, setGrandTotal] = useState(0);
+
   let currenciesIndex = 0;
   const valueAfterAddendum = JSON.parse(
     localStorage.getItem("value_after_addendum")
@@ -52,10 +53,10 @@ const HargaPekerjaan = ({
   };
 
   const submitFormParameterJobPrice = (values) => {
-    if (valueAfterAddendum === grandTotal) {
+    if (dataAfterAdendum?.after_addendum_job_price == grandTotal) {
       submitJobPrice(
         {
-          add_contract_id: localStorage.getItem("add_contract_id"),
+          add_contract_id: contract_id,
           currency_id: currencies.count[currenciesIndex].id,
           item: values.data,
           body_clause_data: values.body_data,
@@ -183,20 +184,6 @@ const HargaPekerjaan = ({
                   </TableContainer>
                 </div>
               </div>
-              {/* <div
-                className="mt-8"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  border: "1px solid #000000",
-                  borderRadius: 8,
-                  padding: 16,
-                }}
-              >
-                <div className="perubahan-klausul mt-8">
-                  <PerubahanKlausul />
-                </div>
-              </div> */}
               <div className="mt-8"></div>
               <PerubahanKlausulKontrak
                 subTitle={"C"}
@@ -209,6 +196,8 @@ const HargaPekerjaan = ({
                 isDisable={isDisable}
               />
               <UpdateButton
+                isDisable={true}
+                // isDisable={isDisable}
                 fromWhere={"job_price"}
                 isDrafting={true}
                 isMandatory={true}

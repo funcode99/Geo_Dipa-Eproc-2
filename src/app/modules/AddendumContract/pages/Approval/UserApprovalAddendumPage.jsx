@@ -51,7 +51,6 @@ const UserApprovalAddendumPage = ({
   };
 
   // gak ada isi nya
-  // console.log('isi data contract by id di delivery monitoring', dataContractById)
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, addendum_id, tab: forceTabActive } = useParams();
@@ -144,9 +143,6 @@ const UserApprovalAddendumPage = ({
     },
   ]);
   const [checkedInitialValues, setCheckedInitialValues] = useState([]);
-  useEffect(() => {
-    console.log("checked initial values", checkedInitialValues);
-  }, [checkedInitialValues]);
   const [timePeriodData, setTimePeriodData] = useState();
   const [initialData, setInitialData] = useState();
 
@@ -241,7 +237,6 @@ const UserApprovalAddendumPage = ({
   // sengaja dikasih event biar yang diambil value nya
   function handleChangeTab(event, newTabActive) {
     // isi nya urutan angka array sesuai dengan yang di klik
-    console.log("isi newTabActive", newTabActive);
     setTabActive(newTabActive);
   }
 
@@ -255,7 +250,6 @@ const UserApprovalAddendumPage = ({
       // url: `/adendum/contract-final-draft/${contract_id}/show`,
       url: `/adendum/contract-final-draft/d086f59c-838a-440f-a262-d8f21f8fc4e1/show`,
       onSuccess: (res) => {
-        console.log("isi respon 2.23", res.data);
         setFinalDraftData(res.data);
       },
     });
@@ -334,13 +328,11 @@ const UserApprovalAddendumPage = ({
   };
 
   const getDataContractHeaderAfter = async () => {
-    console.log("masuk ke api 2.3");
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
       url: `/adendum/add-contracts/${addendum_id}`,
       onSuccess: (res) => {
-        console.log("apakah menarik data 2.3", res?.data);
         setTabDisableLists(res?.data);
         setStepper(res?.data?.steppers);
       },
@@ -353,7 +345,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/job-directors`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setauthorizedOfficial(res.data);
       },
     });
@@ -365,7 +356,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/refference/get-vendor/${id}`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setSecondAuthorizedOfficial(res.data.officer_data);
         setPICData(res.data.pic_data);
         setAccountNumberBankData(res.data.bank_data);
@@ -379,7 +369,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/direksi-pekerjaan`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setJobDirector(res.data);
       },
     });
@@ -442,9 +431,6 @@ const UserApprovalAddendumPage = ({
   };
 
   const assignTabLists = (values) => {
-    console.log("isi values", values);
-    console.log("isi tablists", TabLists);
-
     TabLists.map((Tabitem) => {
       Tabitem.addendum = false;
     });
@@ -461,9 +447,6 @@ const UserApprovalAddendumPage = ({
   };
 
   const [supportDocumentFetch, setSupportDocumentFetch] = useState();
-  useEffect(() => {
-    console.log("data sekarang", supportDocumentFetch);
-  }, [supportDocumentFetch]);
 
   const getAddContractDocument = async () => {
     fetch_api_sg({
