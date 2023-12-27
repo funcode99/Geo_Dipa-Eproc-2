@@ -26,6 +26,7 @@ const HargaPekerjaan = ({
   dataAfterAdendum,
   jobPriceCurrent,
   is_add_job_price,
+  dataNewClauseDrafting,
 }) => {
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
@@ -80,8 +81,8 @@ const HargaPekerjaan = ({
         enableReinitialize={true}
         initialValues={{
           data: item,
-          body_data: dataNewClause.job_price.bodyClauseData,
-          attachment_data: dataNewClause.job_price.attachmentClauseData,
+          body_data: dataNewClauseDrafting.job_price.bodyClauseData,
+          attachment_data: dataNewClauseDrafting.job_price.attachmentClauseData,
         }}
         onSubmit={(values) => {
           submitFormParameterJobPrice(values);
@@ -210,6 +211,7 @@ const HargaPekerjaan = ({
 
 const mapState = (state) => ({
   dataNewClause: state.addendumContract.dataNewClause,
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
 
 export default connect(mapState, null)(HargaPekerjaan);

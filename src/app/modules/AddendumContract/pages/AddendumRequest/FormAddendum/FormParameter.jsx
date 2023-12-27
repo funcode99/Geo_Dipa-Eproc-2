@@ -819,7 +819,7 @@ const FormParameter = ({
                           fontWeight: 600,
                         }}
                       >
-                        Jenis Denda
+                        Jenis Denda tiga
                       </span>
                       <Field
                         as="select"

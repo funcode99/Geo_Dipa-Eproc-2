@@ -32,6 +32,7 @@ const Denda = ({
   contract_id,
   dataNewClause,
   is_add_fine,
+  dataNewClauseDrafting,
 }) => {
   const dispatch = useDispatch();
   const [dataArr, setDataArr] = useState([]);
@@ -95,6 +96,8 @@ const Denda = ({
         fromWhere: fromWhere,
       });
     }
+    getDataPenalties();
+    getDataBankAccounts();
   }, []);
 
   useEffect(() => {
@@ -288,7 +291,7 @@ const Denda = ({
                           fontWeight: 600,
                         }}
                       >
-                        Jenis Denda
+                        Jenis Denda nya
                       </span>
                       <Field
                         as="select"
@@ -437,8 +440,8 @@ const Denda = ({
         enableReinitialize={true}
         initialValues={{
           fine_data: fine,
-          body_data: dataNewClause.fine.bodyClauseData,
-          attachment_data: dataNewClause.fine.attachmentClauseData,
+          body_data: dataNewClauseDrafting.fine.bodyClauseData,
+          attachment_data: dataNewClauseDrafting.fine.attachmentClauseData,
         }}
         onSubmit={(values) => {
           submitFormParameterFine(values);

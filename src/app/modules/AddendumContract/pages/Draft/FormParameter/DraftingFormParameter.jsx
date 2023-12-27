@@ -613,7 +613,7 @@ const DraftingFormParameter = ({
                           fontWeight: 600,
                         }}
                       >
-                        Jenis Denda
+                        Jenis Denda lima
                       </span>
                       <Field
                         as="select"
