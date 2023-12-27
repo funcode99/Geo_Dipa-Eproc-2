@@ -62,6 +62,7 @@ const HargaPekerjaan = ({
         },
         contract_id
       );
+      alert("Berhasil update data!");
     } else {
       alert(
         "Jumlah rincian pekerjaan anda belum sama dengan nilai perjanjian setelah addendum!"

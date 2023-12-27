@@ -587,7 +587,7 @@ const PerubahanKlausulKontrak = ({
             className="btn btn-primary text-white add-new-clause"
             onClick={showAddClause}
           >
-            Tambah Klausul Lampiran
+            Tambah Klausul Lampiran tes
           </button>
         </div>
 

@@ -6,6 +6,7 @@ import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContrac
 import { submitOther } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const Lainnya = ({
+  data,
   jsonData,
   isDisable,
   fromWhere,
@@ -13,6 +14,7 @@ const Lainnya = ({
   contract_id,
   isMandatory,
   otherCurrent,
+  is_add_other,
   dataNewClause,
   add_contract_others,
   dataNewClauseDrafting,

@@ -25,6 +25,7 @@ import {
 } from "@material-ui/core";
 
 const Denda = ({
+  dataArr,
   jsonData,
   isDisable,
   fromWhere,
@@ -35,40 +36,6 @@ const Denda = ({
   dataNewClauseDrafting,
 }) => {
   const dispatch = useDispatch();
-  const [dataArr, setDataArr] = useState([]);
-  const [dataArrFine, setDataArrFine] = useState([]);
-
-  const getDataPenalties = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/refference/get-all-pinalties`,
-      onSuccess: (res) => {
-        setDataArr(
-          res.data.map((item) => ({
-            id: item.id,
-            name: item.pinalty_name,
-          }))
-        );
-      },
-    });
-  };
-
-  const getDataBankAccounts = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/refference/get-party-bank/${contract_id}`,
-      onSuccess: (res) => {
-        setDataArrFine(
-          res.data.map((item) => ({
-            id: item.id,
-            name: item.pinalty_name,
-          }))
-        );
-      },
-    });
-  };
 
   useEffect(() => {
     if (fineCurrent !== null) {
@@ -87,7 +54,7 @@ const Denda = ({
     if (fineCurrent !== null) {
       dispatch({
         type: actionTypes.SetDraftingClause,
-        payload: fineCurrent?.body_clause_data[0] || {
+        payload: fineCurrent?.body_clause_data || {
           clause_number: "",
           before_clause_note: "",
           after_clause_note: "",
@@ -96,13 +63,6 @@ const Denda = ({
         fromWhere: fromWhere,
       });
     }
-    getDataPenalties();
-    getDataBankAccounts();
-  }, []);
-
-  useEffect(() => {
-    getDataPenalties();
-    getDataBankAccounts();
   }, []);
 
   function handleChangePage(newPage) {
@@ -137,7 +97,7 @@ const Denda = ({
     openCloseAddFine.current.open();
   };
   const classes = useStyles();
-  const [fine, setFine] = useState(fineCurrent?.penalty_fine_data);
+  const [fine, setFine] = useState(fineCurrent?.penalty_fine_data || 0);
   const handleFilter = (data, data2) => {
     const sort = JSON.parse(data2.sort);
     const filter = JSON.parse(data2.filter);
@@ -148,13 +108,14 @@ const Denda = ({
   const submitFormParameterFine = (values) => {
     submitFine(
       {
-        add_contract_id: localStorage.getItem("add_contract_id"),
+        add_contract_id: contract_id,
         penalty_fine_data: values.fine_data,
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
       contract_id
     );
+    alert("Berhasil update data!");
   };
   const tableHeaderFine = [
     {
@@ -208,10 +169,16 @@ const Denda = ({
     />
   );
   const deleteFine = (id) => {
-    setFine(() => {
-      return fine.filter((data) => {
-        return data.id !== id;
-      });
+    // setFine(() => {
+    //   return fine.filter((data) => {
+    //     return data.id !== id;
+    //   });
+    // });
+    setFine((data) => {
+      if (Array.isArray(data)) {
+        return data.filter((item) => item.id !== id);
+      }
+      return data;
     });
   };
 
@@ -237,11 +204,25 @@ const Denda = ({
             value_type: "",
           }}
           onSubmit={(values) => {
+            // setFine((data) => {
+            //   return [
+            //     ...data,
+            //     createData(
+            //       1,
+            //       values.pinalty_name,
+            //       values.value,
+            //       values.max_day,
+            //       values.value_type
+            //     ),
+            //   ];
+            // });
             setFine((data) => {
+              const dataArray = Array.isArray(data) ? data : [];
+
               return [
-                ...data,
+                ...dataArray,
                 createData(
-                  fine.length + 1,
+                  dataArray.length + 1, // Use dataArray.length to calculate the new id
                   values.pinalty_name,
                   values.value,
                   values.max_day,
@@ -249,6 +230,11 @@ const Denda = ({
                 ),
               ];
             });
+            // setFine(() => {
+            //   return fine.filter((data) => {
+            //     return data.id !== id;
+            //   });
+            // });
             openCloseAddFine.current.close();
           }}
         >
@@ -302,8 +288,8 @@ const Denda = ({
                           borderRadius: 4,
                         }}
                       >
-                        {dataArrFine.length > 0 &&
-                          dataArr.map((data) => {
+                        {dataArr.length > 0 &&
+                          dataArr.map((data, index) => {
                             return (
                               <>
                                 <option
@@ -312,7 +298,7 @@ const Denda = ({
                                   }}
                                 ></option>
                                 <option
-                                  key={data.id}
+                                  key={index}
                                   style={{
                                     padding: "10px 12px",
                                     backgroundColor: "white",
@@ -574,29 +560,28 @@ const Denda = ({
                       </TableRow>
                     </TableBody>
                     <TableBody>
-                      {fine?.map((row, index) => (
-                        <TableRow
-                          key={row.name}
-                          sx={{
-                            "&:last-child td, &:last-child th": {
-                              border: 0,
-                            },
-                          }}
-                        >
-                          <TableCell component="th">{index + 1}</TableCell>
-                          <TableCell align="left" scope="row">
-                            {row.jenis_denda}
-                          </TableCell>
-                          <TableCell align="left">{row.nilai}</TableCell>
-                          <TableCell align="left">{row.max_day}</TableCell>
-                          <TableCell align="left">
-                            {row.type_nilai === "1" ? "%" : "Nilai"}
-                          </TableCell>
-                          <TableCell align="left">
-                            {actionButton(row.id, deleteFine)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {fine.length > 0 &&
+                        fine?.map((row, index) => (
+                          <TableRow
+                            key={row.name}
+                            sx={{
+                              "&:last-child td, &:last-child th": {
+                                border: 0,
+                              },
+                            }}
+                          >
+                            <TableCell component="th">{index + 1}</TableCell>
+                            <TableCell align="left" scope="row">
+                              {row.pinalty_name}
+                            </TableCell>
+                            <TableCell align="left">{row.value}</TableCell>
+                            <TableCell align="left">{row.max_day}</TableCell>
+                            <TableCell align="left">{row.value_type}</TableCell>
+                            <TableCell align="left">
+                              {actionButton(row.id, deleteFine)}
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </TableContainer>

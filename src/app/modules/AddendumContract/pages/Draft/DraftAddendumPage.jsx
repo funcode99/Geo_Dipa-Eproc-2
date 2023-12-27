@@ -32,8 +32,6 @@ import TemplateKlausul from "./TemplateKlausul";
 import ParaPihakTab from "../../../../../app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameterSubTab/PartiesFormParameter";
 import LainnyaTab from "./tabs/Lainnya";
 
-//
-
 const DraftAddendumPage = ({
   loadings,
   headerData,
@@ -419,6 +417,28 @@ const DraftAddendumPage = ({
       ]}
     />
   );
+
+  const [dataArr, setDataArr] = useState([]);
+
+  const getDataPenalties = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/refference/get-all-pinalties`,
+      onSuccess: (res) => {
+        setDataArr(
+          res.data.map((item) => ({
+            id: item.id,
+            name: item.pinalty_name,
+          }))
+        );
+      },
+    });
+  };
+
+  useEffect(() => {
+    getDataPenalties();
+  }, []);
 
   const userReviewData = [
     {
@@ -1874,6 +1894,7 @@ const DraftAddendumPage = ({
           {tabActive === 5 && (
             <DendaTab
               fromWhere={"fine"}
+              dataArr={dataArr}
               contract_id={draft_id}
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
@@ -1911,6 +1932,7 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 8 && (
             <LainnyaTab
+              data={data}
               fromWhere="other"
               isDrafting={true}
               isMandatory={true}

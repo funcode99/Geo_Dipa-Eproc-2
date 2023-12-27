@@ -614,22 +614,11 @@ const PerubahanKlausulKontrak = ({
           </h1>
           <button
             type="button"
-            disabled={
-              isDrafting
-                ? dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
-                    .attachment_number === "" ||
-                  dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
-                    .clause_note === "" ||
-                  isDisable
-                : dataNewClause[fromWhere].attachmentClauseData[0]
-                    .attachment_number === "" ||
-                  dataNewClause[fromWhere].attachmentClauseData[0]
-                    .clause_note === ""
-            }
+            // disabled={isDisabled}
             className="btn btn-primary text-white add-new-clause"
             onClick={showAddClause}
           >
-            Tambah Klausul Lampiran
+            Tambah Klausul Lampiran lampiran
           </button>
         </div>
 
