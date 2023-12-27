@@ -2995,8 +2995,11 @@ const PartiesFormParameter = ({
               isDrafting={isDrafting}
               showAddClause={showAddClause}
             />
-
-            <UpdateButton fromWhere={"parties"} isDrafting={isDrafting} />
+            <UpdateButton
+              fromWhere={"parties"}
+              isDisable={!isDisable}
+              isDrafting={isDrafting}
+            />
           </Form>
         )}
       </Formik>

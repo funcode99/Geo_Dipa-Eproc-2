@@ -277,7 +277,7 @@ const Denda = ({
                           fontWeight: 600,
                         }}
                       >
-                        Jenis Denda nya
+                        Jenis Denda
                       </span>
                       <Field
                         as="select"
@@ -540,13 +540,14 @@ const Denda = ({
                     </h1>
                     <button
                       type="button"
+                      disabled={isDisable}
                       className="btn btn-primary"
                       style={{
                         maxHeight: 40,
                       }}
                       onClick={showAddFine}
                     >
-                      Denda
+                      + Denda
                     </button>
                   </div>
                   <Table sx={{ minWidth: 650 }} aria-label="simple table">

@@ -614,11 +614,21 @@ const PerubahanKlausulKontrak = ({
           </h1>
           <button
             type="button"
-            // disabled={isDisabled}
+            disabled={!isDisable}
             className="btn btn-primary text-white add-new-clause"
             onClick={showAddClause}
+            style={{
+              color: "white",
+              fontSize: 14,
+              fontWeight: "400",
+              padding: "8px 14px",
+              borderRadius: "8px",
+              backgroundColor: !isDisable ? "#8c8a8a" : "#3699ff",
+              outline: "none",
+              border: "none",
+            }}
           >
-            Tambah Klausul Lampiran lampiran
+            Tambah Klausul Lampiran
           </button>
         </div>
 
