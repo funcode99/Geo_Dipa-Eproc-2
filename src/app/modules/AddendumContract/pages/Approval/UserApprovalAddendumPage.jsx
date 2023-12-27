@@ -351,6 +351,7 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
+        console.log("masuk ke api 1.2", res?.data);
         setJsonData(res?.data);
         setDataArr({
           id: res.data.id,
@@ -378,7 +379,31 @@ const UserApprovalAddendumPage = ({
           // decrease_job_price: res.data.decrease_job_price,
           // addendum_percentage: res.data.addendum_percentage,
           // conclusion: res.data.conclusion,
+
+          payment_method_data: res?.data?.payment_method,
+          penalty_fine_data: res?.data?.penalty_fine_data,
+          time_period_data: {
+            from_time: res?.data?.from_time,
+            thru_time: res?.data?.thru_time,
+            worked_start_date: res?.data?.worked_start_date,
+            worked_end_date: res?.data?.worked_end_date,
+            guarantee_start_date: res?.data?.guarantee_start_date,
+            guarantee_end_date: res?.data?.guarantee_end_date,
+            maintenance_start_date: res?.data?.maintenance_start_date,
+            maintenance_end_date: res?.data?.maintenance_end_date,
+            contract_period_type: res?.data?.contract_period_type,
+            work_period_type: res?.data?.work_period_type,
+            contract_period_range_day: res?.data?.contract_period_range_day,
+            contract_period_range_month: res?.data?.contract_period_range_month,
+            work_implement_period_day: res?.data?.work_implement_period_day,
+            work_implement_period_month: res?.data?.work_implement_period_month,
+            guarantee_period_day: res?.data?.guarantee_period_day,
+            guarantee_period_month: res?.data?.guarantee_period_month,
+            maintenance_period_day: res?.data?.maintenance_period_day,
+            maintenance_period_month: res?.data?.maintenance_period_month,
+          },
         });
+        // pakai ini biar gak pass by reference, tapi pass by value
         localStorage.setItem(
           "payment_method",
           JSON.stringify(res?.data?.payment_method_data)
@@ -418,13 +443,12 @@ const UserApprovalAddendumPage = ({
   };
 
   const getDataContractHeaderAfter = async () => {
-    console.log("masuk ke api 2.3");
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
       url: `/adendum/add-contracts/${addendum_id}`,
       onSuccess: (res) => {
-        console.log("apakah menarik data 2.3", res?.data);
+        console.log("masuk ke api 2.3", res?.data);
         setTabDisableLists(res?.data);
         if (res?.data?.status_code === "15") {
           setStepper(approvalStepper1);
@@ -854,7 +878,7 @@ const UserApprovalAddendumPage = ({
                           <th>Keterangan</th>
                         </tr>
                         <tr>
-                          <td>Rp 7.422.000.000,00</td>
+                          <td>{dataArr?.initial_contract_value}</td>
                           <td>Rp 9.500.000.000,00</td>
                           <td></td>
                         </tr>
@@ -868,7 +892,10 @@ const UserApprovalAddendumPage = ({
                           <th>Keterangan</th>
                         </tr>
                         <tr>
-                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {dataArr?.time_period_data?.from_time || "x"} -{" "}
+                            {dataArr?.time_period_data?.thru_time || "x"}
+                          </td>
                           <td>
                             {tabDisableLists?.add_contract_time_period
                               ?.from_time || "x"}{" "}
@@ -879,7 +906,12 @@ const UserApprovalAddendumPage = ({
                           <td>Jangka Waktu Perjanjian</td>
                         </tr>
                         <tr>
-                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {dataArr?.time_period_data?.worked_start_date ||
+                              "x"}{" "}
+                            -{" "}
+                            {dataArr?.time_period_data?.worked_end_date || "x"}
+                          </td>
                           <td>
                             {tabDisableLists?.add_contract_time_period
                               ?.worked_start_date || "x"}{" "}
@@ -890,7 +922,13 @@ const UserApprovalAddendumPage = ({
                           <td>Jangka Waktu Pelaksanaan Pekerjaan</td>
                         </tr>
                         <tr>
-                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {dataArr?.time_period_data?.guarantee_start_date ||
+                              "x"}{" "}
+                            -{" "}
+                            {dataArr?.time_period_data?.guarantee_end_date ||
+                              "x"}
+                          </td>
                           <td>
                             {tabDisableLists?.add_contract_time_period
                               ?.guarantee_start_date || "x"}{" "}
@@ -901,7 +939,13 @@ const UserApprovalAddendumPage = ({
                           <td>Jangka Waktu Masa Garansi</td>
                         </tr>
                         <tr>
-                          <td>01/08/2023 - 15/02/2024</td>
+                          <td>
+                            {dataArr?.time_period_data
+                              ?.maintenance_start_date || "x"}{" "}
+                            -{" "}
+                            {dataArr?.time_period_data?.maintenance_end_date ||
+                              "x"}
+                          </td>
                           <td>
                             {tabDisableLists?.add_contract_time_period
                               ?.maintenance_start_date || "x"}{" "}
@@ -921,7 +965,7 @@ const UserApprovalAddendumPage = ({
                           <th>Keterangan</th>
                         </tr>
                         <tr>
-                          <td>Full Pembayaran</td>
+                          <td>{dataArr?.payment_method_data}</td>
                           <td>Pembayaran Bertahap</td>
                           <td></td>
                         </tr>
@@ -935,9 +979,26 @@ const UserApprovalAddendumPage = ({
                           <th>Keterangan</th>
                         </tr>
                         <tr>
-                          <td></td>
-                          <td>Pembayaran Bertahap</td>
-                          <td></td>
+                          {dataArr?.penalty_fine_data?.map((item) => {
+                            // wajib pakai return disini
+                            return tabDisableLists?.add_contract_fine?.penalty_fine_data.map(
+                              (item2) => {
+                                return (
+                                  <tr>
+                                    <td>
+                                      Nilai {item?.value} - Maksimal{" "}
+                                      {item?.max_day} Hari
+                                    </td>
+                                    <td>
+                                      Nilai {item2?.value} - Maksimal{" "}
+                                      {item2?.max_day} Hari
+                                    </td>
+                                    <td></td>
+                                  </tr>
+                                );
+                              }
+                            );
+                          })}
                         </tr>
                       </table>
                     )}
