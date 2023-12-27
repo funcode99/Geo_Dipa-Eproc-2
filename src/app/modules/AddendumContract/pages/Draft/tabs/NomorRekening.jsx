@@ -443,7 +443,11 @@ const NomorRekening = ({
                 showAddClause={showAddClause}
               />
 
-              <UpdateButton fromWhere={"account_number"} isDrafting={true} />
+              <UpdateButton
+                isDrafting={true}
+                isDisable={isDisable}
+                fromWhere={"account_number"}
+              />
             </Form>
           );
         }}

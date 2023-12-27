@@ -431,7 +431,11 @@ const Lainnya = ({
                   ))}
               </div>
 
-              <UpdateButton fromWhere={"payment_method"} isDrafting={true} />
+              <UpdateButton
+                isDrafting={true}
+                isDisable={isDisable}
+                fromWhere={"payment_method"}
+              />
             </Form>
           );
         }}

@@ -437,7 +437,11 @@ const MetodePembayaran = ({
                 showAddClause={showAddClause}
               />
 
-              <UpdateButton fromWhere={"payment_method"} isDrafting={true} />
+              <UpdateButton
+                fromWhere={"payment_method"}
+                isDrafting={true}
+                isDisable={isDisable}
+              />
             </Form>
           );
         }}

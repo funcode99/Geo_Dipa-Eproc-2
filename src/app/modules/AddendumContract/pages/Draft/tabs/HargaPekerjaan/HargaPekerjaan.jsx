@@ -27,9 +27,6 @@ const HargaPekerjaan = ({
   jobPriceCurrent,
   is_add_job_price,
 }) => {
-  if (is_add_job_price) {
-    isDisable = is_add_job_price;
-  }
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -169,6 +166,7 @@ const HargaPekerjaan = ({
                           type="button"
                           className="btn btn-primary text-white"
                           onClick={showAddDetail}
+                          disabled={isDisable}
                         >
                           + Tambah Rincian
                         </button>
@@ -193,11 +191,11 @@ const HargaPekerjaan = ({
                 isMandatory={true}
                 isDrafting={true}
                 values={values}
-                isDisable={isDisable}
+                isDisable={!isDisable}
               />
               <UpdateButton
-                isDisable={true}
-                // isDisable={isDisable}
+                // isDisable={false}
+                isDisable={isDisable}
                 fromWhere={"job_price"}
                 isDrafting={true}
                 isMandatory={true}

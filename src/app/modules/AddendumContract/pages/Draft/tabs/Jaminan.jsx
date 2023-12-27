@@ -636,7 +636,11 @@ const Jaminan = ({
                 showAddClause={showAddClause}
               />
 
-              <UpdateButton fromWhere={"guarantee"} isDrafting={true} />
+              <UpdateButton
+                isDrafting={true}
+                isDisable={isDisable}
+                fromWhere={"guarantee"}
+              />
             </Form>
           );
         }}

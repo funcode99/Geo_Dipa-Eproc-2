@@ -87,7 +87,6 @@ const UserApprovalAddendumPage = ({
 
   const [addendumAdditional, setAddendumAdditional] = useState([]);
   const addendumCombine = [...addendumAdditional, ...addendumSuffix];
-  console.log("kombinasi", addendumCombine);
 
   const keys = {
     fetch: "get-data-contracts-approval",
@@ -342,7 +341,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
-        console.log("masuk ke api 1.2", res?.data);
         setJsonData(res?.data);
         setDataArr({
           id: res.data.id,

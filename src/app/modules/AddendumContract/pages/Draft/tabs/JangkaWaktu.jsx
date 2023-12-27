@@ -19,9 +19,6 @@ const JangkaWaktu = ({
   add_contract_time_period,
   timePeriodAddendumCurrent,
 }) => {
-  if (is_add_time_period) {
-    isDisable = is_add_time_period;
-  }
   const dispatch = useDispatch();
   const openCloseAddClause = useRef();
   const showAddClause = () => {
@@ -620,7 +617,7 @@ const JangkaWaktu = ({
               values={values}
               isDrafting={true}
               isMandatory={true}
-              isDisable={isDisable}
+              isDisable={!isDisable}
               title={"Jangka Waktu"}
               fromWhere={"time_period"}
               showAddClause={showAddClause}
@@ -629,6 +626,7 @@ const JangkaWaktu = ({
             <UpdateButton
               isDrafting={true}
               isMandatory={true}
+              isDisable={isDisable}
               fromWhere={"time_period"}
             />
           </Form>

@@ -1837,7 +1837,7 @@ const DraftAddendumPage = ({
               fromWhere={"job_price"}
               // isDisable={data?.is_add_job_price}
               is_add_job_price={data?.is_add_job_price}
-              isDisable={!data?.is_add_job_price && !isAdmin}
+              isDisable={!data?.is_add_job_price || !isAdmin}
               jobPriceCurrent={data?.add_contract_job_price}
             />
           )}
@@ -1849,7 +1849,7 @@ const DraftAddendumPage = ({
               dataNewClause={dataNewClause}
               timePeriodData={dataContractById}
               // isDisable={data?.is_add_time_period}
-              isDisable={!data?.is_add_time_period && !isAdmin}
+              isDisable={!data?.is_add_time_period || !isAdmin}
               is_add_time_period={data?.is_add_time_period}
               timePeriodAddendumCurrent={data?.add_contract_time_period}
               add_contract_time_period={data?.add_contract_time_period}
@@ -1879,7 +1879,7 @@ const DraftAddendumPage = ({
               dataNewClause={dataNewClause}
               is_add_fine={data?.is_add_fine}
               fineCurrent={data?.add_contract_fine}
-              isDisable={!data?.is_add_fine && !isAdmin}
+              isDisable={!data?.is_add_fine || !isAdmin}
             />
           )}
           {tabActive === 6 && (

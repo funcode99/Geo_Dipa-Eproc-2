@@ -31,9 +31,6 @@ const Denda = ({
   dataNewClause,
   is_add_fine,
 }) => {
-  if (is_add_fine) {
-    isDisable = is_add_fine;
-  }
   const dispatch = useDispatch();
   useEffect(() => {
     if (fineCurrent !== null) {
@@ -364,11 +361,15 @@ const Denda = ({
               title={"Denda"}
               isDrafting={true}
               fromWhere={"fine"}
-              isDisable={isDisable}
+              isDisable={!isDisable}
               showAddClause={showAddClause}
             />
 
-            <UpdateButton fromWhere={"fine"} isDrafting={true} />
+            <UpdateButton
+              fromWhere={"fine"}
+              isDrafting={true}
+              isDisable={isDisable}
+            />
           </Form>
         )}
       </Formik>
