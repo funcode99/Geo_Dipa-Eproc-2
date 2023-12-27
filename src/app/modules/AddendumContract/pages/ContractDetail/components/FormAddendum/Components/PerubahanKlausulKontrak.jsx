@@ -338,6 +338,134 @@ const PerubahanKlausulKontrak = ({
           )}
 
           {/* body kontrak di other kondisi drafting */}
+          {fromWhere === "other" &&
+            isDrafting &&
+            dataNewClauseDrafting &&
+            dataNewClauseDrafting[fromWhere]?.bodyClauseData?.map(
+              (item, index) => {
+                return (
+                  <>
+                    {/* Nomor Pasal */}
+                    <div>
+                      <Field
+                        type="text"
+                        name={`body_data[${index}].clause_number`}
+                        value={item?.clause_number}
+                        onChange={(e) =>
+                          changeOtherBodyClauseData(
+                            index,
+                            e.target.value,
+                            "clause_number"
+                          )
+                        }
+                        placeholder="Masukkan Nomor Klausul"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          minWidth: 400,
+                        }}
+                        disabled={!isDisable}
+                      />
+                      {item.clause_number === "" && index === 0 && isMandatory && (
+                        <p>
+                          <span style={{ color: "red" }}>*</span>Wajib Diisi
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Pasal */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 14,
+                        // marginTop: 28
+                      }}
+                    >
+                      {/* pasal sebelum addendum */}
+                      <div>
+                        <p
+                          style={{
+                            fontWeight: 500,
+                            marginBottom: 14,
+                          }}
+                        >
+                          Pasal Sebelum Addendum
+                        </p>
+                        <Field
+                          className="form-control"
+                          as="textarea"
+                          name={`body_data[${index}].before_clause_note`}
+                          value={item?.before_clause_note}
+                          onChange={(e) =>
+                            changeOtherBodyClauseData(
+                              index,
+                              e.target.value,
+                              "before_clause_note"
+                            )
+                          }
+                          placeholder="Masukkan Klausul Kontrak"
+                          style={{
+                            padding: 8,
+                            borderRadius: 4,
+                            minWidth: 400,
+                          }}
+                          rows="4"
+                          disabled={!isDisable}
+                        />
+                        {item?.before_clause_note === "" &&
+                          index === 0 &&
+                          isMandatory && (
+                            <p>
+                              <span style={{ color: "red" }}>*</span>Wajib Diisi
+                            </p>
+                          )}
+                      </div>
+
+                      {/* pasal setelah addendum */}
+                      <div>
+                        <p
+                          style={{
+                            fontWeight: 500,
+                            marginBottom: 14,
+                          }}
+                        >
+                          Pasal Setelah Addendum
+                        </p>
+                        <Field
+                          className="form-control"
+                          as="textarea"
+                          name={`body_data[${index}].after_clause_note`}
+                          value={item.after_clause_note}
+                          onChange={(e) =>
+                            changeOtherBodyClauseData(
+                              index,
+                              e.target.value,
+                              "after_clause_note"
+                            )
+                          }
+                          placeholder="Masukkan Klausul Kontrak"
+                          style={{
+                            padding: 8,
+                            borderRadius: 4,
+                            minWidth: 400,
+                          }}
+                          rows="4"
+                          disabled={!isDisable}
+                        />
+                        {item.after_clause_note === "" &&
+                          index === 0 &&
+                          isMandatory && (
+                            <p>
+                              <span style={{ color: "red" }}>*</span>Wajib Diisi
+                            </p>
+                          )}
+                      </div>
+                    </div>
+                  </>
+                );
+              }
+            )}
 
           {/* body kontrak di other kondisi bukan drafting */}
           {fromWhere === "other" &&

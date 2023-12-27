@@ -35,6 +35,7 @@ const JobPriceFormParameter = ({
   contract_id,
   jobPriceData,
   isDisable,
+  disableUpdate,
 }) => {
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -434,8 +435,7 @@ const JobPriceFormParameter = ({
                 isDisable={isDisable}
               />
             </div>
-
-            <UpdateButton fromWhere={"job_price"} />
+            {!disableUpdate && <UpdateButton fromWhere={"job_price"} />}
           </Form>
         )}
       </Formik>
