@@ -69,7 +69,7 @@ const MetodePembayaran = ({
     alert("Berhasil Update Data!");
   };
   const [addendumPaymentMethod, setAddendumPaymentMethod] = useState(
-    jsonData?.payment_method
+    paymentMethodCurrent?.payment_method_name
   );
 
   useEffect(() => {
