@@ -33,27 +33,27 @@ const NomorRekening = ({
     jsonData?.data_bank?.length > 0 ? jsonData?.data_bank[bankIndex] : []
   );
   const submitFormParameterAccountNumber = (values) => {
-    // console.log(values, "values");
-    // let data_new = new FormData();
-    // data_new.append("add_contract_id", contract_id);
-    // data_new.append("data_bank", JSON.stringify(values.data_bank));
-    // data_new.append("bank_statement_file", values.bank_statement_file);
-    // data_new.append("body_clause_data", JSON.stringify(values.body_data));
-    // data_new.append(
-    //   "attachment_clause_data",
-    //   JSON.stringify(values.attachment_data)
-    // );
-    // submitAccountNumber(data_new, contract_id);
-    submitAccountNumber(
-      {
-        add_contract_id: contract_id,
-        data_bank: values.data_bank,
-        bank_statement_file: values.bank_statement_file,
-        body_clause_data: values.body_data,
-        attachment_clause_data: values.attachment_data,
-      },
-      contract_id
+    console.log(values, "values");
+    let data_new = new FormData();
+    data_new.append("add_contract_id", contract_id);
+    data_new.append("data_bank", JSON.stringify(values.data_bank));
+    data_new.append("bank_statement_file", values.bank_statement_file.name);
+    data_new.append("body_clause_data", JSON.stringify(values.body_data));
+    data_new.append(
+      "attachment_clause_data",
+      JSON.stringify(values.attachment_data)
     );
+    submitAccountNumber(data_new, contract_id);
+    // submitAccountNumber(
+    //   {
+    //     add_contract_id: contract_id,
+    //     data_bank: values.data_bank,
+    //     bank_statement_file: values.bank_statement_file,
+    //     body_clause_data: values.body_data,
+    //     attachment_clause_data: values.attachment_data,
+    //   },
+    //   contract_id
+    // );
     alert("Berhasil Update Data!");
   };
 
