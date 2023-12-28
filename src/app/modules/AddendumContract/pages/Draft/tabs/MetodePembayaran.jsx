@@ -1,6 +1,8 @@
 import { Formik, Field, Form } from "formik";
 import { connect, useDispatch } from "react-redux";
 import React, { useState, useRef, useEffect } from "react";
+import DialogGlobal from "app/components/modals/DialogGlobal";
+import CurrencyInput from "react-currency-input-field";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { submitPaymentMethod } from "app/modules/AddendumContract/service/AddendumContractCrudService";
@@ -21,6 +23,8 @@ const MetodePembayaran = ({
   add_contract_payment_method,
 }) => {
   const dispatch = useDispatch();
+  const [percentage, setPercentage] = useState(0);
+  const [description, setDescription] = useState("");
   const openCloseAddPayment = useRef();
   const showAddPayment = () => {
     openCloseAddPayment.current.open();
@@ -30,10 +34,6 @@ const MetodePembayaran = ({
     openCloseAddClause.current.open();
   };
   const earlyStagePayment = null;
-  // const payment_method = localStorage.getItem("payment_method");
-  // const earlyStagePayment = {
-  //   payment: JSON.parse(payment_method),
-  // };
   const [stagePayment, setStagePayment] = useState({
     payment: paymentMethodCurrent?.payment_method_data,
   });
@@ -99,8 +99,144 @@ const MetodePembayaran = ({
       });
     }
   }, []);
+
+  const createNewPaymentStage = (description, percentage_value, payment) => ({
+    description,
+    percentage_value,
+    payment,
+  });
   return (
     <div className="bg-white p-10">
+      <DialogGlobal
+        ref={openCloseAddPayment}
+        isCancel={false}
+        isSubmit={false}
+        yesButton={false}
+        noButton={false}
+      >
+        <Formik
+          enableReinitialize
+          initialValues={{
+            percentage: percentage,
+            description: description,
+          }}
+          onSubmit={(values) => {
+            setStagePayment((data) => {
+              return {
+                ...data,
+                payment: [
+                  ...data.payment,
+                  createNewPaymentStage(
+                    values.description,
+                    values.percentage,
+                    data?.payment?.length + 1
+                  ),
+                ],
+              };
+            });
+            setDescription("");
+            openCloseAddPayment.current.close();
+          }}
+        >
+          {(values) => {
+            return (
+              <Form>
+                <div
+                  style={{
+                    padding: "0 17%",
+                  }}
+                >
+                  <h1
+                    style={{
+                      marginBottom: 40,
+                      fontSize: 16,
+                      fontWeight: 600,
+                      textAlign: "center",
+                    }}
+                  >
+                    Tambah pembayaran bertahap
+                  </h1>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 14,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span>Persentase</span>
+                      <Field
+                        name="percentage"
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                        defaultValue={0}
+                        decimalsLimit={0}
+                        maxLength={3}
+                        decimalSeparator=","
+                        groupSeparator="."
+                        component={CurrencyInput}
+                        onValueChange={(value) => {
+                          setPercentage(value);
+                        }}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 10,
+                      }}
+                    >
+                      <span>Deskripsi</span>
+                      <Field
+                        style={{
+                          padding: 8,
+                          borderRadius: 4,
+                          border: 1,
+                          borderStyle: "solid",
+                          borderColor: "#8c8a8a",
+                          opacity: 0.8,
+                        }}
+                        name="description"
+                        onChange={(e) => {
+                          setDescription(e.target.value);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginTop: 52,
+                    padding: "0 7%",
+                  }}
+                >
+                  <button type="submit" className="btn btn-primary">
+                    Save
+                  </button>
+                </div>
+              </Form>
+            );
+          }}
+        </Formik>
+      </DialogGlobal>
       <NewClause
         openCloseAddClause={openCloseAddClause}
         fromWhere={"payment_method"}
@@ -427,7 +563,7 @@ const MetodePembayaran = ({
                         onClick={showAddPayment}
                         disabled={isDisable}
                       >
-                        Tambah
+                        + Tambah
                       </button>
                     </div>
                   )}
