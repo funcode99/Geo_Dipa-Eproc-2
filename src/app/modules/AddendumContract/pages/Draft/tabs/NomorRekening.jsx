@@ -72,7 +72,7 @@ const NomorRekening = ({
         fromWhere: "account_number",
       });
     }
-  }, []);
+  }, [add_contract_account_number]);
 
   return (
     <div className="bg-white p-10">
@@ -86,7 +86,8 @@ const NomorRekening = ({
         enableReinitialize={true}
         initialValues={{
           data_bank: accountNumber,
-          bank_statement_file: "",
+          bank_statement_file:
+            add_contract_account_number?.data_bank?.bank_statement_file,
           body_data: dataNewClauseDrafting?.account_number?.bodyClauseData,
           attachment_data:
             dataNewClauseDrafting?.account_number?.attachmentClauseData,
@@ -311,7 +312,6 @@ const NomorRekening = ({
                           value={
                             add_contract_account_number?.data_bank
                               ?.account_holder_name
-                            // jsonData?.data_bank[bankIndex]?.account_holder_name
                           }
                         />
                       </div>
