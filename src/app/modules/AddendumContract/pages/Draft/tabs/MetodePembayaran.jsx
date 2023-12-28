@@ -5,6 +5,7 @@ import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { submitPaymentMethod } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
+import NewClause from "../../ContractDetail/components/FormAddendum/Components/Modal/NewClause";
 
 const MetodePembayaran = ({
   tes,
@@ -100,6 +101,12 @@ const MetodePembayaran = ({
   }, []);
   return (
     <div className="bg-white p-10">
+      <NewClause
+        openCloseAddClause={openCloseAddClause}
+        fromWhere={"payment_method"}
+        fieldType={"clause_attachment"}
+        isDrafting={true}
+      />
       <Formik
         enableReinitialize={true}
         initialValues={{

@@ -9,6 +9,7 @@ import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import { submitFine } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
+import NewClause from "../../ContractDetail/components/FormAddendum/Components/Modal/NewClause";
 import {
   getSorting,
   searchFindMulti,
@@ -422,6 +423,12 @@ const Denda = ({
           )}
         </Formik>
       </DialogGlobal>
+      <NewClause
+        openCloseAddClause={openCloseAddClause}
+        fromWhere={"fine"}
+        fieldType={"clause_attachment"}
+        isDrafting={true}
+      />
       <Formik
         enableReinitialize={true}
         initialValues={{

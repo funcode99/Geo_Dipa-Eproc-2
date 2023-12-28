@@ -76,6 +76,12 @@ const NomorRekening = ({
 
   return (
     <div className="bg-white p-10">
+      <NewClause
+        openCloseAddClause={openCloseAddClause}
+        fromWhere={"account_number"}
+        fieldType={"clause_attachment"}
+        isDrafting={true}
+      />
       <Formik
         enableReinitialize={true}
         initialValues={{

@@ -7,6 +7,7 @@ import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton.jsx";
 import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
 import { submitTimePeriod } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import NewClause from "../../ContractDetail/components/FormAddendum/Components/Modal/NewClause";
 
 const JangkaWaktu = ({
   isAdmin,
@@ -161,6 +162,12 @@ const JangkaWaktu = ({
 
   return (
     <div className="bg-white p-10">
+      <NewClause
+        openCloseAddClause={openCloseAddClause}
+        fromWhere={"time_period"}
+        fieldType={"clause_attachment"}
+        isDrafting={true}
+      />
       <Formik
         enableReinitialize={true}
         initialValues={{
