@@ -198,12 +198,13 @@ const Lainnya = ({
                   <button
                     type="button"
                     disabled={
-                      dataLainnya.bodyClauseData.slice(-1)[0].clause_number ===
-                        "" ||
-                      dataLainnya.bodyClauseData.slice(-1)[0]
-                        .before_clause_note === "" ||
-                      dataLainnya.bodyClauseData.slice(-1)[0]
-                        .after_clause_note === ""
+                      // dataLainnya.bodyClauseData.slice(-1)[0].clause_number ===
+                      //   "" ||
+                      // dataLainnya.bodyClauseData.slice(-1)[0]
+                      //   .before_clause_note === "" ||
+                      // dataLainnya.bodyClauseData.slice(-1)[0]
+                      //   .after_clause_note === ""
+                      isDisable
                     }
                     className="btn btn-primary text-white add-new-clause"
                     onClick={addNewBodyClauseData}
@@ -355,10 +356,11 @@ const Lainnya = ({
                   <button
                     type="button"
                     disabled={
-                      dataLainnya.attachmentClauseData.slice(-1)[0]
-                        .attachment_number === "" ||
-                      dataLainnya.attachmentClauseData.slice(-1)[0]
-                        .clause_note === ""
+                      // dataLainnya.attachmentClauseData.slice(-1)[0]
+                      //   .attachment_number === "" ||
+                      // dataLainnya.attachmentClauseData.slice(-1)[0]
+                      //   .clause_note === ""
+                      isDisable
                     }
                     className="btn btn-primary text-white add-new-clause"
                     onClick={addNewAttachmentClause}

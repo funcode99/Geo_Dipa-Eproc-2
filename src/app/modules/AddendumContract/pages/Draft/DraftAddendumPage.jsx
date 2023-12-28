@@ -11,6 +11,7 @@ import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 import UploadInput from "app/components/input/UploadInput";
 import React, { useState, useRef, useEffect } from "react";
 import DialogGlobal from "app/components/modals/DialogGlobal";
+import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import Steppers from "app/components/steppersCustom/Steppers";
 import TextAreaInput from "app/components/input/TextAreaInput";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
@@ -54,7 +55,7 @@ const DraftAddendumPage = ({
   const [jobSupervisor, setJobSupervisor] = useState();
   const [linksGroup, setLinksGroup] = useState(dataGroup);
   // const [timePeriodData, setTimePeriodData] = useState();
-  // const [finalDraftData, setFinalDraftData] = useState();
+  const [finalDraftData, setFinalDraftData] = useState();
   const [jobSupervisor2, setJobSupervisor2] = useState();
   const [dataContractById, setDataContractById] = useState({});
   const [inputValue, setInputValue] = useState("Upload File");
@@ -65,7 +66,7 @@ const DraftAddendumPage = ({
   const [secondAuthorizedOfficial, setSecondAuthorizedOfficial] = useState();
   const [distributionTabActive, setDistributionTabActive] = React.useState(0);
   const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0);
-  // const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
+  const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
 
   const getClientStatus = (val) => {
     const filteredData = rolesEproc?.filter(
@@ -167,16 +168,16 @@ const DraftAddendumPage = ({
     setDistributionSequence(newTabActive);
   }
 
-  // const getFinalDraftData = async (contract_id) => {
-  //   fetch_api_sg({
-  //     key: keys.fetch,
-  //     type: "get",
-  //     url: `/adendum/contract-final-draft/${contract_id}/show`,
-  //     onSuccess: (res) => {
-  //       setFinalDraftData(res.data);
-  //     },
-  //   });
-  // };
+  const getFinalDraftData = async (contract_id) => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/contract-final-draft/${contract_id}/show`,
+      onSuccess: (res) => {
+        setFinalDraftData(res.data);
+      },
+    });
+  };
 
   // const getDataContractHeader = async () => {
   //   fetch_api_sg({
@@ -197,6 +198,7 @@ const DraftAddendumPage = ({
       // url: `/adendum/contract-released/${draft_id}/show`,
       url: `/adendum/add-contracts/${draft_id}`,
       onSuccess: (res) => {
+        getFinalDraftData(res?.data?.contract?.id);
         setJsonData(res?.data);
         localStorage.setItem(
           "payment_method",
@@ -1320,7 +1322,6 @@ const DraftAddendumPage = ({
           <Button>Save</Button>
         </div>
       </DialogGlobal>
-
       <DialogGlobal
         ref={openCloseAddAttachment}
         isCancel={false}
@@ -1811,6 +1812,216 @@ const DraftAddendumPage = ({
         </form>
       </Card>
 
+      <p>hello world</p>
+      {jsonData?.final_draft ? (
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: 28,
+            marginTop: 24,
+            marginBottom: 24,
+            borderRadius: 5,
+          }}
+        >
+          <h1
+            style={{
+              fontSize: 12,
+              fontWeight: 400,
+            }}
+          >
+            Silahkan download file final draft dibawah ini:
+          </h1>
+
+          <select
+            style={{
+              borderRadius: 4,
+              padding: "10px 12px",
+              width: 310,
+              backgroundColor: "#e8f4fb",
+            }}
+            onChange={(e) => setFinalDraftSelectValue(e.target.value)}
+          >
+            <option value="Kontrak">Final Draft Kontrak</option>
+            {finalDraftData?.add_contracts.length > 0 && (
+              <option value="Addendum">Final Draft Addendum</option>
+            )}
+          </select>
+          {finalDraftSelectValue === "Kontrak" && (
+            <div
+              style={{
+                minHeight: 100,
+                marginTop: 10,
+                marginBottom: 10,
+                fontSize: 12,
+                fontWeight: 400,
+                color: "#3699ff",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${jsonData?.form_review?.spk_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {jsonData?.form_review?.spk_name}
+                </a>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                {/* <p>Lampiran 1.doc</p> */}
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${jsonData?.form_review?.lampiran_1_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {jsonData?.form_review?.lampiran_1_name}
+                </a>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
+                  style={{
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${jsonData?.form_review?.lampiran_2_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {jsonData?.form_review?.lampiran_2_name}
+                </a>
+              </div>
+            </div>
+          )}
+
+          {finalDraftSelectValue === "Addendum" && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                // rowGap: 14,
+                marginTop: 14,
+              }}
+            >
+              <p>Perihal: {finalDraftData?.add_contracts[0]?.perihal}</p>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 400,
+                    color: "#3699ff",
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${DEV_NODE}/final_draft/${finalDraftData.add_contracts[0].final_draft[0].body_file_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {
+                    finalDraftData?.add_contracts[0]?.final_draft[0]
+                      ?.body_file_name
+                  }
+                </a>
+              </div>
+              {finalDraftData?.add_contracts[0]?.final_draft[0]?.lampiran_data?.map(
+                (item) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                      }}
+                    >
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/file-final-draft.svg"
+                        )}
+                      />
+                      <a
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          color: "#3699ff",
+                          marginBottom: "1rem",
+                        }}
+                        onClick={() =>
+                          window.open(
+                            `${DEV_NODE}/final_draft/lampiran/${item.lampiran_file_name}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {item?.lampiran_file_name}
+                      </a>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="d-flex justify-content-center m-5 border-danger">
+          <CircularProgress />
+        </div>
+      )}
+
       {sequence === 1 && <TemplateKlausul />}
 
       {sequence === 0 && (
@@ -1941,7 +2152,7 @@ const DraftAddendumPage = ({
               dataNewClause={dataNewClause}
               is_add_other={data?.is_add_other}
               otherCurrent={data?.add_contract_others}
-              isDisable={!data?.is_add_other || !isAdmin}
+              isDisable={!data?.other_note || !isAdmin}
               add_contract_others={data?.add_contract_others}
             />
           )}

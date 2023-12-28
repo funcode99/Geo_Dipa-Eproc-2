@@ -33,7 +33,6 @@ const NomorRekening = ({
     jsonData?.data_bank?.length > 0 ? jsonData?.data_bank[bankIndex] : []
   );
   const submitFormParameterAccountNumber = (values) => {
-    console.log(values, "values");
     let data_new = new FormData();
     data_new.append("add_contract_id", contract_id);
     data_new.append("data_bank", JSON.stringify(values.data_bank));
@@ -84,8 +83,6 @@ const NomorRekening = ({
       });
     }
   }, [add_contract_account_number]);
-
-  console.log(add_contract_account_number, "add_contract_account_number");
 
   return (
     <div className="bg-white p-10">
