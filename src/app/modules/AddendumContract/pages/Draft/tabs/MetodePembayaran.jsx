@@ -54,6 +54,7 @@ const MetodePembayaran = ({
       values.payment_method === "gradually"
     ) {
       alert("Silahkan tambah tahap pembayaran anda");
+      return false;
     }
     submitPaymentMethod(
       {
