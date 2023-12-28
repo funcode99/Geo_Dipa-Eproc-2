@@ -60,7 +60,9 @@ const MetodePembayaran = ({
         add_contract_id: contract_id,
         payment_method_name: values.payment_method,
         payment_method_data:
-          values.payment_method === "gradually" ? values.payment_data : null,
+          values.payment_method == "full" ? [] : values.payment_data,
+        // payment_method_data:
+        //   values.payment_method === "gradually" ? values.payment_data : null,
         body_clause_data: values.body_data,
         attachment_clause_data: values.attachment_data,
       },
@@ -247,7 +249,8 @@ const MetodePembayaran = ({
         enableReinitialize={true}
         initialValues={{
           payment_method: addendumPaymentMethod,
-          payment_data: stagePayment?.payment,
+          payment_data:
+            addendumPaymentMethod == "full" ? [] : stagePayment?.payment,
           body_data: dataNewClauseDrafting?.payment_method?.bodyClauseData,
           attachment_data:
             dataNewClauseDrafting?.payment_method?.attachmentClauseData,
