@@ -37,12 +37,7 @@ const NomorRekening = ({
     let data_new = new FormData();
     data_new.append("add_contract_id", contract_id);
     data_new.append("data_bank", JSON.stringify(values.data_bank));
-    data_new.append(
-      "bank_statement_file",
-      values.bank_statement_file.name === undefined
-        ? values.bank_statement_file
-        : values.bank_statement_file.name
-    );
+    data_new.append("bank_statement_file", values.bank_statement_file);
     data_new.append("body_clause_data", JSON.stringify(values.body_data));
     data_new.append(
       "attachment_clause_data",
