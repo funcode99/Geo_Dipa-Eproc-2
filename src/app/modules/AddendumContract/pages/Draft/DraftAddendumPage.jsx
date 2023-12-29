@@ -1843,10 +1843,10 @@ const DraftAddendumPage = ({
           >
             <option value="Kontrak">Final Draft Kontrak</option>
             {finalDraftData?.add_contracts?.length > 0 && (
-              <option value="Addendum">Final Draft Addendum</option>
+              <option value="Addendum">Final Draft Addendum 1</option>
             )}
             {finalDraftData?.add_contracts?.length > 1 && (
-              <option value="Addendum_2">Final Draft Addendum ke dua</option>
+              <option value="Addendum_2">Final Draft Addendum 2</option>
             )}
           </select>
 
