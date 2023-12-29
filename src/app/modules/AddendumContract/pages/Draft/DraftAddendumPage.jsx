@@ -1845,6 +1845,9 @@ const DraftAddendumPage = ({
             {finalDraftData?.add_contracts?.length > 0 && (
               <option value="Addendum">Final Draft Addendum</option>
             )}
+            {finalDraftData?.add_contracts?.length > 1 && (
+              <option value="Addendum_2">Final Draft Addendum ke dua</option>
+            )}
           </select>
 
           {finalDraftSelectValue === "Kontrak" && (
@@ -1968,6 +1971,82 @@ const DraftAddendumPage = ({
                 </a>
               </div>
               {finalDraftData?.add_contracts[0]?.final_draft[0]?.lampiran_data?.map(
+                (item) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                      }}
+                    >
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/file-final-draft.svg"
+                        )}
+                      />
+                      <a
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          color: "#3699ff",
+                          marginBottom: "1rem",
+                        }}
+                        onClick={() =>
+                          window.open(
+                            `${DEV_NODE}/final_draft/lampiran/${item?.lampiran_file_name}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {item?.lampiran_file_name}
+                      </a>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          )}
+          {finalDraftSelectValue === "Addendum_2" && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 14,
+              }}
+            >
+              <p>Perihal: {finalDraftData?.add_contracts[1]?.perihal}</p>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 400,
+                    color: "#3699ff",
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${DEV_NODE}/final_draft/${finalDraftData?.add_contracts[1]?.final_draft[0]?.body_file_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {
+                    finalDraftData?.add_contracts[1]?.final_draft[0]
+                      ?.body_file_name
+                  }
+                </a>
+              </div>
+              {finalDraftData?.add_contracts[1]?.final_draft[0]?.lampiran_data?.map(
                 (item) => {
                   return (
                     <div
