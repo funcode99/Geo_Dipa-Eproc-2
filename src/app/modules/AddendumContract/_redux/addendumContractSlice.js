@@ -15,7 +15,7 @@ const attachmentClauseDataTemplate = {
 
 const initialAddendumContractState = {
   authorizedOfficialIndex: 0,
-  isAddJobPrice: false,
+  // isAddJobPrice: false,
   conclusion: "",
   dataDeverableDoc: null,
   dataContractById: [],
@@ -1106,12 +1106,12 @@ export const reducer = persistReducer(
         };
       }
 
-      case actionTypes.SetIsAddJobPrice: {
-        return {
-          ...state,
-          isAddJobPrice: action.payload,
-        };
-      }
+      // case actionTypes.SetIsAddJobPrice: {
+      //   return {
+      //     ...state,
+      //     isAddJobPrice: action.payload,
+      //   };
+      // }
 
       case actionTypes.SetConclusion: {
         return {

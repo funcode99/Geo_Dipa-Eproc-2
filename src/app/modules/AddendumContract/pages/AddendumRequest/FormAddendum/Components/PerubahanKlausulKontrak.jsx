@@ -15,6 +15,7 @@ const PerubahanKlausulKontrak = ({
   fromWhere,
   isMandatory = false,
   isDrafting = false,
+  isDisable,
 }) => {
   const dispatch = useDispatch();
 
@@ -159,6 +160,7 @@ const PerubahanKlausulKontrak = ({
               {/* Nomor Pasal */}
               <div>
                 <Field
+                  disabled={!isDisable}
                   type="text"
                   name={`body_data.clause_number`}
                   value={
@@ -214,6 +216,7 @@ const PerubahanKlausulKontrak = ({
                     Pasal Sebelum Addendum
                   </p>
                   <Field
+                    disabled={!isDisable}
                     className="form-control"
                     as="textarea"
                     name={`body_data.before_clause_note`}
@@ -263,6 +266,7 @@ const PerubahanKlausulKontrak = ({
                     Pasal Setelah Addendum
                   </p>
                   <Field
+                    disabled={!isDisable}
                     className="form-control"
                     as="textarea"
                     name={`body_data.after_clause_note`}
@@ -314,6 +318,7 @@ const PerubahanKlausulKontrak = ({
                     {/* Nomor Pasal */}
                     <div>
                       <Field
+                        disabled={!isDisable}
                         type="text"
                         name={`body_data[${index}].clause_number`}
                         value={item?.clause_number}
@@ -358,6 +363,7 @@ const PerubahanKlausulKontrak = ({
                           Pasal Sebelum Addendum
                         </p>
                         <Field
+                          disabled={!isDisable}
                           className="form-control"
                           as="textarea"
                           name={`body_data[${index}].before_clause_note`}
@@ -397,6 +403,7 @@ const PerubahanKlausulKontrak = ({
                           Pasal Setelah Addendum
                         </p>
                         <Field
+                          disabled={!isDisable}
                           className="form-control"
                           as="textarea"
                           name={`body_data[${index}].after_clause_note`}
@@ -438,6 +445,7 @@ const PerubahanKlausulKontrak = ({
                   {/* Nomor Pasal */}
                   <div>
                     <Field
+                      disabled={!isDisable}
                       type="text"
                       name={`body_data[${index}].clause_number`}
                       value={item?.clause_number}
@@ -482,6 +490,7 @@ const PerubahanKlausulKontrak = ({
                         Pasal Sebelum Addendum
                       </p>
                       <Field
+                        disabled={!isDisable}
                         className="form-control"
                         as="textarea"
                         name={`body_data[${index}].before_clause_note`}
@@ -521,6 +530,7 @@ const PerubahanKlausulKontrak = ({
                         Pasal Setelah Addendum
                       </p>
                       <Field
+                        disabled={!isDisable}
                         className="form-control"
                         as="textarea"
                         name={`body_data[${index}].after_clause_note`}
@@ -596,6 +606,7 @@ const PerubahanKlausulKontrak = ({
             (item, index) => (
               <>
                 <Field
+                  disabled={!isDisable}
                   onChange={(e) =>
                     changeFieldData(
                       index,
@@ -622,6 +633,7 @@ const PerubahanKlausulKontrak = ({
                 )}
 
                 <Field
+                  disabled={!isDisable}
                   className="form-control"
                   as="textarea"
                   onChange={(e) =>
@@ -655,6 +667,7 @@ const PerubahanKlausulKontrak = ({
           dataNewClause[fromWhere].attachmentClauseData.map((item, index) => (
             <>
               <Field
+                disabled={!isDisable}
                 onChange={(e) =>
                   changeFieldData(
                     index,
@@ -679,6 +692,7 @@ const PerubahanKlausulKontrak = ({
               )}
 
               <Field
+                disabled={!isDisable}
                 className="form-control"
                 as="textarea"
                 onChange={(e) =>

@@ -122,7 +122,7 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_party?.body_clause_data[0] ||
+          tabDisableLists?.add_contract_party?.body_clause_data ||
           bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "parties",
@@ -141,7 +141,7 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_job_price?.body_clause_data[0] ||
+          tabDisableLists?.add_contract_job_price?.body_clause_data ||
           bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "job_price",
@@ -160,7 +160,7 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_time_period?.body_clause_data[0] ||
+          tabDisableLists?.add_contract_time_period?.body_clause_data ||
           bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "time_period",
@@ -179,7 +179,7 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_payment_method?.body_clause_data[0] ||
+          tabDisableLists?.add_payment_method?.body_clause_data ||
           bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "payment_method",
@@ -199,7 +199,7 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_fine?.body_clause_data[0] ||
+          tabDisableLists?.add_contract_fine?.body_clause_data ||
           bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "fine",
@@ -218,7 +218,7 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_guarantee?.body_clause_data[0] ||
+          tabDisableLists?.add_contract_guarantee?.body_clause_data ||
           bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "guarantee",
@@ -237,7 +237,7 @@ const FormParameter = ({
       dispatch({
         type: actionTypes.SetRequestClause,
         payload:
-          tabDisableLists?.add_contract_account_number?.body_clause_data[0] ||
+          tabDisableLists?.add_contract_account_number?.body_clause_data ||
           bodyClauseDataTemplate,
         fieldType: "refill_body_clause_data",
         fromWhere: "account_number",
@@ -263,7 +263,7 @@ const FormParameter = ({
         fromWhere: "other",
       });
     }
-  }, []);
+  }, [tabDisableLists]);
 
   const tableHeaderFine = [
     {
@@ -415,45 +415,60 @@ const FormParameter = ({
     },
   ];
 
-  const [timePeriodAddendum, setTimePeriodAddendum] = useState([
+  const timePeriodAddendum = [
     {
       title: "Jangka Waktu Perjanjian",
-      startDate: timePeriodData?.from_time,
-      endDate: timePeriodData?.thru_time,
-      totalMonth: timePeriodData?.contract_period_range_month,
-      calendarDay: timePeriodData?.contract_period_range_day,
-      radio: timePeriodData?.contract_period_type,
+      startDate: tabDisableLists?.add_contract_time_period?.from_time,
+      endDate: tabDisableLists?.add_contract_time_period?.thru_time,
+      totalMonth:
+        tabDisableLists?.add_contract_time_period?.contract_period_range_month,
+      calendarDay:
+        tabDisableLists?.add_contract_time_period?.contract_period_range_day,
+      radio: tabDisableLists?.add_contract_time_period?.contract_period_type,
       prefix: "contract",
-      selectableStart: timePeriodData?.from_time !== null ? true : false,
+      selectableStart:
+        tabDisableLists?.add_contract_time_period?.from_time !== null
+          ? true
+          : false,
     },
     {
       title: "Jangka Waktu Pelaksanaan Pekerjaan",
-      startDate: timePeriodData?.worked_start_date,
-      endDate: timePeriodData?.worked_end_date,
-      totalMonth: timePeriodData?.work_implement_period_month,
-      calendarDay: timePeriodData?.work_implement_period_day,
-      radio: timePeriodData?.work_period_type,
+      startDate: tabDisableLists?.add_contract_time_period?.worked_start_date,
+      endDate: tabDisableLists?.add_contract_time_period?.worked_end_date,
+      totalMonth:
+        tabDisableLists?.add_contract_time_period?.work_implement_period_month,
+      calendarDay:
+        tabDisableLists?.add_contract_time_period?.work_implement_period_day,
+      radio: tabDisableLists?.add_contract_time_period?.work_period_type,
       prefix: "work",
       selectableStart:
-        timePeriodData?.worked_start_date !== null ? true : false,
+        tabDisableLists?.add_contract_time_period?.worked_start_date !== null
+          ? true
+          : false,
     },
     {
       title: "Jangka Waktu Masa Garansi",
-      startDate: timePeriodData?.guarantee_start_date,
-      endDate: timePeriodData?.guarantee_end_date,
-      totalMonth: timePeriodData?.guarantee_period_month,
-      calendarDay: timePeriodData?.guarantee_period_day,
+      startDate:
+        tabDisableLists?.add_contract_time_period?.guarantee_start_date,
+      endDate: tabDisableLists?.add_contract_time_period?.guarantee_end_date,
+      totalMonth:
+        tabDisableLists?.add_contract_time_period?.guarantee_period_month,
+      calendarDay:
+        tabDisableLists?.add_contract_time_period?.guarantee_period_day,
       prefix: "guarantee",
     },
     {
       title: "Jangka Waktu Masa Pemeliharaan",
-      startDate: timePeriodData?.maintenance_start_date,
-      endDate: timePeriodData?.maintenance_end_date,
-      totalMonth: timePeriodData?.maintenance_period_month,
-      calendarDay: timePeriodData?.maintenance_period_day,
+      startDate:
+        tabDisableLists?.add_contract_time_period?.maintenance_start_date,
+      endDate: tabDisableLists?.add_contract_time_period?.maintenance_end_date,
+      totalMonth:
+        tabDisableLists?.add_contract_time_period?.maintenance_period_month,
+      calendarDay:
+        tabDisableLists?.add_contract_time_period?.maintenance_period_day,
       prefix: "maintenance",
     },
-  ]);
+  ];
 
   const [bankIndex, setBankIndex] = useState(0);
   const changeDataBankIndex = (num) => {
@@ -461,15 +476,7 @@ const FormParameter = ({
     setAccountNumber(jsonData?.data_bank[num]);
   };
 
-  // const [timePeriodBodyClauseData, setTimePeriodBodyClauseData] = useState(
-  //   bodyClauseDataTemplate
-  // );
-  // const [
-  //   timePeriodAttachmentClauseData,
-  //   setTimePeriodAttachmentClauseData,
-  // ] = useState([attachmentClauseDataTemplate]);
-
-  const [inputDataGuarantee, setInputDataGuarantee] = useState({
+  const inputDataGuarantee = {
     dp_guarantee:
       tabDisableLists?.add_contract_guarantee?.down_payment_guarantee,
     dp_guarantee_start_date:
@@ -500,7 +507,7 @@ const FormParameter = ({
     maintenance_guarantee_evidence_file:
       tabDisableLists?.add_contract_guarantee
         ?.maintenance_guarantee_evidence_file,
-  });
+  };
 
   // bikin converter tanggal ke x hari & y bulan + skpp/spmk
   const submitFormParameterTimePeriod = (values) => {
@@ -626,9 +633,14 @@ const FormParameter = ({
     // JSON.parse(localStorage.getItem("fine"))
     tabDisableLists?.add_contract_fine
   );
-  const [addendumFine, setAddendumFine] = useState(
-    tabDisableLists?.add_contract_fine
-  );
+  // const [addendumFine, setAddendumFine] = useState(
+  //   tabDisableLists?.add_contract_fine?.penalty_fine_data
+  // );
+
+  // console.log(
+  //   "ini isi nya apaan sih",
+  //   tabDisableLists?.add_contract_fine?.penalty_fine_data
+  // );
 
   const deleteFine = (id) => {
     setFine(() => {
@@ -648,15 +660,12 @@ const FormParameter = ({
   };
 
   const [stagePayment, setStagePayment] = useState({
-    // payment: jsonData?.payment_method_data,
     payment: tabDisableLists?.add_contract_payment_method?.payment_method_data,
   });
   const [accountNumber, setAccountNumber] = useState(
     jsonData?.data_bank[bankIndex]
   );
-
   const [uploadBankData, setUploadBankData] = useState();
-
   const getDataPenalties = async () => {
     fetch_api_sg({
       key: keys.fetch,
@@ -708,7 +717,6 @@ const FormParameter = ({
   }, []);
 
   const [addendumPaymentMethod, setAddendumPaymentMethod] = useState(
-    // jsonData?.payment_method
     tabDisableLists?.add_contract_payment_method?.payment_method_name
   );
 
@@ -1166,7 +1174,7 @@ const FormParameter = ({
                 jobSupervisor={jobSupervisor}
                 jobSupervisor2={jobSupervisor2}
                 contract_id={contract_id}
-                isDisable={tabDisableLists?.is_add_parties}
+                isDisable={false}
                 partiesData={tabDisableLists}
                 disableUpdate={disableUpdate}
               />
@@ -1181,7 +1189,7 @@ const FormParameter = ({
                 headerData={headerData}
                 jsonData={jsonData}
                 contract_id={contract_id}
-                isDisable={tabDisableLists?.is_add_job_price}
+                isDisable={false}
                 jobPriceData={tabDisableLists}
                 disableUpdate={disableUpdate}
               />
@@ -1504,23 +1512,15 @@ const FormParameter = ({
                                         }}
                                         name={data.prefix + "_start_date"}
                                         value={data.startDate}
-                                        disabled={
-                                          (data.title ===
-                                            "Jangka Waktu Perjanjian" &&
-                                            data.selectableStart) ||
-                                          (data.title ===
-                                            "Jangka Waktu Pelaksanaan Pekerjaan" &&
-                                            data.selectableStart) ||
-                                          !tabDisableLists?.is_add_time_period
-                                        }
-                                        onChange={(e) =>
-                                          setTimePeriodAddendum((prev) => {
-                                            let newArr = [...prev];
-                                            newArr[index].startDate =
-                                              e.target.value;
-                                            return newArr;
-                                          })
-                                        }
+                                        disabled={true}
+                                        // onChange={(e) =>
+                                        //   setTimePeriodAddendum((prev) => {
+                                        //     let newArr = [...prev];
+                                        //     newArr[index].startDate =
+                                        //       e.target.value;
+                                        //     return newArr;
+                                        //   })
+                                        // }
                                       />
                                     </div>
 
@@ -1554,24 +1554,25 @@ const FormParameter = ({
                                         }}
                                         name={data.prefix + "_end_date"}
                                         value={data.endDate}
-                                        onChange={(e) => {
-                                          setTimePeriodAddendum((prev) => {
-                                            if (e !== null) {
-                                              let newArr = [...prev];
-                                              newArr[index].endDate =
-                                                e.target.value;
-                                              let a = countdownConverter(
-                                                data?.startDate,
-                                                data?.endDate
-                                              );
-                                              newArr[index].totalMonth = a[0];
-                                              newArr[index].calendarDay = a[1];
-                                              return newArr;
-                                            }
-                                          });
-                                        }}
+                                        // onChange={(e) => {
+                                        //   setTimePeriodAddendum((prev) => {
+                                        //     if (e !== null) {
+                                        //       let newArr = [...prev];
+                                        //       newArr[index].endDate =
+                                        //         e.target.value;
+                                        //       let a = countdownConverter(
+                                        //         data?.startDate,
+                                        //         data?.endDate
+                                        //       );
+                                        //       newArr[index].totalMonth = a[0];
+                                        //       newArr[index].calendarDay = a[1];
+                                        //       return newArr;
+                                        //     }
+                                        //   });
+                                        // }}
                                         disabled={
-                                          !tabDisableLists?.is_add_time_period
+                                          true
+                                          // !tabDisableLists?.is_add_time_period
                                         }
                                       />
                                     </div>
@@ -1621,17 +1622,15 @@ const FormParameter = ({
                                         type="radio"
                                         name={`add_${data?.prefix}_period_type`}
                                         value={"SKPP"}
-                                        onChange={(e) =>
-                                          setTimePeriodAddendum((prev) => {
-                                            let newArr = [...prev];
-                                            newArr[index].radio =
-                                              e.target.value;
-                                            return newArr;
-                                          })
-                                        }
-                                        disabled={
-                                          !tabDisableLists?.is_add_time_period
-                                        }
+                                        // onChange={(e) =>
+                                        //   setTimePeriodAddendum((prev) => {
+                                        //     let newArr = [...prev];
+                                        //     newArr[index].radio =
+                                        //       e.target.value;
+                                        //     return newArr;
+                                        //   })
+                                        // }
+                                        disabled={true}
                                       />
                                       <span>SKPP</span>
                                     </div>
@@ -1649,17 +1648,15 @@ const FormParameter = ({
                                         type="radio"
                                         name={`add_${data?.prefix}_period_type`}
                                         value={"SPMK"}
-                                        onChange={(e) =>
-                                          setTimePeriodAddendum((prev) => {
-                                            let newArr = [...prev];
-                                            newArr[index].radio =
-                                              e.target.value;
-                                            return newArr;
-                                          })
-                                        }
-                                        disabled={
-                                          !tabDisableLists?.is_add_time_period
-                                        }
+                                        // onChange={(e) =>
+                                        //   setTimePeriodAddendum((prev) => {
+                                        //     let newArr = [...prev];
+                                        //     newArr[index].radio =
+                                        //       e.target.value;
+                                        //     return newArr;
+                                        //   })
+                                        // }
+                                        disabled={true}
                                       />
                                       <span>SPMK</span>
                                     </div>
@@ -1672,13 +1669,13 @@ const FormParameter = ({
                     </div>
 
                     <PerubahanKlausulKontrak
-                      isDisable={tabDisableLists?.is_add_time_period}
                       subTitle={"B"}
                       title={"Jangka Waktu"}
                       fromWhere={"time_period"}
                       showAddClause={showAddClause}
                       values={values}
                       isMandatory={true}
+                      isDisable={false}
                       isDrafting={true}
                     />
                     {!disableUpdate && (
@@ -2000,36 +1997,18 @@ const FormParameter = ({
                             </>
                           );
                         })}
-                      {addendumPaymentMethod === "gradually" && (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            marginTop: 28,
-                          }}
-                        >
-                          <button
-                            type="button"
-                            className="btn btn-primary mx-1"
-                            onClick={showAddPayment}
-                            disabled={!tabDisableLists?.is_add_payment_method}
-                          >
-                            Tambah
-                          </button>
-                        </div>
-                      )}
                     </div>
                   </div>
 
                   {/* 17:50 13 Desember 2023 */}
                   <PerubahanKlausulKontrak
-                    isDisable={tabDisableLists?.is_add_payment_method}
                     subTitle={"B"}
                     title={"Metode Pembayaran"}
                     fromWhere={"payment_method"}
                     showAddClause={showAddClause}
                     values={values}
                     isMandatory={true}
+                    isDisable={false}
                     isDrafting={true}
                   />
                   {!disableUpdate && (
@@ -2168,18 +2147,6 @@ const FormParameter = ({
                             >
                               A. Addendum Denda Pekerjaan
                             </h1>
-                            {}
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              style={{
-                                maxHeight: 40,
-                              }}
-                              onClick={showAddFine}
-                              disabled={!tabDisableLists?.is_add_fine}
-                            >
-                              Denda
-                            </button>
                           </div>
                           <Table
                             sx={{ minWidth: 650 }}
@@ -2196,39 +2163,37 @@ const FormParameter = ({
                                 <TableCell align="left">Tipe Nilai</TableCell>
                               </TableRow>
                             </TableBody>
-                            {addendumFine !== null && (
+                            {tabDisableLists?.add_contract_fine
+                              ?.penalty_fine_data !== null && (
                               <TableBody>
-                                {addendumFine?.map((row, index) => (
-                                  <TableRow
-                                    key={row.name}
-                                    sx={{
-                                      "&:last-child td, &:last-child th": {
-                                        border: 0,
-                                      },
-                                    }}
-                                  >
-                                    <TableCell component="th">
-                                      {index + 1}
-                                    </TableCell>
-                                    <TableCell align="left" scope="row">
-                                      {row?.pinalty_name}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row?.value}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row?.max_day}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                      {row?.type === "1" ? "%" : "Nilai"}
-                                    </TableCell>
-                                    {tabDisableLists?.is_add_fine === true && (
-                                      <TableCell align="left">
-                                        {actionButton(row.id, deleteFine)}
+                                {tabDisableLists?.add_contract_fine?.penalty_fine_data.map(
+                                  (row, index) => (
+                                    <TableRow
+                                      key={row.name}
+                                      sx={{
+                                        "&:last-child td, &:last-child th": {
+                                          border: 0,
+                                        },
+                                      }}
+                                    >
+                                      <TableCell component="th">
+                                        {index + 1}
                                       </TableCell>
-                                    )}
-                                  </TableRow>
-                                ))}
+                                      <TableCell align="left" scope="row">
+                                        {row?.pinalty_name}
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        {row?.value}
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        {row?.max_day}
+                                      </TableCell>
+                                      <TableCell align="left">
+                                        {row?.type === "1" ? "%" : "Nilai"}
+                                      </TableCell>
+                                    </TableRow>
+                                  )
+                                )}
                               </TableBody>
                             )}
                           </Table>
@@ -2243,7 +2208,7 @@ const FormParameter = ({
                       showAddClause={showAddClause}
                       values={values}
                       isMandatory={true}
-                      isDisable={tabDisableLists?.is_add_fine}
+                      isDisable={false}
                       isDrafting={true}
                     />
                     {!disableUpdate && <UpdateButton fromWhere={"fine"} />}
@@ -2526,7 +2491,7 @@ const FormParameter = ({
                         </div>
 
                         {guaranteeBeforeAddendum &&
-                          guaranteeBeforeAddendum.map((data, index) => (
+                          guaranteeBeforeAddendum.map((data) => (
                             <>
                               <div>
                                 <div
@@ -2565,17 +2530,22 @@ const FormParameter = ({
                                       }}
                                     >
                                       <Field
+                                        disabled
                                         type="radio"
                                         value="1"
                                         name={data.nameTitle}
-                                        onChange={(e) => {
-                                          setInputDataGuarantee((state) => {
-                                            let fieldName = data.nameTitle;
-                                            let a = { ...state };
-                                            a[fieldName] = e.target.value;
-                                            return a;
-                                          });
-                                        }}
+                                        // onChange={(e) => {
+                                        //   setInputDataGuarantee((state) => {
+                                        //     console.log(
+                                        //       "masuk update guarantee",
+                                        //       data.nameTitle
+                                        //     );
+                                        //     let fieldName = data.nameTitle;
+                                        //     let a = { ...state };
+                                        //     a[fieldName] = e.target.value;
+                                        //     return a;
+                                        //   });
+                                        // }}
                                       />
                                       <span>Ya</span>
                                     </label>
@@ -2588,13 +2558,18 @@ const FormParameter = ({
                                         alignItems: "center",
                                         columnGap: 8,
                                       }}
+                                      disabled
                                     >
                                       <Field
+                                        disabled
                                         type="radio"
                                         value="0"
                                         name={data.nameTitle}
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
+                                            console.log(
+                                              "masuk update guarantee"
+                                            );
                                             let fieldName = data.nameTitle;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2624,6 +2599,7 @@ const FormParameter = ({
                                         display: "flex",
                                         flexDirection: "column",
                                       }}
+                                      disabled
                                     >
                                       <span>Tanggal Mulai</span>
                                       <Field
@@ -2636,15 +2612,14 @@ const FormParameter = ({
                                           flexDirection: "row-reverse",
                                           columnGap: 10,
                                         }}
-                                        disabled={
-                                          inputDataGuarantee[data.nameTitle] ===
-                                          "0"
-                                            ? true
-                                            : false
-                                        }
+                                        disabled={true}
                                         name={data.nameStart}
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
+                                            console.log(
+                                              "masuk update guarantee",
+                                              data.nameTitle
+                                            );
                                             let fieldName = data.nameStart;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2685,6 +2660,9 @@ const FormParameter = ({
                                         }
                                         onChange={(e) => {
                                           setInputDataGuarantee((state) => {
+                                            console.log(
+                                              "masuk update guarantee"
+                                            );
                                             let fieldName = data.nameEnd;
                                             let a = { ...state };
                                             a[fieldName] = e.target.value;
@@ -2791,7 +2769,7 @@ const FormParameter = ({
                         showAddClause={showAddClause}
                         values={values}
                         isMandatory={true}
-                        isDisable={tabDisableLists?.is_add_guarantee}
+                        isDisable={false}
                         isDrafting={true}
                       />
                       {!disableUpdate && (
@@ -3014,9 +2992,7 @@ const FormParameter = ({
                                   data={jsonData?.data_bank}
                                   func={changeDataBankIndex}
                                   labelName={`account_number`}
-                                  disabled={
-                                    !tabDisableLists?.is_add_account_number
-                                  }
+                                  disabled={true}
                                 />
                               </div>
                               <div
@@ -3180,9 +3156,7 @@ const FormParameter = ({
                                       event.target.files[0]
                                     );
                                   }}
-                                  disabled={
-                                    !tabDisableLists?.is_add_account_number
-                                  }
+                                  disabled={true}
                                 />
                               </div>
                             </div>
@@ -3198,7 +3172,7 @@ const FormParameter = ({
                         showAddClause={showAddClause}
                         values={values}
                         isMandatory={true}
-                        isDisable={tabDisableLists?.is_add_account_number}
+                        isDisable={false}
                         isDrafting={true}
                       />
                       {!disableUpdate && (
@@ -3235,10 +3209,8 @@ const FormParameter = ({
                       showAddContract={showAddContract}
                       values={values}
                       isMandatory={true}
+                      isDisable={false}
                       isDrafting={true}
-                      isDisable={
-                        !tabDisableLists?.other_note !== null ? true : false
-                      }
                     />
                     {!disableUpdate && <UpdateButton fromWhere={"other"} />}
                   </Form>

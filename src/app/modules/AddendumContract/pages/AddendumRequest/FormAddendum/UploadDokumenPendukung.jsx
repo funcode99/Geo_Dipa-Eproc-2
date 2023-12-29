@@ -17,6 +17,19 @@ const UploadDokumenPendukung = ({
   getDataList,
 }) => {
   supportDocumentFetch.map((item) => {
+    if (getDataList?.add_support_document_data.length > 0) {
+      return getDataList?.add_support_document_data?.map((item2) => {
+        if (item2.seq == item.seq) {
+          console.log("masuk ke else");
+          item.noDokumen = item2.noDokumen;
+          item.tglDokumen = item2.tglDokumen;
+          item.fileDokumen = item2.fileDokumen;
+          item.perihal = item2.perihal;
+        }
+      });
+    }
+  });
+  supportDocumentFetch.map((item) => {
     if (
       item.document_name ===
         "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor" ||
@@ -42,9 +55,15 @@ const UploadDokumenPendukung = ({
     }
   });
   const [supportingDocument, setSupportingDocument] = useState({
-    data: getDataList?.add_support_document_data,
+    data: supportDocumentFetch,
   });
   // disini SLICE TIDAK MENGHAPUS ARRAY YANG SUDAH ADA
+  // console.log(
+  //   "isi supportingDocument",
+  //   supportDocumentFetch,
+  //   getDataList?.add_support_document_data
+  // );
+
   let kondisiA = supportDocumentFetch.slice(0, 4);
   let pelengkapA = supportDocumentFetch.slice(8);
   let pelengkapB = supportDocumentFetch.slice(4, 7);
@@ -113,8 +132,6 @@ const UploadDokumenPendukung = ({
     if (
       values.drafterSelectValue === "Supply Chain Management (SCM) Division"
     ) {
-      // formDataNew.append("drafter_code", 1);
-      // formDataNew.append("add_drafter", values.drafterSelectValue);
       formDataNew = {
         drafter_code: 1,
         add_drafter: values.drafterSelectValue,
@@ -122,25 +139,16 @@ const UploadDokumenPendukung = ({
     } else if (
       values.drafterSelectValue === "Corporate Legal & Compliance Division"
     ) {
-      // formDataNew.append("drafter_code", 2);
-      // formDataNew.append("add_drafter", values.drafterSelectValue);
       formDataNew = {
         drafter_code: 2,
         add_drafter: values.drafterSelectValue,
       };
     } else if (values.drafterSelectValue === "Pengguna (Direksi Pekerjaan)") {
-      // formDataNew.append("drafter_code", 3);
-      // formDataNew.append("add_drafter", values.drafterSelectValue);
       formDataNew = {
         drafter_code: 3,
         add_drafter: values.drafterSelectValue,
       };
     } else {
-      // formDataNew.append("drafter_code", 1);
-      // formDataNew.append(
-      //   "add_drafter",
-      //   "Supply Chain Management (SCM) Division"
-      // );
       formDataNew = {
         drafter_code: 1,
         add_drafter: "Supply Chain Management (SCM) Division",
@@ -167,6 +175,7 @@ const UploadDokumenPendukung = ({
     //       typeof item.fileDokumenKirim === "undefined" ||
     //       typeof item.perihal === "undefined"
     //     ) {
+    //       console.log("kosong");
     //     } else {
     //       formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
     //       formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
@@ -298,9 +307,7 @@ const UploadDokumenPendukung = ({
                                 <Field
                                   type="text"
                                   name={`supportDocumentData.data[${index}].document_name`}
-                                  value={
-                                    supportingDocument.data[index].document_name
-                                  }
+                                  value={item.document_name}
                                   onChange={(e) => {
                                     setNewDocumentValue(
                                       index,
@@ -357,9 +364,7 @@ const UploadDokumenPendukung = ({
                                 <Field
                                   type="text"
                                   name={`supportDocumentData[${index}].noDokumen`}
-                                  value={
-                                    supportingDocument.data[index].noDokumen
-                                  }
+                                  value={item.noDokumen}
                                   onChange={(e) => {
                                     setNewDocumentValue(
                                       index,
@@ -390,9 +395,7 @@ const UploadDokumenPendukung = ({
                                 <Field
                                   type="date"
                                   name={`supportDocumentData[${index}].tglDokumen`}
-                                  value={
-                                    supportingDocument.data[index].tglDokumen
-                                  }
+                                  value={item.tglDokumen}
                                   onChange={(e) => {
                                     setNewDocumentValue(
                                       index,
@@ -512,7 +515,7 @@ const UploadDokumenPendukung = ({
                                 <Field
                                   as="textarea"
                                   name={`supportDocumentData[${index}].perihal`}
-                                  value={supportingDocument.data[index].perihal}
+                                  value={item.perihal}
                                   onChange={(e) => {
                                     setNewDocumentValue(
                                       index,

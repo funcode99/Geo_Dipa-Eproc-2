@@ -107,6 +107,14 @@ export function draftSuppDoc2(params, contract_id) {
   );
 }
 
+export function approveAddendumContract(contract_id) {
+  return axios.post(`/adendum/add-contracts/${contract_id}/approved`);
+}
+
+export function rejectAddendumContract(contract_id) {
+  return axios.post(`/adendum/add-contracts/${contract_id}/rejected`);
+}
+
 // Tasks
 export function submitTask(values, update) {
   if (update) {
