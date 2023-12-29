@@ -24,6 +24,10 @@ import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 import SVG from "react-inlinesvg";
 import FormParameter from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormParameter";
 import Steppers from "app/components/steppersCustom/Steppers";
+import {
+  approveAddendumContract,
+  rejectAddendumContract,
+} from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -233,6 +237,14 @@ const UserApprovalAddendumPage = ({
   const [timePeriodData, setTimePeriodData] = useState();
   const [initialData, setInitialData] = useState();
 
+  const submitApproval = (type) => {
+    if (type === "Reject") {
+      rejectAddendumContract(contract_id);
+    } else {
+      approveAddendumContract(contract_id);
+    }
+  };
+
   const addCheckedField = (data, type) => {
     if (type === "jasa") {
       data.map((services) => {
@@ -412,6 +424,7 @@ const UserApprovalAddendumPage = ({
           "fine",
           JSON.stringify(res?.data?.penalty_fine_data)
         );
+        // start of local storage jangka waktu
         localStorage.setItem(
           "time_period",
           JSON.stringify({
@@ -436,7 +449,9 @@ const UserApprovalAddendumPage = ({
           })
         );
         let timePeriodData = JSON.parse(localStorage.getItem("time_period"));
+        localStorage.removeItem("time_period");
         setTimePeriodData(timePeriodData);
+        // end of local storage jangka waktu
         getSecondAuthorizedOfficial(res?.data?.vendor_id);
       },
     });
@@ -978,28 +993,27 @@ const UserApprovalAddendumPage = ({
                           <th>Setelah Addendum</th>
                           <th>Keterangan</th>
                         </tr>
-                        <tr>
-                          {dataArr?.penalty_fine_data?.map((item) => {
-                            // wajib pakai return disini
-                            return tabDisableLists?.add_contract_fine?.penalty_fine_data.map(
-                              (item2) => {
-                                return (
-                                  <tr>
-                                    <td>
-                                      Nilai {item?.value} - Maksimal{" "}
-                                      {item?.max_day} Hari
-                                    </td>
-                                    <td>
-                                      Nilai {item2?.value} - Maksimal{" "}
-                                      {item2?.max_day} Hari
-                                    </td>
-                                    <td></td>
-                                  </tr>
-                                );
-                              }
-                            );
-                          })}
-                        </tr>
+
+                        {dataArr?.penalty_fine_data?.map((item) => {
+                          // wajib pakai return disini
+                          return tabDisableLists?.add_contract_fine?.penalty_fine_data.map(
+                            (item2) => {
+                              return (
+                                <tr>
+                                  <td>
+                                    Nilai {item?.value} - Maksimal{" "}
+                                    {item?.max_day} Hari
+                                  </td>
+                                  <td>
+                                    Nilai {item2?.value} - Maksimal{" "}
+                                    {item2?.max_day} Hari
+                                  </td>
+                                  <td></td>
+                                </tr>
+                              );
+                            }
+                          );
+                        })}
                       </table>
                     )}
                     {item === "Jaminan" && (
@@ -1273,6 +1287,7 @@ const UserApprovalAddendumPage = ({
                 style={{
                   minWidth: 100,
                 }}
+                onClick={() => submitApproval("Reject")}
               >
                 Reject
               </Button>
@@ -1280,6 +1295,7 @@ const UserApprovalAddendumPage = ({
                 style={{
                   minWidth: 100,
                 }}
+                onClick={() => submitApproval("Approve")}
               >
                 Approve
               </Button>

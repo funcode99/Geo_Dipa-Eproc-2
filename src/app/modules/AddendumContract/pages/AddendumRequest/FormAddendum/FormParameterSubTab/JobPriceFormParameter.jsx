@@ -437,7 +437,7 @@ const JobPriceFormParameter = ({
                 values={values}
                 isMandatory={true}
                 isDrafting={true}
-                isDisable={isDisable}
+                isDisable={false}
               />
             </div>
             {!disableUpdate && <UpdateButton fromWhere={"job_price"} />}
