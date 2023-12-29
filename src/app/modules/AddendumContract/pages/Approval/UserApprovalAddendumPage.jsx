@@ -22,7 +22,7 @@ import useToast from "app/components/toast/index";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 
 import SVG from "react-inlinesvg";
-import FormParameter from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormParameter";
+import FormParameterView from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormParameterView";
 import Steppers from "app/components/steppersCustom/Steppers";
 import {
   approveAddendumContract,
@@ -1139,7 +1139,7 @@ const UserApprovalAddendumPage = ({
             variant="scrollable"
           />
 
-          <FormParameter
+          <FormParameterView
             currentActiveTab={tabActive}
             headerData={dataArr}
             jsonData={jsonData}

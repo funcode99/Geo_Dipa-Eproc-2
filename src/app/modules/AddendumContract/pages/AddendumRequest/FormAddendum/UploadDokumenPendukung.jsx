@@ -17,7 +17,7 @@ const UploadDokumenPendukung = ({
   getDataList,
 }) => {
   supportDocumentFetch.map((item) => {
-    if (getDataList?.add_support_document_data.length > 0) {
+    if (getDataList?.add_support_document_data) {
       return getDataList?.add_support_document_data?.map((item2) => {
         if (item2.seq == item.seq) {
           console.log("masuk ke else");
@@ -121,7 +121,7 @@ const UploadDokumenPendukung = ({
         };
       });
     }
-    const fill = getDataList?.add_support_document_data.map((item) => {
+    const fill = getDataList?.add_support_document_data?.map((item) => {
       item.isChangeFile = false;
     });
   }, []);

@@ -23,7 +23,7 @@ import UploadDokumenPendukung from "./UploadDokumenPendukung";
 
 import SVG from "react-inlinesvg";
 import FormPermohonan from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormPermohonan";
-import FormParameter from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormParameter";
+import FormParameter from "app/modules/AddendumContract/pages/AddendumRequest/FormAddendum/FormParameterDraft";
 import Steppers from "app/components/steppersCustom/Steppers";
 
 const useStyles = makeStyles((theme) => ({
