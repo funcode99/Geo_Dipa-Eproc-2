@@ -346,7 +346,7 @@ export const ContractAddendumDetail = ({
         {tabActive === 5 && <JangkaWaktu />}
         {tabActive === 6 && <Jaminan />}
         {tabActive === 7 && <Denda />}
-        {tabActive === 8 && <BAST />}
+        {tabActive === 8 && <ListAddendum />}
       </Paper>
     </React.Fragment>
   );
