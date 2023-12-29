@@ -1842,7 +1842,9 @@ const DraftAddendumPage = ({
             onChange={(e) => setFinalDraftSelectValue(e.target.value)}
           >
             <option value="Kontrak">Final Draft Kontrak</option>
-            <option value="Addendum">Final Draft Addendum</option>
+            {finalDraftData?.add_contracts?.length > 0 && (
+              <option value="Addendum">Final Draft Addendum</option>
+            )}
           </select>
 
           {finalDraftSelectValue === "Kontrak" && (
@@ -1856,38 +1858,72 @@ const DraftAddendumPage = ({
                 color: "#3699ff",
               }}
             >
-              {[...Array(5).keys()].map((index) => (
-                <div
-                  key={index}
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
                   style={{
-                    display: "flex",
-                    gap: 6,
+                    marginBottom: "1rem",
                   }}
+                  onClick={() =>
+                    window.open(
+                      `${API_EPROC}/${finalDraftData?.form_review?.spk_name}`,
+                      "_blank"
+                    )
+                  }
                 >
-                  <SVG
-                    src={toAbsoluteUrl(
-                      "/media/svg/icons/All/file-final-draft.svg"
-                    )}
-                  />
-                  <a
-                    style={{
-                      marginBottom: "1rem",
-                    }}
-                    onClick={() =>
-                      window.open(
-                        `${API_EPROC}/${
-                          finalDraftData?.form_review[
-                            `lampiran_${index + 1}_name`
-                          ]
-                        }`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    {finalDraftData?.form_review[`lampiran_${index + 1}_name`]}
-                  </a>
-                </div>
-              ))}
+                  {finalDraftData?.form_review?.spk_name}
+                </a>
+              </div>
+              {Object.keys(finalDraftData?.form_review || {}).map((key) => {
+                if (
+                  key.startsWith("lampiran_") &&
+                  key.endsWith("_name") &&
+                  finalDraftData?.form_review[key] !== ""
+                ) {
+                  const index = parseInt(
+                    key.replace("lampiran_", "").replace("_name", ""),
+                    10
+                  );
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                      }}
+                    >
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/file-final-draft.svg"
+                        )}
+                      />
+                      <a
+                        style={{
+                          marginBottom: "1rem",
+                        }}
+                        onClick={() =>
+                          window.open(
+                            `${API_EPROC}/${finalDraftData?.form_review[key]}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {finalDraftData?.form_review[key]}
+                      </a>
+                    </div>
+                  );
+                }
+                return null;
+              })}
             </div>
           )}
 
