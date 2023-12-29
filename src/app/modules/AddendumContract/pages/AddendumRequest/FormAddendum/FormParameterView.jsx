@@ -2565,17 +2565,17 @@ const FormParameter = ({
                                         type="radio"
                                         value="0"
                                         name={data.nameTitle}
-                                        onChange={(e) => {
-                                          setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee"
-                                            );
-                                            let fieldName = data.nameTitle;
-                                            let a = { ...state };
-                                            a[fieldName] = e.target.value;
-                                            return a;
-                                          });
-                                        }}
+                                        // onChange={(e) => {
+                                        //   setInputDataGuarantee((state) => {
+                                        //     console.log(
+                                        //       "masuk update guarantee"
+                                        //     );
+                                        //     let fieldName = data.nameTitle;
+                                        //     let a = { ...state };
+                                        //     a[fieldName] = e.target.value;
+                                        //     return a;
+                                        //   });
+                                        // }}
                                       />
                                       <span>Tidak</span>
                                     </label>
@@ -2614,18 +2614,18 @@ const FormParameter = ({
                                         }}
                                         disabled={true}
                                         name={data.nameStart}
-                                        onChange={(e) => {
-                                          setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee",
-                                              data.nameTitle
-                                            );
-                                            let fieldName = data.nameStart;
-                                            let a = { ...state };
-                                            a[fieldName] = e.target.value;
-                                            return a;
-                                          });
-                                        }}
+                                        // onChange={(e) => {
+                                        //   setInputDataGuarantee((state) => {
+                                        //     console.log(
+                                        //       "masuk update guarantee",
+                                        //       data.nameTitle
+                                        //     );
+                                        //     let fieldName = data.nameStart;
+                                        //     let a = { ...state };
+                                        //     a[fieldName] = e.target.value;
+                                        //     return a;
+                                        //   });
+                                        // }}
                                       />
                                     </label>
                                   </div>
@@ -2658,17 +2658,17 @@ const FormParameter = ({
                                             ? true
                                             : false
                                         }
-                                        onChange={(e) => {
-                                          setInputDataGuarantee((state) => {
-                                            console.log(
-                                              "masuk update guarantee"
-                                            );
-                                            let fieldName = data.nameEnd;
-                                            let a = { ...state };
-                                            a[fieldName] = e.target.value;
-                                            return a;
-                                          });
-                                        }}
+                                        // onChange={(e) => {
+                                        //   setInputDataGuarantee((state) => {
+                                        //     console.log(
+                                        //       "masuk update guarantee"
+                                        //     );
+                                        //     let fieldName = data.nameEnd;
+                                        //     let a = { ...state };
+                                        //     a[fieldName] = e.target.value;
+                                        //     return a;
+                                        //   });
+                                        // }}
                                       />
                                     </label>
                                   </div>

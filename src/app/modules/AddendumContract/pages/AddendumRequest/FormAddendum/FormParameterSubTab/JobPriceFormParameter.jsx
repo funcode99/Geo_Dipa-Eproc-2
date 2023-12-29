@@ -275,7 +275,7 @@ const JobPriceFormParameter = ({
                     countData={
                       searchFindMulti(
                         stableSort(
-                          jsonData?.contract_items,
+                          jsonData?.contract_items || [],
                           getSorting(order, orderBy)
                         ),
                         filterBy
@@ -287,7 +287,7 @@ const JobPriceFormParameter = ({
                     {/* komponen table ada disini */}
                     {searchFindMulti(
                       stableSort(
-                        jsonData?.contract_items,
+                        jsonData?.contract_items || [],
                         getSorting(order, orderBy)
                       ),
                       filterBy
@@ -416,7 +416,7 @@ const JobPriceFormParameter = ({
 
                   <EditableTable
                     openCloseAddDetail={openCloseAddDetail}
-                    previousData={jsonData?.contract_items}
+                    previousData={jsonData?.contract_items || []}
                     func={setItem}
                     grandTotal={grandTotal}
                     jobPriceCurrent={jobPriceData?.add_contract_job_price}
