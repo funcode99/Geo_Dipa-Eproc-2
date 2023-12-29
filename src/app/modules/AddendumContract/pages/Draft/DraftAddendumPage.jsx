@@ -169,6 +169,7 @@ const DraftAddendumPage = ({
     setDistributionSequence(newTabActive);
   }
 
+  // get api 2.23
   const getFinalDraftData = async (contract_id) => {
     fetch_api_sg({
       key: keys.fetch,
@@ -196,10 +197,9 @@ const DraftAddendumPage = ({
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      // url: `/adendum/contract-released/${draft_id}/show`,
       url: `/adendum/add-contracts/${draft_id}`,
       onSuccess: (res) => {
-        getFinalDraftData(res?.data?.contract?.id);
+        getFinalDraftData(res?.data?.contract_id);
         setJsonData(res?.data);
         localStorage.setItem(
           "payment_method",
@@ -1813,8 +1813,7 @@ const DraftAddendumPage = ({
         </form>
       </Card>
 
-      <p>hello world</p>
-      {jsonData?.final_draft ? (
+      {finalDraftData?.form_review ? (
         <div
           style={{
             backgroundColor: "white",
@@ -1843,10 +1842,9 @@ const DraftAddendumPage = ({
             onChange={(e) => setFinalDraftSelectValue(e.target.value)}
           >
             <option value="Kontrak">Final Draft Kontrak</option>
-            {finalDraftData?.add_contracts.length > 0 && (
-              <option value="Addendum">Final Draft Addendum</option>
-            )}
+            <option value="Addendum">Final Draft Addendum</option>
           </select>
+
           {finalDraftSelectValue === "Kontrak" && (
             <div
               style={{
@@ -1858,84 +1856,38 @@ const DraftAddendumPage = ({
                 color: "#3699ff",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  gap: 6,
-                }}
-              >
-                <SVG
-                  src={toAbsoluteUrl(
-                    "/media/svg/icons/All/file-final-draft.svg"
-                  )}
-                />
-                <a
+              {[...Array(5).keys()].map((index) => (
+                <div
+                  key={index}
                   style={{
-                    marginBottom: "1rem",
+                    display: "flex",
+                    gap: 6,
                   }}
-                  onClick={() =>
-                    window.open(
-                      `${API_EPROC}/${jsonData?.form_review?.spk_name}`,
-                      "_blank"
-                    )
-                  }
                 >
-                  {jsonData?.form_review?.spk_name}
-                </a>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: 6,
-                }}
-              >
-                <SVG
-                  src={toAbsoluteUrl(
-                    "/media/svg/icons/All/file-final-draft.svg"
-                  )}
-                />
-                {/* <p>Lampiran 1.doc</p> */}
-                <a
-                  style={{
-                    marginBottom: "1rem",
-                  }}
-                  onClick={() =>
-                    window.open(
-                      `${API_EPROC}/${jsonData?.form_review?.lampiran_1_name}`,
-                      "_blank"
-                    )
-                  }
-                >
-                  {jsonData?.form_review?.lampiran_1_name}
-                </a>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: 6,
-                }}
-              >
-                <SVG
-                  src={toAbsoluteUrl(
-                    "/media/svg/icons/All/file-final-draft.svg"
-                  )}
-                />
-                <a
-                  style={{
-                    marginBottom: "1rem",
-                  }}
-                  onClick={() =>
-                    window.open(
-                      `${API_EPROC}/${jsonData?.form_review?.lampiran_2_name}`,
-                      "_blank"
-                    )
-                  }
-                >
-                  {jsonData?.form_review?.lampiran_2_name}
-                </a>
-              </div>
+                  <SVG
+                    src={toAbsoluteUrl(
+                      "/media/svg/icons/All/file-final-draft.svg"
+                    )}
+                  />
+                  <a
+                    style={{
+                      marginBottom: "1rem",
+                    }}
+                    onClick={() =>
+                      window.open(
+                        `${API_EPROC}/${
+                          finalDraftData?.form_review[
+                            `lampiran_${index + 1}_name`
+                          ]
+                        }`,
+                        "_blank"
+                      )
+                    }
+                  >
+                    {finalDraftData?.form_review[`lampiran_${index + 1}_name`]}
+                  </a>
+                </div>
+              ))}
             </div>
           )}
 
@@ -1944,7 +1896,6 @@ const DraftAddendumPage = ({
               style={{
                 display: "flex",
                 flexDirection: "column",
-                // rowGap: 14,
                 marginTop: 14,
               }}
             >
@@ -1969,7 +1920,7 @@ const DraftAddendumPage = ({
                   }}
                   onClick={() =>
                     window.open(
-                      `${DEV_NODE}/final_draft/${finalDraftData.add_contracts[0].final_draft[0].body_file_name}`,
+                      `${DEV_NODE}/final_draft/${finalDraftData?.add_contracts[0]?.final_draft[0]?.body_file_name}`,
                       "_blank"
                     )
                   }
@@ -2003,7 +1954,7 @@ const DraftAddendumPage = ({
                         }}
                         onClick={() =>
                           window.open(
-                            `${DEV_NODE}/final_draft/lampiran/${item.lampiran_file_name}`,
+                            `${DEV_NODE}/final_draft/lampiran/${item?.lampiran_file_name}`,
                             "_blank"
                           )
                         }
@@ -2052,7 +2003,6 @@ const DraftAddendumPage = ({
               jsonData={dataContractById}
               jobSupervisor={jobSupervisor}
               jobSupervisor2={jobSupervisor2}
-              // isDisable={data?.is_add_parties}
               is_add_parties={data?.is_add_parties}
               authorizedOfficialData={authorizedOfficial}
               isDisable={!data?.is_add_parties && !isAdmin}
@@ -2067,10 +2017,10 @@ const DraftAddendumPage = ({
               currencies={currencies}
               data={dataContractById}
               fromWhere={"job_price"}
-              // isDisable={data?.is_add_job_price}
               is_add_job_price={data?.is_add_job_price}
               isDisable={!data?.is_add_job_price || !isAdmin}
               jobPriceCurrent={data?.add_contract_job_price}
+              add_contract_job_price={data?.add_contract_job_price}
             />
           )}
           {tabActive === 3 && (
@@ -2080,7 +2030,6 @@ const DraftAddendumPage = ({
               fromWhere={"time_period"}
               dataNewClause={dataNewClause}
               timePeriodData={dataContractById}
-              // isDisable={data?.is_add_time_period}
               isDisable={!data?.is_add_time_period || !isAdmin}
               is_add_time_period={data?.is_add_time_period}
               timePeriodAddendumCurrent={data?.add_contract_time_period}
@@ -2089,14 +2038,13 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 4 && (
             <MetodePembayaranTab
-              // isDisable={true}
               data={data}
               tes="ini tes"
               isAdmin={isAdmin}
               contract_id={draft_id}
               jsonData={dataContractById}
-              dataNewClause={dataNewClause}
               fromWhere={"payment_method"}
+              dataNewClause={dataNewClause}
               is_add_payment_method={data?.is_add_payment_method}
               isDisable={!data?.is_add_payment_method || !isAdmin}
               paymentMethodCurrent={data?.add_contract_payment_method}
@@ -2105,8 +2053,8 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 5 && (
             <DendaTab
-              fromWhere={"fine"}
               dataArr={dataArr}
+              fromWhere={"fine"}
               contract_id={draft_id}
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
@@ -2120,9 +2068,9 @@ const DraftAddendumPage = ({
               newData={data}
               newJson={jsonData}
               contract_id={draft_id}
+              fromWhere={"guarantee"}
               jsonData={dataContractById}
               dataNewClause={dataNewClause}
-              fromWhere={"guarantee"}
               is_add_guarantee={data?.is_add_guarantee}
               dataNewClauseDrafting={dataNewClauseDrafting}
               isDisable={!data?.is_add_guarantee || !isAdmin}

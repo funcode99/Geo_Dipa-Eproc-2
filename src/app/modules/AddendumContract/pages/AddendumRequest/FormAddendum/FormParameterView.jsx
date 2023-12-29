@@ -327,6 +327,38 @@ const FormParameter = ({
   const [filterBy, setFilterBy] = React.useState({});
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [inputDataGuarantee, setInputDataGuarantee] = useState({
+    dp_guarantee:
+      tabDisableLists?.add_contract_guarantee?.down_payment_guarantee,
+    dp_guarantee_start_date:
+      tabDisableLists?.add_contract_guarantee
+        ?.down_payment_guarantee_start_date,
+    dp_guarantee_end_date:
+      tabDisableLists?.add_contract_guarantee?.down_payment_guarantee_end_date,
+    dp_guarantee_evidence_file:
+      tabDisableLists?.add_contract_guarantee
+        ?.down_payment_guarantee_evidence_file_name,
+    implementation_guarantee:
+      tabDisableLists?.add_contract_guarantee?.implementation_guarantee,
+    implementation_guarantee_start_date:
+      tabDisableLists?.add_contract_guarantee
+        ?.implementation_guarantee_start_date,
+    implementation_guarantee_end_date:
+      tabDisableLists?.add_contract_guarantee
+        ?.implementation_guarantee_end_date,
+    implementation_guarantee_evidence_file:
+      tabDisableLists?.add_contract_guarantee
+        ?.implementation_guarantee_evidence_file,
+    maintenance_guarantee:
+      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee,
+    maintenance_guarantee_start_date:
+      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee_start_date,
+    maintenance_guarantee_end_date:
+      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee_end_date,
+    maintenance_guarantee_evidence_file:
+      tabDisableLists?.add_contract_guarantee
+        ?.maintenance_guarantee_evidence_file,
+  });
 
   const [data, setData] = useState({});
   useEffect(() => {
@@ -476,38 +508,9 @@ const FormParameter = ({
     setAccountNumber(jsonData?.data_bank[num]);
   };
 
-  const inputDataGuarantee = {
-    dp_guarantee:
-      tabDisableLists?.add_contract_guarantee?.down_payment_guarantee,
-    dp_guarantee_start_date:
-      tabDisableLists?.add_contract_guarantee
-        ?.down_payment_guarantee_start_date,
-    dp_guarantee_end_date:
-      tabDisableLists?.add_contract_guarantee?.down_payment_guarantee_end_date,
-    dp_guarantee_evidence_file:
-      tabDisableLists?.add_contract_guarantee
-        ?.down_payment_guarantee_evidence_file_name,
-    implementation_guarantee:
-      tabDisableLists?.add_contract_guarantee?.implementation_guarantee,
-    implementation_guarantee_start_date:
-      tabDisableLists?.add_contract_guarantee
-        ?.implementation_guarantee_start_date,
-    implementation_guarantee_end_date:
-      tabDisableLists?.add_contract_guarantee
-        ?.implementation_guarantee_end_date,
-    implementation_guarantee_evidence_file:
-      tabDisableLists?.add_contract_guarantee
-        ?.implementation_guarantee_evidence_file,
-    maintenance_guarantee:
-      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee,
-    maintenance_guarantee_start_date:
-      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee_start_date,
-    maintenance_guarantee_end_date:
-      tabDisableLists?.add_contract_guarantee?.maintenance_guarantee_end_date,
-    maintenance_guarantee_evidence_file:
-      tabDisableLists?.add_contract_guarantee
-        ?.maintenance_guarantee_evidence_file,
-  };
+  // const inputDataGuarantee = {
+
+  // };
 
   // bikin converter tanggal ke x hari & y bulan + skpp/spmk
   const submitFormParameterTimePeriod = (values) => {

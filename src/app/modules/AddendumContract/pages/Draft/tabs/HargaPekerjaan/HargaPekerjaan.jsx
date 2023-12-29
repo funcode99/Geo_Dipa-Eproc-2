@@ -1,21 +1,20 @@
 import { Formik, Form } from "formik";
 import Title from "./Component/Title";
-import { connect } from "react-redux";
 import Currency from "./Component/Currency";
 import { FormattedMessage } from "react-intl";
-import PerubahanKlausul from "./PerubahanKlausul";
 import { TableContainer } from "@material-ui/core";
+import { connect, useDispatch } from "react-redux";
 import React, { useState, useRef, useEffect } from "react";
 import { formatCurrencyIDR } from "./Helper/formartCurrencyIDR";
 import UpdateButton from "app/components/button/ButtonGlobal/UpdateButton";
 import TableRincianHargaPekerjaanAwal from "./Table/TableRincianHargaPekerjaanAwal";
+import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
+import { submitJobPrice } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import NewClause from "../../../ContractDetail/components/FormAddendum/Components/Modal/NewClause";
 import GRAccord from "app/modules/DeliveryMonitoring/pages/Termin/ServiceAccGR/components/GRAccord";
 import Item from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/Item";
-// import PerubahanKlausulKontrak from "../../../ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
-import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/EditableTable/index";
-import { submitJobPrice } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import PerubahanKlausulKontrak from "../../../ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
+import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/EditableTable/index";
 
 const HargaPekerjaan = ({
   data,
@@ -27,7 +26,9 @@ const HargaPekerjaan = ({
   jobPriceCurrent,
   is_add_job_price,
   dataNewClauseDrafting,
+  add_contract_job_price,
 }) => {
+  const dispatch = useDispatch();
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -46,6 +47,35 @@ const HargaPekerjaan = ({
     }
     setGrandTotal(item?.reduce(sum, 0));
   }, [item]);
+
+  useEffect(() => {
+    if (add_contract_job_price?.attachment_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_job_price?.attachment_clause_data || [
+          {
+            attachment_number: "",
+            clause_note: "",
+          },
+        ],
+        fieldType: "refill_attachment_clause_data",
+        fromWhere: "job_price",
+      });
+    }
+    if (add_contract_job_price?.body_clause_data !== null) {
+      dispatch({
+        type: actionTypes.SetDraftingClause,
+        payload: add_contract_job_price?.body_clause_data || {
+          clause_number: "",
+          before_clause_note: "",
+          after_clause_note: "",
+        },
+        fieldType: "refill_body_clause_data",
+        fromWhere: "job_price",
+      });
+    }
+  }, [add_contract_job_price]);
+
   const showAddDetail = () => {
     openCloseAddDetail.current.open();
   };
@@ -73,10 +103,10 @@ const HargaPekerjaan = ({
   return (
     <>
       <NewClause
-        openCloseAddClause={openCloseAddClause}
+        isDrafting={true}
         fromWhere={"job_price"}
         fieldType={"clause_attachment"}
-        isDrafting={true}
+        openCloseAddClause={openCloseAddClause}
       />
       <Formik
         enableReinitialize={true}
@@ -111,9 +141,9 @@ const HargaPekerjaan = ({
               >
                 <div className="nilai-perjanjian-kontrak-awal">
                   <Currency
-                    title={"  Nilai perjanjian kontrak awal"}
                     value={data?.contract_value}
                     currencyCode={data?.currency?.code}
+                    title={"  Nilai perjanjian kontrak awal"}
                   />
                 </div>
 
@@ -166,19 +196,19 @@ const HargaPekerjaan = ({
                         </button>
                         <button
                           type="button"
-                          className="btn btn-primary text-white"
-                          onClick={showAddDetail}
                           disabled={isDisable}
+                          onClick={showAddDetail}
+                          className="btn btn-primary text-white"
                         >
                           + Tambah Rincian
                         </button>
                       </div>
                     </div>
                     <EditableTable
-                      openCloseAddDetail={openCloseAddDetail}
-                      previousData={data?.contract_items}
-                      jobPriceCurrent={jobPriceCurrent}
                       func={setItem}
+                      jobPriceCurrent={jobPriceCurrent}
+                      previousData={data?.contract_items}
+                      openCloseAddDetail={openCloseAddDetail}
                       grandTotal={formatCurrencyIDR(grandTotal)}
                     />
                   </TableContainer>
@@ -187,20 +217,19 @@ const HargaPekerjaan = ({
               <div className="mt-8"></div>
               <PerubahanKlausulKontrak
                 subTitle={"C"}
+                values={values}
+                isDrafting={true}
+                isMandatory={true}
+                fromWhere={"job_price"}
+                isDisable={!isDisable}
                 title={"Harga Pekerjaan"}
                 showAddClause={showAddClause}
-                fromWhere={"job_price"}
-                isMandatory={true}
-                isDrafting={true}
-                values={values}
-                isDisable={!isDisable}
               />
               <UpdateButton
-                // isDisable={false}
-                isDisable={isDisable}
-                fromWhere={"job_price"}
                 isDrafting={true}
                 isMandatory={true}
+                isDisable={isDisable}
+                fromWhere={"job_price"}
               />
             </div>
           </Form>
