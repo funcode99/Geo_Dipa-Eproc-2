@@ -7,8 +7,6 @@ import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContrac
 import { submitGuarantee } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 import NewClause from "../../../pages/ContractDetail/components/FormAddendum/Components/Modal/NewClause";
 import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/Components/PerubahanKlausulKontrak";
-// import { useDispatch, connect } from "react-redux";
-// import { actionTypes } from "app/modules/AddendumContract/_redux/addendumContractAction";
 
 const Jaminan = ({
   newData,
