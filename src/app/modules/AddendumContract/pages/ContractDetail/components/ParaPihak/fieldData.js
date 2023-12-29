@@ -89,145 +89,348 @@ export const formDataCheckbox = [
   ],
 ];
 
+// export const formData1 = [
+//   {
+//     Child: TitleField,
+//     ChildrenProps: {
+//       title: <Ini2 text={"PRICE_CHANGE.TITLE"} />,
+//     },
+//     deleteInput: true,
+//   },
+//   [
+//     {
+//       name: "start_price",
+//       label: <Ini2 text={"PRICE_CHANGE.START_PRICE"} />,
+//     },
+//   ],
+//   [
+//     {
+//       name: "end_price",
+//       label: <Ini2 text={"PRICE_CHANGE.END_PRICE_ADDENDUM"} />,
+//     },
+//   ],
+//   [
+//     {
+//       name: "additional_price",
+//       label: <Ini2 text={"PRICE_CHANGE.ADDITIONAL_PRICE"} />,
+//     },
+//   ],
+//   [
+//     {
+//       name: "tab_outside",
+//       label: <Ini2 text={"PRICE_CHANGE.ADDITIONAL_PRICE"} />,
+//       typeInput: "CheckboxInput",
+//     },
+//   ][
+//     {
+//       name: "subtraction_price",
+//       label: <Ini2 text={"PRICE_CHANGE.SUBTRACTION_PRICE"} />,
+//     }
+//   ],
+//   [
+//     {
+//       name: "after_price_addendum",
+//       label: <Ini2 text={"PRICE_CHANGE.AFTER_PRICE_ADDENDUM"} />,
+//     },
+//   ],
+//   [
+//     {
+//       name: "addendum_percentage",
+//       label: <Ini2 text={"PRICE_CHANGE.PERCENTAGE_ADDENDUM"} />,
+//     },
+//   ],
+//   [
+//     {
+//       name: "conclusion",
+//       label: <Ini2 text={"PRICE_CHANGE.CONCLUSION"} />,
+//     },
+//   ],
+//   // {
+//   //   Child: TitleField,
+//   //   ChildrenProps: {
+//   //     title: <Ini2 text={"SUPPORTING_DOCUMENT.TITLE"} />
+//   //   },
+//   //   deleteInput: true
+//   // },
+// ];
+
+// export const supportingDocumentDefault = [
+//   {
+//     id: "1",
+//     name: "Surat Permohonan Addendum dari Pihak Kedua",
+//     // nama adalah referensi, jika nama sama maka referensi input nya sama
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+//   {
+//     id: "2",
+//     name: "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor",
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+//   {
+//     id: "3",
+//     name: "Berita Acara Kesepakatan Addendum",
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+//   {
+//     id: "4",
+//     name: "Surat Kuasa Khusus",
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+//   {
+//     id: "5",
+//     name: "Justifikasi",
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+//   {
+//     id: "6",
+//     name: "Kajian Hukum dari Fungsi Legal",
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+//   {
+//     id: "7",
+//     name: "Kajian Risk Management dari Fungsi Risk Management",
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+//   {
+//     id: "8",
+//     name: "Hasil Keputusan Rapat Direksi (Radir)",
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+//   {
+//     id: "9",
+//     name: "Memo/Surat Permohonan Addendum",
+//     noDokumen: "",
+//     tglDokumen: "",
+//     fileDokumen: "",
+//     perihal: "",
+//   },
+// ];
+
 export const formData1 = [
+  [
+    {
+      name: "nama_pemberi",
+      label: <Ini text={"NAMA_PEMBERI"} />,
+    },
+  ],
   {
     Child: TitleField,
     ChildrenProps: {
-      title: <Ini2 text={"PRICE_CHANGE.TITLE"} />,
+      title: <Ini text={"DEED"} />,
     },
-    deleteInput: true,
   },
   [
     {
-      name: "start_price",
-      label: <Ini2 text={"PRICE_CHANGE.START_PRICE"} />,
+      name: "nama_notaris",
+      label: <Ini text={"NAMA_NOTARIS"} />,
     },
   ],
   [
     {
-      name: "end_price",
-      label: <Ini2 text={"PRICE_CHANGE.END_PRICE_ADDENDUM"} />,
+      name: "akta",
+      label: <Ini text={"DEED_NO"} />,
+    },
+    {
+      name: "tgl_akta",
+      label: <Ini text={"DEED_DATE"} />,
     },
   ],
   [
     {
-      name: "additional_price",
-      label: <Ini2 text={"PRICE_CHANGE.ADDITIONAL_PRICE"} />,
+      name: "sk_kemenkum",
+      label: <Ini text={"SK_KUM_NO"} />,
+    },
+    {
+      name: "tgl_sk_kemenkum",
+      label: <Ini text={"SK_KUM_DATE"} />,
+    },
+  ],
+  {
+    Child: TitleField,
+    ChildrenProps: {
+      title: <Ini text={"DEED_LAST"} />,
+    },
+  },
+  [
+    {
+      name: "nama_notaris_akhir",
+      label: <Ini text={"NAMA_NOTARIS"} />,
     },
   ],
   [
     {
-      name: "tab_outside",
-      label: <Ini2 text={"PRICE_CHANGE.ADDITIONAL_PRICE"} />,
-      typeInput: "CheckboxInput",
+      name: "akta_akhir",
+      label: <Ini text={"DEED_NO"} />,
     },
-  ][
     {
-      name: "subtraction_price",
-      label: <Ini2 text={"PRICE_CHANGE.SUBTRACTION_PRICE"} />,
-    }
-  ],
-  [
-    {
-      name: "after_price_addendum",
-      label: <Ini2 text={"PRICE_CHANGE.AFTER_PRICE_ADDENDUM"} />,
+      name: "tgl_akta_akhir",
+      label: <Ini text={"DEED_DATE"} />,
     },
   ],
   [
     {
-      name: "addendum_percentage",
-      label: <Ini2 text={"PRICE_CHANGE.PERCENTAGE_ADDENDUM"} />,
+      name: "sk_kemenkum_akhir",
+      label: <Ini text={"SK_KUM_NO"} />,
+    },
+    {
+      name: "tgl_sk_kemenkum_akhir",
+      label: <Ini text={"SK_KUM_DATE"} />,
     },
   ],
   [
     {
-      name: "conclusion",
-      label: <Ini2 text={"PRICE_CHANGE.CONCLUSION"} />,
+      name: "domisili_hukum",
+      label: <Ini text={"LEGAL_DOM"} />,
+      typeInput: "TextAreaInput",
     },
   ],
-  // {
-  //   Child: TitleField,
-  //   ChildrenProps: {
-  //     title: <Ini2 text={"SUPPORTING_DOCUMENT.TITLE"} />
-  //   },
-  //   deleteInput: true
-  // },
-];
-
-export const supportingDocumentDefault = [
   {
-    id: "1",
-    name: "Surat Permohonan Addendum dari Pihak Kedua",
-    // nama adalah referensi, jika nama sama maka referensi input nya sama
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
+    Child: TitleField,
+    ChildrenProps: {
+      title: <Ini text={"AUTH_OFC"} />,
+    },
   },
+  [
+    {
+      name: "nama_pejabat",
+      label: <Ini text={"PLACEMAN_NAME"} />,
+    },
+    {
+      name: "telp_pejabat",
+      label: <Ini text={"PHONE"} />,
+    },
+  ],
+  [
+    {
+      name: "jabatan_pejabat",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
+    },
+    {
+      name: "fax_pejabat",
+      label: <Ini text={"FAX"} />,
+    },
+  ],
+  [
+    {
+      name: "alamat_pejabat",
+      label: <Ini text={"ADDRESS"} />,
+      typeInput: "TextAreaInput",
+    },
+  ],
+  [
+    {
+      name: "nama_notaris_penugasan",
+      label: <Ini text={"NAMA_NOTARIS"} />,
+    },
+  ],
+  [
+    {
+      name: "sk_penugasan",
+      label: <Ini text={"SK_ASS_NO"} />,
+    },
+    {
+      name: "tgl_sk_penugasan",
+      label: <Ini text={"DATE_SK"} />,
+    },
+  ],
+  [
+    {
+      name: "akta_penugasan",
+      label: <Ini text={"DEED_NO"} />,
+    },
+    {
+      name: "tgl_akta_penugasan",
+      label: <Ini text={"DEED_DATE"} />,
+    },
+  ],
+  [
+    {
+      name: "sk_kemenkum_penugasan",
+      label: <Ini text={"SK_KUM_ASS_NO"} />,
+    },
+    {
+      name: "tgl_sk_kemenkum_penugasan",
+      label: <Ini text={"DATE_SK"} />,
+    },
+  ],
   {
-    id: "2",
-    name: "Surat Penawaran Harga dan Rincian Harga Pekerjaan dari Vendor",
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
+    Child: TitleField,
+    ChildrenProps: {
+      title: <Ini text={"BOARD_DIRECTOR"} />,
+    },
   },
+  [
+    {
+      name: "jabatan_direksi",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
+    },
+    {
+      name: "telp_direksi",
+      label: <Ini text={"PHONE"} />,
+    },
+  ],
+  [
+    {
+      name: "alamat_direksi",
+      label: <Ini text={"ADDRESS"} />,
+      typeInput: "TextAreaInput",
+    },
+    {
+      name: "fax_direksi",
+      label: <Ini text={"FAX"} />,
+    },
+  ],
   {
-    id: "3",
-    name: "Berita Acara Kesepakatan Addendum",
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
+    Child: TitleField,
+    ChildrenProps: {
+      title: <Ini text={"JOB_SUPERV"} />,
+    },
   },
-  {
-    id: "4",
-    name: "Surat Kuasa Khusus",
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
-  },
-  {
-    id: "5",
-    name: "Justifikasi",
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
-  },
-  {
-    id: "6",
-    name: "Kajian Hukum dari Fungsi Legal",
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
-  },
-  {
-    id: "7",
-    name: "Kajian Risk Management dari Fungsi Risk Management",
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
-  },
-  {
-    id: "8",
-    name: "Hasil Keputusan Rapat Direksi (Radir)",
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
-  },
-  {
-    id: "9",
-    name: "Memo/Surat Permohonan Addendum",
-    noDokumen: "",
-    tglDokumen: "",
-    fileDokumen: "",
-    perihal: "",
-  },
+  [
+    {
+      name: "jabatan_pengawas",
+      label: <Ini text={"PLACEMAN_POSITION"} />,
+    },
+    {
+      name: "telp_pengawas",
+      label: <Ini text={"PHONE"} />,
+    },
+  ],
+  [
+    {
+      name: "alamat_pengawas",
+      label: <Ini text={"ADDRESS"} />,
+      typeInput: "TextAreaInput",
+    },
+    {
+      name: "fax_pengawas",
+      label: <Ini text={"FAX"} />,
+    },
+  ],
 ];
 
 export const formData2 = [
