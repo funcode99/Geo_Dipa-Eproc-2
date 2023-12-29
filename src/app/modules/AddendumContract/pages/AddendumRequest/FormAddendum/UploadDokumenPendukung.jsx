@@ -155,6 +155,55 @@ const UploadDokumenPendukung = ({
       };
     }
 
+    // if (
+    //   supportingDocument?.data?.some(
+    //     (item) =>
+    //       item.required === true &&
+    //       (typeof item.noDokumen === "undefined" ||
+    //         typeof item.tglDokumen === "undefined" ||
+    //         typeof item.fileDokumenKirim === "undefined" ||
+    //         typeof item.perihal === "undefined")
+    //   )
+    // ) {
+    //   alert("Silahkan isi form mandatory yang masih kosong");
+    // } else {
+    //   let initValue = 0;
+    //   const a = supportingDocument?.data?.map((item, index) => {
+    //     if (
+    //       typeof item.noDokumen === "undefined" ||
+    //       typeof item.tglDokumen === "undefined" ||
+    //       typeof item.fileDokumenKirim === "undefined" ||
+    //       typeof item.perihal === "undefined"
+    //     ) {
+    //       console.log("kosong");
+    //     } else {
+    //       formDataNew.append(`noDokumen[${index}]`, item.noDokumen);
+    //       formDataNew.append(`tglDokumen[${index}]`, item.tglDokumen);
+    //       formDataNew.append(`fileDokumen[${index}]`, item.fileDokumenKirim);
+    //       formDataNew.append(`perihal[${index}]`, item.perihal);
+    //       formDataNew.append(
+    //         `idDokumen[${index}]`,
+    //         typeof item.id === "0" ? null : item.id
+    //       );
+    //       formDataNew.append(`seq[${index}]`, item.seq);
+    //       formDataNew.append(
+    //         `tipeDokumen[${index}]`,
+    //         typeof item.document_type === "undefined"
+    //           ? null
+    //           : item.document_type
+    //       );
+    //       formDataNew.append(`namaDokumen[${index}]`, item.document_name);
+    //       formDataNew.append(
+    //         `namaDokumenEng[${index}]`,
+    //         typeof item.document_name_eng === "undefined"
+    //           ? null
+    //           : item.document_name_eng
+    //       );
+    //       initValue += 1;
+    //     }
+    //   });
+    // }
+
     if (values.type === "Submit") {
       uploadSuppDoc2(formDataNew, getDataList?.id);
     } else {
@@ -185,7 +234,6 @@ const UploadDokumenPendukung = ({
   const setNewDocumentValue = (index, event, name) => {
     setSupportingDocument((previous) => {
       let newState = [...previous.data];
-      console.log("newState", newState);
       newState[index][name] = event;
       return {
         data: newState,

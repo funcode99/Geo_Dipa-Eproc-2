@@ -30,8 +30,6 @@ const CollapsibleRow = ({
   row,
   parentIndex,
 }) => {
-  // console.log("isi row", row);
-
   const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
   return (
@@ -112,12 +110,6 @@ const CollapsibleRow = ({
               // ]}
 
               handleAction={(type, data, label) => {
-                console.log(
-                  "masuk ke handleAction collapsible row",
-                  type,
-                  data,
-                  label
-                );
                 if (label === "JOB_PRICE.TABLE_ACTION.DELETE") {
                   onDeleteMode(index);
                 } else if (label === "JOB_PRICE.TABLE_ACTION.EDIT") {

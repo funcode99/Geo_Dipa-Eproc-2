@@ -26,10 +26,8 @@ const HargaPekerjaan = ({
   dataAfterAdendum,
   jobPriceCurrent,
   is_add_job_price,
+  dataNewClauseDrafting,
 }) => {
-  if (is_add_job_price) {
-    isDisable = is_add_job_price;
-  }
   const openCloseAddDetail = useRef();
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
@@ -37,6 +35,7 @@ const HargaPekerjaan = ({
   };
   const [item, setItem] = useState([]);
   const [grandTotal, setGrandTotal] = useState(0);
+
   let currenciesIndex = 0;
   const valueAfterAddendum = JSON.parse(
     localStorage.getItem("value_after_addendum")
@@ -52,10 +51,10 @@ const HargaPekerjaan = ({
   };
 
   const submitFormParameterJobPrice = (values) => {
-    if (valueAfterAddendum === grandTotal) {
+    if (dataAfterAdendum?.after_addendum_job_price == grandTotal) {
       submitJobPrice(
         {
-          add_contract_id: localStorage.getItem("add_contract_id"),
+          add_contract_id: contract_id,
           currency_id: currencies.count[currenciesIndex].id,
           item: values.data,
           body_clause_data: values.body_data,
@@ -63,6 +62,7 @@ const HargaPekerjaan = ({
         },
         contract_id
       );
+      alert("Berhasil update data!");
     } else {
       alert(
         "Jumlah rincian pekerjaan anda belum sama dengan nilai perjanjian setelah addendum!"
@@ -82,8 +82,8 @@ const HargaPekerjaan = ({
         enableReinitialize={true}
         initialValues={{
           data: item,
-          body_data: dataNewClause.job_price.bodyClauseData,
-          attachment_data: dataNewClause.job_price.attachmentClauseData,
+          body_data: dataNewClauseDrafting.job_price.bodyClauseData,
+          attachment_data: dataNewClauseDrafting.job_price.attachmentClauseData,
         }}
         onSubmit={(values) => {
           submitFormParameterJobPrice(values);
@@ -168,6 +168,7 @@ const HargaPekerjaan = ({
                           type="button"
                           className="btn btn-primary text-white"
                           onClick={showAddDetail}
+                          disabled={isDisable}
                         >
                           + Tambah Rincian
                         </button>
@@ -183,20 +184,6 @@ const HargaPekerjaan = ({
                   </TableContainer>
                 </div>
               </div>
-              {/* <div
-                className="mt-8"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  border: "1px solid #000000",
-                  borderRadius: 8,
-                  padding: 16,
-                }}
-              >
-                <div className="perubahan-klausul mt-8">
-                  <PerubahanKlausul />
-                </div>
-              </div> */}
               <div className="mt-8"></div>
               <PerubahanKlausulKontrak
                 subTitle={"C"}
@@ -206,9 +193,11 @@ const HargaPekerjaan = ({
                 isMandatory={true}
                 isDrafting={true}
                 values={values}
-                isDisable={isDisable}
+                isDisable={!isDisable}
               />
               <UpdateButton
+                // isDisable={false}
+                isDisable={isDisable}
                 fromWhere={"job_price"}
                 isDrafting={true}
                 isMandatory={true}
@@ -223,6 +212,7 @@ const HargaPekerjaan = ({
 
 const mapState = (state) => ({
   dataNewClause: state.addendumContract.dataNewClause,
+  dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
 
 export default connect(mapState, null)(HargaPekerjaan);

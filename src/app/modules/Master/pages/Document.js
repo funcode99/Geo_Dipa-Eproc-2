@@ -75,7 +75,6 @@ export const Documents = ({ typeId }) => {
   const [options, setOptions] = React.useState();
   const [tableContent, setTableContent] = React.useState([]);
   const [newContent, setnewContent] = React.useState([]);
-  console.log(modals, loading, tableContent);
 
   const FormSchema = Yup.object().shape({
     document_name: Yup.string()

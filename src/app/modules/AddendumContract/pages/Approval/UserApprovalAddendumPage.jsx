@@ -91,7 +91,6 @@ const UserApprovalAddendumPage = ({
 
   const [addendumAdditional, setAddendumAdditional] = useState([]);
   const addendumCombine = [...addendumAdditional, ...addendumSuffix];
-  console.log("kombinasi", addendumCombine);
 
   const keys = {
     fetch: "get-data-contracts-approval",
@@ -142,7 +141,6 @@ const UserApprovalAddendumPage = ({
   ];
 
   // gak ada isi nya
-  // console.log('isi data contract by id di delivery monitoring', dataContractById)
   const classes = useStyles();
   const location = useLocation();
   const { contract_id, addendum_id, tab: forceTabActive } = useParams();
@@ -161,6 +159,7 @@ const UserApprovalAddendumPage = ({
   const [sequence, setSequence] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [firstTime, setfirstTime] = React.useState(0);
+  const [selectedTabLists, setSelectedTabLists] = useState();
   const [tempProps, setTempProps] = React.useState({
     task_id: "",
     tab: 0,
@@ -227,13 +226,7 @@ const UserApprovalAddendumPage = ({
     //   // icon: <FeaturedPlayList className="mb-0 mr-2" />,
     // },
   ]);
-  const [selectedTabLists, setSelectedTabLists] = useState(
-    TabLists[0]?.label ? TabLists[0]?.label : []
-  );
-  const [checkedInitialValues, setCheckedInitialValues] = useState();
-  useEffect(() => {
-    console.log("checked initial values", checkedInitialValues);
-  }, [checkedInitialValues]);
+  const [checkedInitialValues, setCheckedInitialValues] = useState([]);
   const [timePeriodData, setTimePeriodData] = useState();
   const [initialData, setInitialData] = useState();
 
@@ -336,7 +329,6 @@ const UserApprovalAddendumPage = ({
   // sengaja dikasih event biar yang diambil value nya
   function handleChangeTab(event, newTabActive) {
     // isi nya urutan angka array sesuai dengan yang di klik
-    console.log("isi newTabActive", newTabActive);
     setTabActive(newTabActive);
     setSelectedTabLists(TabLists[newTabActive]?.label);
   }
@@ -351,7 +343,6 @@ const UserApprovalAddendumPage = ({
       // url: `/adendum/contract-final-draft/${contract_id}/show`,
       url: `/adendum/contract-final-draft/d086f59c-838a-440f-a262-d8f21f8fc4e1/show`,
       onSuccess: (res) => {
-        console.log("isi respon 2.23", res.data);
         setFinalDraftData(res.data);
       },
     });
@@ -363,7 +354,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
-        console.log("masuk ke api 1.2", res?.data);
         setJsonData(res?.data);
         setDataArr({
           id: res.data.id,
@@ -463,7 +453,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/add-contracts/${addendum_id}`,
       onSuccess: (res) => {
-        console.log("masuk ke api 2.3", res?.data);
         setTabDisableLists(res?.data);
         if (res?.data?.status_code === "15") {
           setStepper(approvalStepper1);
@@ -561,7 +550,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/job-directors`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setauthorizedOfficial(res.data);
       },
     });
@@ -573,7 +561,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/refference/get-vendor/${id}`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setSecondAuthorizedOfficial(res.data.officer_data);
         setPICData(res.data.pic_data);
         setAccountNumberBankData(res.data.bank_data);
@@ -587,7 +574,6 @@ const UserApprovalAddendumPage = ({
       type: "get",
       url: `/adendum/direksi-pekerjaan`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setJobDirector(res.data);
       },
     });
@@ -650,9 +636,6 @@ const UserApprovalAddendumPage = ({
   };
 
   const assignTabLists = (values) => {
-    console.log("isi values", values);
-    console.log("isi tablists", TabLists);
-
     TabLists.map((Tabitem) => {
       Tabitem.addendum = false;
     });
@@ -669,9 +652,6 @@ const UserApprovalAddendumPage = ({
   };
 
   const [supportDocumentFetch, setSupportDocumentFetch] = useState();
-  useEffect(() => {
-    console.log("data sekarang", supportDocumentFetch);
-  }, [supportDocumentFetch]);
 
   const getAddContractDocument = async () => {
     fetch_api_sg({

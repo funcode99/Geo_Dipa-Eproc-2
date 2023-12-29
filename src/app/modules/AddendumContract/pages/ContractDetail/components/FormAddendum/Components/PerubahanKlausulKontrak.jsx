@@ -19,15 +19,6 @@ const PerubahanKlausulKontrak = ({
 }) => {
   const dispatch = useDispatch();
 
-  console.log(
-    "isi fromWhere sekarang",
-    fromWhere,
-    isDrafting,
-    isMandatory,
-    dataNewClause,
-    dataNewClauseDrafting
-  );
-
   const changeOtherBodyClauseData = (fieldIndex, value, fieldType) => {
     let newArr = isDrafting
       ? [...dataNewClauseDrafting[fromWhere].bodyClauseData]
@@ -623,20 +614,19 @@ const PerubahanKlausulKontrak = ({
           </h1>
           <button
             type="button"
-            disabled={
-              isDrafting
-                ? dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
-                    .attachment_number === "" ||
-                  dataNewClauseDrafting[fromWhere].attachmentClauseData[0]
-                    .clause_note === "" ||
-                  isDisable
-                : dataNewClause[fromWhere].attachmentClauseData[0]
-                    .attachment_number === "" ||
-                  dataNewClause[fromWhere].attachmentClauseData[0]
-                    .clause_note === ""
-            }
+            disabled={!isDisable}
             className="btn btn-primary text-white add-new-clause"
             onClick={showAddClause}
+            style={{
+              color: "white",
+              fontSize: 14,
+              fontWeight: "400",
+              padding: "8px 14px",
+              borderRadius: "8px",
+              backgroundColor: !isDisable ? "#8c8a8a" : "#3699ff",
+              outline: "none",
+              border: "none",
+            }}
           >
             Tambah Klausul Lampiran
           </button>

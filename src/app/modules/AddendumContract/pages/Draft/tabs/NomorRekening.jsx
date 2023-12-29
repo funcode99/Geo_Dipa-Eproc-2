@@ -43,6 +43,16 @@ const NomorRekening = ({
       JSON.stringify(values.attachment_data)
     );
     submitAccountNumber(data_new, contract_id);
+    // submitAccountNumber(
+    //   {
+    //     add_contract_id: contract_id,
+    //     data_bank: values.data_bank,
+    //     bank_statement_file: values.bank_statement_file,
+    //     body_clause_data: values.body_data,
+    //     attachment_clause_data: values.attachment_data,
+    //   },
+    //   contract_id
+    // );
     alert("Berhasil Update Data!");
   };
 
@@ -72,15 +82,22 @@ const NomorRekening = ({
         fromWhere: "account_number",
       });
     }
-  }, []);
+  }, [add_contract_account_number]);
 
   return (
     <div className="bg-white p-10">
+      <NewClause
+        openCloseAddClause={openCloseAddClause}
+        fromWhere={"account_number"}
+        fieldType={"clause_attachment"}
+        isDrafting={true}
+      />
       <Formik
         enableReinitialize={true}
         initialValues={{
           data_bank: accountNumber,
-          bank_statement_file: "",
+          bank_statement_file:
+            add_contract_account_number?.data_bank?.bank_statement_file,
           body_data: dataNewClauseDrafting?.account_number?.bodyClauseData,
           attachment_data:
             dataNewClauseDrafting?.account_number?.attachmentClauseData,
@@ -305,7 +322,6 @@ const NomorRekening = ({
                           value={
                             add_contract_account_number?.data_bank
                               ?.account_holder_name
-                            // jsonData?.data_bank[bankIndex]?.account_holder_name
                           }
                         />
                       </div>
@@ -443,7 +459,11 @@ const NomorRekening = ({
                 showAddClause={showAddClause}
               />
 
-              <UpdateButton fromWhere={"account_number"} isDrafting={true} />
+              <UpdateButton
+                isDrafting={true}
+                isDisable={isDisable}
+                fromWhere={"account_number"}
+              />
             </Form>
           );
         }}

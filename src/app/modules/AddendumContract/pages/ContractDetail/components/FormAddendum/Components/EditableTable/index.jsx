@@ -95,7 +95,13 @@ const EditableTable = ({
         ...item,
         subtotal: Math.round(item?.subtotal),
         unit_price: Math.round(item?.unit_price),
-        item_detail: [],
+        item_detail: item?.item_detail?.map((child) => {
+          return {
+            ...child,
+            total: Math.round(child?.total),
+            unit_price: Math.round(child?.unit_price),
+          };
+        }),
       };
     });
     setInit(1);

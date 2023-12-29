@@ -144,7 +144,7 @@ const Jaminan = ({
 
   const addendumJaminan = [
     {
-      judul: "Jaminan Uang Muka",
+      judul: "Jaminan Uang Muka nya",
       nama_radio: "down_payment_guarantee",
       nominal: inputDataGuarantee?.down_payment_guarantee,
       tanggal_mulai: inputDataGuarantee?.down_payment_guarantee_start_date,
@@ -171,6 +171,38 @@ const Jaminan = ({
 
   const submitFormParameterGuarantee = async (values) => {
     try {
+      // await submitGuarantee(
+      //   {
+      //     add_contract_id: contract_id,
+      //     down_payment_guarantee: values.down_payment_guarantee,
+      //     down_payment_guarantee_evidence_file_name:
+      //       values.down_payment_guarantee_evidence_file_name,
+      //     down_payment_guarantee_start_date: "",
+      //     // values.down_payment_guarantee == 0
+      //     //   ? null
+      //     //   : values.down_payment_guarantee_start_date,
+      //     down_payment_guarantee_end_date: "",
+      //     // values.down_payment_guarantee == 0
+      //     //   ? null
+      //     //   : values.down_payment_guarantee_end_date,
+      //     implementation_guarantee: values.implementation_guarantee,
+      //     implementation_guarantee_evidence_file_name:
+      //       values.implementation_guarantee_evidence_file_name,
+      //     implementation_guarantee_start_date:
+      //       values.implementation_guarantee_start_date,
+      //     implementation_guarantee_end_date:
+      //       values.implementation_guarantee_end_date,
+      //     maintenance_guarantee: values.maintenance_guarantee,
+      //     maintenance_guarantee_evidence_file_name:
+      //       values.maintenance_guarantee_evidence_file_name,
+      //     maintenance_guarantee_start_date:
+      //       values.maintenance_guarantee_start_date,
+      //     maintenance_guarantee_end_date: values.maintenance_guarantee_end_date,
+      //     body_clause_data: values.body_data,
+      //     attachment_clause_data: values.attachment_data,
+      //   },
+      //   contract_id
+      // );
       await submitGuarantee(
         {
           add_contract_id: contract_id,
@@ -178,27 +210,41 @@ const Jaminan = ({
           down_payment_guarantee_evidence_file_name:
             values.down_payment_guarantee_evidence_file_name,
           down_payment_guarantee_start_date:
-            values.down_payment_guarantee_start_date,
+            values.down_payment_guarantee === "0"
+              ? null
+              : values.down_payment_guarantee_start_date,
           down_payment_guarantee_end_date:
-            values.down_payment_guarantee_end_date,
+            values.down_payment_guarantee === "0"
+              ? null
+              : values.down_payment_guarantee_end_date,
           implementation_guarantee: values.implementation_guarantee,
           implementation_guarantee_evidence_file_name:
             values.implementation_guarantee_evidence_file_name,
           implementation_guarantee_start_date:
-            values.implementation_guarantee_start_date,
+            values.implementation_guarantee === "0"
+              ? null
+              : values.implementation_guarantee_start_date,
           implementation_guarantee_end_date:
-            values.implementation_guarantee_end_date,
+            values.implementation_guarantee === "0"
+              ? null
+              : values.implementation_guarantee_end_date,
           maintenance_guarantee: values.maintenance_guarantee,
           maintenance_guarantee_evidence_file_name:
             values.maintenance_guarantee_evidence_file_name,
           maintenance_guarantee_start_date:
-            values.maintenance_guarantee_start_date,
-          maintenance_guarantee_end_date: values.maintenance_guarantee_end_date,
+            values.maintenance_guarantee === "0"
+              ? null
+              : values.maintenance_guarantee_start_date,
+          maintenance_guarantee_end_date:
+            values.maintenance_guarantee === "0"
+              ? null
+              : values.maintenance_guarantee_end_date,
           body_clause_data: values.body_data,
           attachment_clause_data: values.attachment_data,
         },
         contract_id
       );
+
       alert("Berhasil Update Data");
     } catch (error) {
       console.error("Submission error:", error);
@@ -530,10 +576,19 @@ const Jaminan = ({
                               flexDirection: "row-reverse",
                               columnGap: 10,
                             }}
+                            // value={
+                            //   inputDataGuarantee[item.nama_radio] === 1
+                            //     ? ""
+                            //     : inputDataGuarantee[
+                            //         item.nama_radio + "_start_date"
+                            //       ]
+                            // }
                             value={
-                              inputDataGuarantee[
-                                item.nama_radio + "_start_date"
-                              ] || ""
+                              inputDataGuarantee[item.nama_radio] == 1
+                                ? inputDataGuarantee[
+                                    item.nama_radio + "_start_date"
+                                  ]
+                                : ""
                             }
                             onChange={(e) => {
                               setInputDataGuarantee({
@@ -543,7 +598,7 @@ const Jaminan = ({
                               });
                             }}
                             disabled={
-                              inputDataGuarantee[item.nama_radio] === "0" ||
+                              // inputDataGuarantee[item.nama_radio] === "0" ||
                               isDisable
                             }
                           />
@@ -569,9 +624,11 @@ const Jaminan = ({
                               columnGap: 10,
                             }}
                             value={
-                              inputDataGuarantee[
-                                item.nama_radio + "_end_date"
-                              ] || ""
+                              inputDataGuarantee[item.nama_radio] == 1
+                                ? inputDataGuarantee[
+                                    item.nama_radio + "_end_date"
+                                  ]
+                                : ""
                             }
                             onChange={(e) => {
                               setInputDataGuarantee({
@@ -579,10 +636,7 @@ const Jaminan = ({
                                 [`${item.nama_radio}_end_date`]: e.target.value,
                               });
                             }}
-                            disabled={
-                              inputDataGuarantee[item.nama_radio] === "0" ||
-                              isDisable
-                            }
+                            disabled={isDisable}
                           />
                         </label>
                       </div>
@@ -636,7 +690,11 @@ const Jaminan = ({
                 showAddClause={showAddClause}
               />
 
-              <UpdateButton fromWhere={"guarantee"} isDrafting={true} />
+              <UpdateButton
+                isDrafting={true}
+                isDisable={isDisable}
+                fromWhere={"guarantee"}
+              />
             </Form>
           );
         }}

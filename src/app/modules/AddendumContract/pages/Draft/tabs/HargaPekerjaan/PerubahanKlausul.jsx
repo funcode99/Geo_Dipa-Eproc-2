@@ -71,7 +71,7 @@ const PerubahanKlausul = () => {
               className="btn btn-primary text-white"
               onClick={showModal}
             >
-              Tambah Klausul Lampiran
+              Tambah Klausul Lampiran nya
             </button>
           </div>
         </div>

@@ -409,7 +409,6 @@ export const DraftRequestPage = ({
       type: "get",
       url: `/adendum/job-directors`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setauthorizedOfficial(res.data);
       },
     });
@@ -421,7 +420,6 @@ export const DraftRequestPage = ({
       type: "get",
       url: `/adendum/refference/get-vendor/${id}`,
       onSuccess: (res) => {
-        console.log("apakah menarik data direksi", res.data);
         setSecondAuthorizedOfficial(res.data.officer_data);
         setPICData(res.data.pic_data);
         setAccountNumberBankData(res.data.bank_data);
@@ -497,9 +495,6 @@ export const DraftRequestPage = ({
   };
 
   const assignTabLists = (values) => {
-    console.log("isi values", values);
-    console.log("isi tablists", TabLists);
-
     TabLists.map((Tabitem) => {
       Tabitem.addendum = false;
     });
@@ -516,9 +511,6 @@ export const DraftRequestPage = ({
   };
 
   const [supportDocumentFetch, setSupportDocumentFetch] = useState();
-  useEffect(() => {
-    console.log("data sekarang", supportDocumentFetch);
-  }, [supportDocumentFetch]);
 
   const getAddContractDocument = async () => {
     fetch_api_sg({
