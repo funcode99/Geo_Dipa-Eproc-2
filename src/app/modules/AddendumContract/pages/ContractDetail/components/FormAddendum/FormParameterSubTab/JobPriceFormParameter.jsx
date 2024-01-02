@@ -432,6 +432,7 @@ const JobPriceFormParameter = ({
                     grandTotal={grandTotal}
                     positionName={positionName}
                     purchGroupLogin={purchGroupLogin}
+                    tabDisableLists={tabDisableLists}
                   />
                 </TableContainer>
               </div>
