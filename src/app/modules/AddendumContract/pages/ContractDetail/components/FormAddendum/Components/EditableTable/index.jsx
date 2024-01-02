@@ -85,6 +85,9 @@ const EditableTable = ({
   grandTotal,
   jobPriceCurrent,
   isDisable,
+  positionName,
+  purchGroupLogin,
+  tabDisableLists,
 }) => {
   let jobPriceData = jobPriceCurrent;
   const [init, setInit] = useState(0);
@@ -650,7 +653,10 @@ const EditableTable = ({
               <TableCell align="left">Harga Satuan</TableCell>
               <TableCell align="left">Harga Total</TableCell>
               <TableCell align="left">Keterangan</TableCell>
-              <TableCell align="left">Aksi</TableCell>
+              {(positionName === "superadmin" ||
+                purchGroupLogin === tabDisableLists?.user_purch_group_id) && (
+                <TableCell align="left">Aksi</TableCell>
+              )}
             </TableRow>
           </TableBody>
 
@@ -697,47 +703,51 @@ const EditableTable = ({
                     />
                     <CustomTableCell {...{ row, name: "subtotal", onChange }} />
                     <CustomTableCell {...{ row, name: "note", onChange }} />
-                    <TableCell className={classes.selectTableCell}>
-                      {row.isEditMode || isDisable ? (
-                        <>
-                          <IconButton
-                            aria-label="done"
-                            onClick={() => onToggleEditMode(row.id)}
-                          >
-                            <DoneIcon />
-                          </IconButton>
-                          {/* <IconButton
-                            aria-label="revert"
-                            onClick={() => onRevert(row.id)}
-                          >
-                            <RevertIcon />
-                          </IconButton> */}
-                        </>
-                      ) : (
-                        <ButtonAction
-                          handleAction={(type, data, label) => {
-                            if (label === "Delete") {
-                              onDeleteMode(index);
-                            } else if (label === "Edit") {
-                              onToggleEditMode(row.id);
-                            } else if (label === "Add Sub Item") {
-                              onAddChildMode(row.id, index);
-                            }
-                          }}
-                          ops={[
-                            {
-                              label: "JOB_PRICE.TABLE_ACTION.EDIT",
-                            },
-                            {
-                              label: "JOB_PRICE.TABLE_ACTION.DELETE",
-                            },
-                            {
-                              label: "JOB_PRICE.TABLE_ACTION.ADD_SUB_ITEM",
-                            },
-                          ]}
-                        ></ButtonAction>
-                      )}
-                    </TableCell>
+                    {(positionName === "superadmin" ||
+                      purchGroupLogin ===
+                        tabDisableLists?.user_purch_group_id) && (
+                      <TableCell className={classes.selectTableCell}>
+                        {row.isEditMode || isDisable ? (
+                          <>
+                            <IconButton
+                              aria-label="done"
+                              onClick={() => onToggleEditMode(row.id)}
+                            >
+                              <DoneIcon />
+                            </IconButton>
+                            {/* <IconButton
+                                aria-label="revert"
+                                onClick={() => onRevert(row.id)}
+                              >
+                                <RevertIcon />
+                              </IconButton> */}
+                          </>
+                        ) : (
+                          <ButtonAction
+                            handleAction={(type, data, label) => {
+                              if (label === "Delete") {
+                                onDeleteMode(index);
+                              } else if (label === "Edit") {
+                                onToggleEditMode(row.id);
+                              } else if (label === "Add Sub Item") {
+                                onAddChildMode(row.id, index);
+                              }
+                            }}
+                            ops={[
+                              {
+                                label: "JOB_PRICE.TABLE_ACTION.EDIT",
+                              },
+                              {
+                                label: "JOB_PRICE.TABLE_ACTION.DELETE",
+                              },
+                              {
+                                label: "JOB_PRICE.TABLE_ACTION.ADD_SUB_ITEM",
+                              },
+                            ]}
+                          ></ButtonAction>
+                        )}
+                      </TableCell>
+                    )}
                   </TableRow>
                 </>
               )

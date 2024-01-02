@@ -92,6 +92,9 @@ const FormParameterDraft = ({
   PICData,
   accountNumberBankData,
   dataNewClauseDrafting,
+  positionName,
+  purchGroupLogin,
+  tabDisableLists,
 }) => {
   const tableHeaderFine = [
     {
@@ -169,7 +172,6 @@ const FormParameterDraft = ({
       }
     });
   }, [guaranteeBeforeAddendum]);
-
   const guaranteeBeforeAddendum = [
     {
       title: "Jaminan Uang Muka",
@@ -205,7 +207,6 @@ const FormParameterDraft = ({
       nameEvidence: "maintenance_guarantee_evidence_file",
     },
   ];
-
   const timePeriodBeforeAddendum = [
     {
       title: "Jangka Waktu Perjanjian",
@@ -242,7 +243,6 @@ const FormParameterDraft = ({
       prefix: "maintenance",
     },
   ];
-
   const [timePeriodAddendum, setTimePeriodAddendum] = useState([
     {
       title: "Jangka Waktu Perjanjian",
@@ -282,13 +282,11 @@ const FormParameterDraft = ({
       prefix: "maintenance",
     },
   ]);
-
   const [bankIndex, setBankIndex] = useState(0);
   const changeDataBankIndex = (num) => {
     setBankIndex(num);
     setAccountNumber(jsonData?.data_bank[num]);
   };
-
   const [inputDataGuarantee, setInputDataGuarantee] = useState({
     dp_guarantee: "0",
     dp_guarantee_start_date: "",
@@ -442,16 +440,13 @@ const FormParameterDraft = ({
   const earlyStagePayment = {
     payment: JSON.parse(localStorage.getItem("payment_method")),
   };
-
   const [stagePayment, setStagePayment] = useState({
     payment: jsonData?.payment_method_data,
   });
   const [accountNumber, setAccountNumber] = useState(
     jsonData?.data_bank[bankIndex]
   );
-
   const [uploadBankData, setUploadBankData] = useState();
-
   const getDataPenalties = async () => {
     fetch_api_sg({
       key: keys.fetch,
@@ -467,7 +462,6 @@ const FormParameterDraft = ({
       },
     });
   };
-
   const getDataBankAccounts = async () => {
     fetch_api_sg({
       key: keys.fetch,
@@ -484,7 +478,6 @@ const FormParameterDraft = ({
       },
     });
   };
-
   const getCurrencies = async () => {
     fetch_api_sg({
       key: keys.fetch,
@@ -495,13 +488,11 @@ const FormParameterDraft = ({
       },
     });
   };
-
   React.useEffect(() => {
     getDataPenalties();
     // getDataBankAccounts();
     getCurrencies();
   }, []);
-
   const [addendumPaymentMethod, setAddendumPaymentMethod] = useState(
     jsonData?.payment_method
   );
@@ -967,6 +958,8 @@ const FormParameterDraft = ({
                 jobSupervisor={jobSupervisor}
                 jobSupervisor2={jobSupervisor2}
                 contract_id={draft_id}
+                positionName={positionName}
+                purchGroupLogin={purchGroupLogin}
               />
             </>
           )}
@@ -979,6 +972,9 @@ const FormParameterDraft = ({
                 headerData={headerData}
                 jsonData={jsonData}
                 contract_id={draft_id}
+                positionName={positionName}
+                purchGroupLogin={purchGroupLogin}
+                tabDisableLists={tabDisableLists}
               />
             </>
           )}
@@ -1294,12 +1290,26 @@ const FormParameterDraft = ({
                                         name={data.prefix + "_start_date"}
                                         value={data.startDate}
                                         disabled={
-                                          (data.title ===
+                                          // (data.title ===
+                                          //   "Jangka Waktu Perjanjian" &&
+                                          //   data.selectableStart) ||
+                                          // (data.title ===
+                                          //   "Jangka Waktu Pelaksanaan Pekerjaan" &&
+                                          //   data.selectableStart) ||
+                                          data.title ===
                                             "Jangka Waktu Perjanjian" &&
-                                            data.selectableStart) ||
-                                          (data.title ===
-                                            "Jangka Waktu Pelaksanaan Pekerjaan" &&
-                                            data.selectableStart)
+                                          data.selectableStart
+                                            ? true
+                                            : data.title ===
+                                                "Jangka Waktu Pelaksanaan Pekerjaan" &&
+                                              data.selectableStart
+                                            ? true
+                                            : positionName === "superadmin"
+                                            ? false
+                                            : purchGroupLogin ===
+                                              tabDisableLists?.user_purch_group_id
+                                            ? false
+                                            : true
                                         }
                                         onChange={(e) =>
                                           setTimePeriodAddendum((prev) => {
@@ -1358,6 +1368,14 @@ const FormParameterDraft = ({
                                             }
                                           });
                                         }}
+                                        disabled={
+                                          positionName === "superadmin"
+                                            ? false
+                                            : purchGroupLogin ===
+                                              tabDisableLists?.user_purch_group_id
+                                            ? false
+                                            : true
+                                        }
                                       />
                                     </div>
                                   </div>
@@ -1392,6 +1410,14 @@ const FormParameterDraft = ({
                                       alignItems: "center",
                                       minHeight: 41.5,
                                     }}
+                                    disabled={
+                                      positionName === "superadmin"
+                                        ? false
+                                        : purchGroupLogin ===
+                                          tabDisableLists?.user_purch_group_id
+                                        ? false
+                                        : true
+                                    }
                                   >
                                     <div
                                       style={{
@@ -1413,6 +1439,14 @@ const FormParameterDraft = ({
                                               e.target.value;
                                             return newArr;
                                           })
+                                        }
+                                        disabled={
+                                          positionName === "superadmin"
+                                            ? false
+                                            : purchGroupLogin ===
+                                              tabDisableLists?.user_purch_group_id
+                                            ? false
+                                            : true
                                         }
                                       />
                                       <span>SKPP</span>
@@ -1438,6 +1472,14 @@ const FormParameterDraft = ({
                                               e.target.value;
                                             return newArr;
                                           })
+                                        }
+                                        disabled={
+                                          positionName === "superadmin"
+                                            ? false
+                                            : purchGroupLogin ===
+                                              tabDisableLists?.user_purch_group_id
+                                            ? false
+                                            : true
                                         }
                                       />
                                       <span>SPMK</span>
@@ -1643,12 +1685,28 @@ const FormParameterDraft = ({
                             display: "flex",
                             gap: 12,
                           }}
+                          disabled={
+                            positionName === "superadmin"
+                              ? false
+                              : purchGroupLogin ===
+                                tabDisableLists?.user_purch_group_id
+                              ? false
+                              : true
+                          }
                         >
                           <input
                             type="radio"
                             name="payment_addendum"
                             onClick={() => setAddendumPaymentMethod("full")}
                             checked={addendumPaymentMethod === "full"}
+                            disabled={
+                              positionName === "superadmin"
+                                ? false
+                                : purchGroupLogin ===
+                                  tabDisableLists?.user_purch_group_id
+                                ? false
+                                : true
+                            }
                           />
                           Full Pembayaran
                         </label>
@@ -1658,6 +1716,14 @@ const FormParameterDraft = ({
                             gap: 12,
                             margin: 0,
                           }}
+                          disabled={
+                            positionName === "superadmin"
+                              ? false
+                              : purchGroupLogin ===
+                                tabDisableLists?.user_purch_group_id
+                              ? false
+                              : true
+                          }
                         >
                           <input
                             type="radio"
@@ -1666,6 +1732,14 @@ const FormParameterDraft = ({
                               setAddendumPaymentMethod("gradually")
                             }
                             checked={addendumPaymentMethod === "gradually"}
+                            disabled={
+                              positionName === "superadmin"
+                                ? false
+                                : purchGroupLogin ===
+                                  tabDisableLists?.user_purch_group_id
+                                ? false
+                                : true
+                            }
                           />
                           Pembayaran Bertahap
                         </label>
@@ -1701,6 +1775,14 @@ const FormParameterDraft = ({
                                         return data;
                                       });
                                     }}
+                                    disabled={
+                                      positionName === "superadmin"
+                                        ? false
+                                        : purchGroupLogin ===
+                                          tabDisableLists?.user_purch_group_id
+                                        ? false
+                                        : true
+                                    }
                                   >
                                     Hapus
                                   </button>
@@ -1732,7 +1814,13 @@ const FormParameterDraft = ({
                                         )
                                       }
                                       disabled={
-                                        addendumPaymentMethod !== "gradually"
+                                        // addendumPaymentMethod !== "gradually" &&
+                                        positionName === "superadmin"
+                                          ? false
+                                          : purchGroupLogin ===
+                                            tabDisableLists?.user_purch_group_id
+                                          ? false
+                                          : true
                                       }
                                     />
                                   </div>
@@ -1759,7 +1847,13 @@ const FormParameterDraft = ({
                                         )
                                       }
                                       disabled={
-                                        addendumPaymentMethod !== "gradually"
+                                        // addendumPaymentMethod !== "gradually" &&
+                                        positionName === "superadmin"
+                                          ? false
+                                          : purchGroupLogin ===
+                                            tabDisableLists?.user_purch_group_id
+                                          ? false
+                                          : true
                                       }
                                     ></textarea>
                                   </div>
@@ -1780,6 +1874,14 @@ const FormParameterDraft = ({
                             type="button"
                             className="btn btn-primary mx-1"
                             onClick={showAddPayment}
+                            disabled={
+                              positionName === "superadmin"
+                                ? false
+                                : purchGroupLogin ===
+                                  tabDisableLists?.user_purch_group_id
+                                ? false
+                                : true
+                            }
                           >
                             Tambah
                           </button>
@@ -1940,6 +2042,14 @@ const FormParameterDraft = ({
                                 maxHeight: 40,
                               }}
                               onClick={showAddFine}
+                              disabled={
+                                positionName === "superadmin"
+                                  ? false
+                                  : purchGroupLogin ===
+                                    tabDisableLists?.user_purch_group_id
+                                  ? false
+                                  : true
+                              }
                             >
                               Denda
                             </button>
@@ -1996,9 +2106,16 @@ const FormParameterDraft = ({
                                   <TableCell align="left">
                                     {row.type === "1" ? "%" : "Nilai"}
                                   </TableCell>
-                                  <TableCell align="left">
-                                    {actionButton(row.id, deleteFine)}
-                                  </TableCell>
+                                  {positionName === "superadmin"
+                                    ? false
+                                    : purchGroupLogin ===
+                                      tabDisableLists?.user_purch_group_id
+                                    ? false
+                                    : true && (
+                                        <TableCell align="left">
+                                          {actionButton(row.id, deleteFine)}
+                                        </TableCell>
+                                      )}
                                 </TableRow>
                               ))}
                             </TableBody>
@@ -2332,6 +2449,14 @@ const FormParameterDraft = ({
                                         alignItems: "center",
                                         columnGap: 8,
                                       }}
+                                      disabled={
+                                        positionName === "superadmin"
+                                          ? false
+                                          : purchGroupLogin ===
+                                            tabDisableLists?.user_purch_group_id
+                                          ? false
+                                          : true
+                                      }
                                     >
                                       <Field
                                         type="radio"
@@ -2345,6 +2470,14 @@ const FormParameterDraft = ({
                                             return a;
                                           });
                                         }}
+                                        disabled={
+                                          positionName === "superadmin"
+                                            ? false
+                                            : purchGroupLogin ===
+                                              tabDisableLists?.user_purch_group_id
+                                            ? false
+                                            : true
+                                        }
                                       />
                                       <span>Ya</span>
                                     </label>
@@ -2357,6 +2490,14 @@ const FormParameterDraft = ({
                                         alignItems: "center",
                                         columnGap: 8,
                                       }}
+                                      disabled={
+                                        positionName === "superadmin"
+                                          ? false
+                                          : purchGroupLogin ===
+                                            tabDisableLists?.user_purch_group_id
+                                          ? false
+                                          : true
+                                      }
                                     >
                                       <Field
                                         type="radio"
@@ -2370,6 +2511,14 @@ const FormParameterDraft = ({
                                             return a;
                                           });
                                         }}
+                                        disabled={
+                                          positionName === "superadmin"
+                                            ? false
+                                            : purchGroupLogin ===
+                                              tabDisableLists?.user_purch_group_id
+                                            ? false
+                                            : true
+                                        }
                                       />
                                       <span>Tidak</span>
                                     </label>
@@ -2779,6 +2928,14 @@ const FormParameterDraft = ({
                                   data={jsonData?.data_bank}
                                   func={changeDataBankIndex}
                                   labelName={`account_number`}
+                                  disabled={
+                                    positionName === "superadmin"
+                                      ? false
+                                      : purchGroupLogin ===
+                                        tabDisableLists?.user_purch_group_id
+                                      ? false
+                                      : true
+                                  }
                                 />
                               </div>
                               <div
@@ -2913,6 +3070,14 @@ const FormParameterDraft = ({
                                       event.target.files[0]
                                     );
                                   }}
+                                  disabled={
+                                    positionName === "superadmin"
+                                      ? false
+                                      : purchGroupLogin ===
+                                        tabDisableLists?.user_purch_group_id
+                                      ? false
+                                      : true
+                                  }
                                 />
                               </div>
                             </div>
@@ -2987,6 +3152,8 @@ const mapState = (state) => ({
   },
   status: state.auth.user.data.status,
   dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
+  purchGroupLogin: state.auth.user.data.purch_group,
+  positionName: state.auth.user.data.position_name,
 });
 
 const mapDispatch = {

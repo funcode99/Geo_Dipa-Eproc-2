@@ -90,7 +90,10 @@ const UserApprovalAddendumPage = ({
   ];
 
   const [addendumAdditional, setAddendumAdditional] = useState([]);
-  const addendumCombine = [...addendumAdditional, ...addendumSuffix];
+  const [addendumCombine, setAddendumCombine] = useState([]);
+  useEffect(() => {
+    setAddendumCombine([...addendumAdditional]);
+  }, [addendumAdditional]);
 
   const keys = {
     fetch: "get-data-contracts-approval",
@@ -232,9 +235,9 @@ const UserApprovalAddendumPage = ({
 
   const submitApproval = (type) => {
     if (type === "Reject") {
-      rejectAddendumContract(contract_id);
+      rejectAddendumContract(addendum_id);
     } else {
-      approveAddendumContract(contract_id);
+      approveAddendumContract(addendum_id);
     }
   };
 
