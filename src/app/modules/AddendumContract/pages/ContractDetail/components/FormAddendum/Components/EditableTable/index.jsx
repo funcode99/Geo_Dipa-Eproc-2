@@ -85,6 +85,8 @@ const EditableTable = ({
   grandTotal,
   jobPriceCurrent,
   isDisable,
+  positionName,
+  purchGroupLogin,
 }) => {
   let jobPriceData = jobPriceCurrent;
   const [init, setInit] = useState(0);

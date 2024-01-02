@@ -33,7 +33,10 @@ const JobPriceFormParameter = ({
   jsonData,
   dataNewClause,
   contract_id,
+  tabDisableLists,
   isDisable,
+  positionName,
+  purchGroupLogin,
 }) => {
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -407,6 +410,14 @@ const JobPriceFormParameter = ({
                         className="btn btn-primary text-white"
                         onClick={showAddDetail}
                         // disabled={isDisable}
+                        disabled={
+                          positionName === "superadmin"
+                            ? false
+                            : purchGroupLogin ===
+                              tabDisableLists?.user_purch_group_id
+                            ? false
+                            : true
+                        }
                       >
                         + Tambah Rincian
                       </button>
@@ -419,6 +430,8 @@ const JobPriceFormParameter = ({
                     previousData={jsonData?.contract_items}
                     func={setItem}
                     grandTotal={grandTotal}
+                    positionName={positionName}
+                    purchGroupLogin={purchGroupLogin}
                   />
                 </TableContainer>
               </div>

@@ -27,6 +27,8 @@ const PartiesFormParameter = ({
   dataNewClauseDrafting,
   authorizedOfficialData,
   secondAuthorizedOfficial,
+  positionName,
+  purchGroupLogin,
 }) => {
   if (is_add_parties == true) {
     isDisable = is_add_parties;
@@ -36,27 +38,22 @@ const PartiesFormParameter = ({
   const showAddWorkSupervisor = () => {
     openCloseWorkSupervisor.current.open();
   };
-
   const openCloseWorkDirector = React.useRef();
   const showAddWorkDirector = () => {
     openCloseWorkDirector.current.open();
   };
-
   const openCloseSecondWorkSupervisor = React.useRef();
   const showAddSecondWorkSupervisor = () => {
     openCloseSecondWorkSupervisor.current.open();
   };
-
   const openCloseSecondWorkDirector = React.useRef();
   const showAddSecondWorkDirector = () => {
     openCloseSecondWorkDirector.current.open();
   };
-
   const openCloseAddClause = React.useRef();
   const showAddClause = () => {
     openCloseAddClause.current.open();
   };
-
   const submitFormParameterContractParties = (values) => {
     submitParties(
       {
