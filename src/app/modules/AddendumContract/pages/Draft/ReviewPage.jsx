@@ -53,6 +53,8 @@ const ReviewPage = ({
       position_name: dataSubmit.position_name,
     });
     alert("Berhasil tambah data!");
+    openCloseAddReviewer.current.close();
+    // window.location.reload(true);
   };
   return (
     <>
