@@ -322,12 +322,24 @@ export const AddContractAddendum = ({
 
   const [finalDraftData, setFinalDraftData] = useState();
 
+  // const getFinalDraftData = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     // url: `/adendum/contract-final-draft/${contract_id}/show`,
+  //     url: `/adendum/contract-final-draft/d086f59c-838a-440f-a262-d8f21f8fc4e1/show`,
+  //     onSuccess: (res) => {
+  //       setFinalDraftData(res.data);
+  //     },
+  //   });
+  // };
+  // const [finalDraftData, setFinalDraftData] = useState();
+
   const getFinalDraftData = async () => {
     fetch_api_sg({
       key: keys.fetch,
       type: "get",
-      // url: `/adendum/contract-final-draft/${contract_id}/show`,
-      url: `/adendum/contract-final-draft/d086f59c-838a-440f-a262-d8f21f8fc4e1/show`,
+      url: `/adendum/contract-final-draft/${contract_id}/show`,
       onSuccess: (res) => {
         setFinalDraftData(res.data);
       },
@@ -340,6 +352,7 @@ export const AddContractAddendum = ({
       type: "get",
       url: `/adendum/contract-released/${contract_id}/show`,
       onSuccess: (res) => {
+        // getFinalDraftData(res?.data?.contract_id);
         setJsonData(res?.data);
         localStorage.setItem(
           "payment_method",
@@ -706,7 +719,7 @@ export const AddContractAddendum = ({
 
       <Steppers steps={LOCAL_STEPPER_CONTRACT} />
 
-      {jsonData?.form_review ? (
+      {finalDraftData?.form_review ? (
         <div
           style={{
             backgroundColor: "white",
@@ -735,8 +748,11 @@ export const AddContractAddendum = ({
             onChange={(e) => setFinalDraftSelectValue(e.target.value)}
           >
             <option value="Kontrak">Final Draft Kontrak</option>
-            {finalDraftData?.add_contracts.length > 0 && (
-              <option value="Addendum">Final Draft Addendum</option>
+            {finalDraftData?.add_contracts?.length > 0 && (
+              <option value="Addendum">Final Draft Addendum 1</option>
+            )}
+            {finalDraftData?.add_contracts?.length > 1 && (
+              <option value="Addendum_2">Final Draft Addendum 2</option>
             )}
           </select>
 
@@ -768,76 +784,62 @@ export const AddContractAddendum = ({
                   }}
                   onClick={() =>
                     window.open(
-                      `${API_EPROC}/${jsonData?.form_review?.spk_name}`,
+                      `${API_EPROC}/${finalDraftData?.form_review?.spk_name}`,
                       "_blank"
                     )
                   }
                 >
-                  {jsonData?.form_review?.spk_name}
+                  {finalDraftData?.form_review?.spk_name}
                 </a>
               </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: 6,
-                }}
-              >
-                <SVG
-                  src={toAbsoluteUrl(
-                    "/media/svg/icons/All/file-final-draft.svg"
-                  )}
-                />
-                {/* <p>Lampiran 1.doc</p> */}
-                <a
-                  style={{
-                    marginBottom: "1rem",
-                  }}
-                  onClick={() =>
-                    window.open(
-                      `${API_EPROC}/${jsonData?.form_review?.lampiran_1_name}`,
-                      "_blank"
-                    )
-                  }
-                >
-                  {jsonData?.form_review?.lampiran_1_name}
-                </a>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  gap: 6,
-                }}
-              >
-                <SVG
-                  src={toAbsoluteUrl(
-                    "/media/svg/icons/All/file-final-draft.svg"
-                  )}
-                />
-                <a
-                  style={{
-                    marginBottom: "1rem",
-                  }}
-                  onClick={() =>
-                    window.open(
-                      `${API_EPROC}/${jsonData?.form_review?.lampiran_2_name}`,
-                      "_blank"
-                    )
-                  }
-                >
-                  {jsonData?.form_review?.lampiran_2_name}
-                </a>
-              </div>
+              {Object.keys(finalDraftData?.form_review || {}).map((key) => {
+                if (
+                  key.startsWith("lampiran_") &&
+                  key.endsWith("_name") &&
+                  finalDraftData?.form_review[key] !== ""
+                ) {
+                  const index = parseInt(
+                    key.replace("lampiran_", "").replace("_name", ""),
+                    10
+                  );
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                      }}
+                    >
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/file-final-draft.svg"
+                        )}
+                      />
+                      <a
+                        style={{
+                          marginBottom: "1rem",
+                        }}
+                        onClick={() =>
+                          window.open(
+                            `${API_EPROC}/${finalDraftData?.form_review[key]}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {finalDraftData?.form_review[key]}
+                      </a>
+                    </div>
+                  );
+                }
+                return null;
+              })}
             </div>
           )}
-
           {finalDraftSelectValue === "Addendum" && (
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
-                // rowGap: 14,
                 marginTop: 14,
               }}
             >
@@ -862,7 +864,7 @@ export const AddContractAddendum = ({
                   }}
                   onClick={() =>
                     window.open(
-                      `${DEV_NODE}/final_draft/${finalDraftData.add_contracts[0].final_draft[0].body_file_name}`,
+                      `${DEV_NODE}/final_draft/${finalDraftData?.add_contracts[0]?.final_draft[0]?.body_file_name}`,
                       "_blank"
                     )
                   }
@@ -896,7 +898,83 @@ export const AddContractAddendum = ({
                         }}
                         onClick={() =>
                           window.open(
-                            `${DEV_NODE}/final_draft/lampiran/${item.lampiran_file_name}`,
+                            `${DEV_NODE}/final_draft/lampiran/${item?.lampiran_file_name}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {item?.lampiran_file_name}
+                      </a>
+                    </div>
+                  );
+                }
+              )}
+            </div>
+          )}
+          {finalDraftSelectValue === "Addendum_2" && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 14,
+              }}
+            >
+              <p>Perihal: {finalDraftData?.add_contracts[1]?.perihal}</p>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 6,
+                }}
+              >
+                <SVG
+                  src={toAbsoluteUrl(
+                    "/media/svg/icons/All/file-final-draft.svg"
+                  )}
+                />
+                <a
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 400,
+                    color: "#3699ff",
+                    marginBottom: "1rem",
+                  }}
+                  onClick={() =>
+                    window.open(
+                      `${DEV_NODE}/final_draft/${finalDraftData?.add_contracts[1]?.final_draft[0]?.body_file_name}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  {
+                    finalDraftData?.add_contracts[1]?.final_draft[0]
+                      ?.body_file_name
+                  }
+                </a>
+              </div>
+              {finalDraftData?.add_contracts[1]?.final_draft[0]?.lampiran_data?.map(
+                (item) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 6,
+                      }}
+                    >
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/file-final-draft.svg"
+                        )}
+                      />
+                      <a
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          color: "#3699ff",
+                          marginBottom: "1rem",
+                        }}
+                        onClick={() =>
+                          window.open(
+                            `${DEV_NODE}/final_draft/lampiran/${item?.lampiran_file_name}`,
                             "_blank"
                           )
                         }

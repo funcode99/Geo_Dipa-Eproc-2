@@ -1,4 +1,5 @@
 import { connect } from "react-redux";
+import { useParams } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import { fetch_api_sg } from "redux/globalReducer";
 import React, { useState, useEffect } from "react";
@@ -29,7 +30,8 @@ const tableHeaderContractsNew = [
   },
 ];
 
-const ListAddendum = ({ contract_id, fetch_api_sg }) => {
+const ListAddendum = ({ fetch_api_sg }) => {
+  const { contract_id } = useParams();
   const [dataAddContracts, setDataAddContracts] = useState({});
   const getDataAddContract = async (contract_id) => {
     fetch_api_sg({
