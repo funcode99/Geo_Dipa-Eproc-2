@@ -81,6 +81,24 @@ export function submitOther(params, contract_id) {
 export function submitAddContractUserReviewer(params) {
   return axios.post(`/adendum/review/user-reviewer`, params);
 }
+
+// api 4.5
+export function deleteReviewerUser(id) {
+  return axios.post(`/adendum/review/delete-user-reviewer/${id}`);
+}
+// api 4.7
+export function submitAddContractVendorReviewer(params) {
+  return axios.post(`/adendum/review/send-email-vendor`, params);
+}
+
+// api 4.8
+export function deleteReviewerVendor(id) {
+  return axios.post(`/adendum/review/delete-vendor-reviewer/${id}`);
+}
+// api 4.9
+export function sendEmailAllReviewer(contract_id) {
+  return axios.post(`/adendum/review/send-email/${contract_id}`);
+}
 export function resetSupportDocument(contract_id) {
   return axios.post(`/adendum/add-contracts/${contract_id}/reset-document`);
 }

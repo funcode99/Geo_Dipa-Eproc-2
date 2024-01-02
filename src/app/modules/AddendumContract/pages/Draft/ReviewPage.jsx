@@ -4,7 +4,12 @@ import { fetch_api_sg } from "redux/globalReducer";
 import { ReactSelect } from "percobaan/ReactSelect";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import ButtonAction from "app/components/buttonAction/ButtonAction";
-import { submitAddContractUserReviewer } from "app/modules/AddendumContract/service/AddendumContractCrudService";
+import {
+  sendEmailAllReviewer,
+  deleteReviewerVendor,
+  submitAddContractUserReviewer,
+  submitAddContractVendorReviewer,
+} from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const ReviewPage = ({
   isAdmin,
@@ -21,11 +26,34 @@ const ReviewPage = ({
   const showAddReviewer = () => {
     openCloseAddReviewer.current.open();
   };
+  const openCloseAddVendor = React.useRef();
+  const showAddVendor = () => {
+    openCloseAddVendor.current.open();
+  };
 
   const [dataSubmit, setDataSubmit] = useState();
+  const [dataVendor, setDataVendor] = useState();
 
   const actionButton = (
     <ButtonAction
+      style={{
+        backgroundColor: "#e8f4fb",
+      }}
+      hoverLabel="More"
+      data={"1"}
+      ops={[
+        {
+          label: "Batalkan",
+        },
+      ]}
+    />
+  );
+
+  const actionButtonVendor = (id) => (
+    <ButtonAction
+      handleAction={(_, __, type) => {
+        deleteDataReviewerVendor(id);
+      }}
       style={{
         backgroundColor: "#e8f4fb",
       }}
@@ -54,6 +82,28 @@ const ReviewPage = ({
     });
     alert("Berhasil tambah data!");
     openCloseAddReviewer.current.close();
+    // window.location.reload(true);
+  };
+  const submitVendor = () => {
+    submitAddContractVendorReviewer({
+      add_contract_id: contract_id,
+      pic_full_name: dataVendor.pic_full_name,
+      pic_email: dataVendor.pic_email,
+    });
+    alert("Berhasil tambah data!");
+    openCloseAddVendor.current.close();
+    // window.location.reload(true);
+  };
+  const sendAllEmail = () => {
+    sendEmailAllReviewer(contract_id);
+    alert("Berhasil kirim email!");
+    openCloseAddVendor.current.close();
+    // window.location.reload(true);
+  };
+  const deleteDataReviewerVendor = (id) => {
+    deleteReviewerVendor(id);
+    alert("Berhasil hapus data!");
+    openCloseAddVendor.current.close();
     // window.location.reload(true);
   };
   return (
@@ -144,6 +194,107 @@ const ReviewPage = ({
             type="button"
             className="btn btn-primary mx-1"
             onClick={submitData}
+          >
+            Save
+          </button>
+        </div>
+      </DialogGlobal>
+      <DialogGlobal
+        ref={openCloseAddVendor}
+        isCancel={false}
+        isSubmit={false}
+        yesButton={false}
+        noButton={false}
+        maxWidth={"sm"}
+      >
+        <div
+          style={{
+            padding: "0 17%",
+          }}
+        >
+          <h1
+            style={{
+              marginBottom: 40,
+              fontSize: 16,
+              fontWeight: 600,
+              textAlign: "center",
+            }}
+          >
+            Tambah Reviewer Vendor
+          </h1>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 14,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              <span>PIC</span>
+              <input
+                style={{
+                  padding: 8,
+                  borderRadius: 4,
+                  border: 1,
+                  borderStyle: "solid",
+                  borderColor: "#8c8a8a",
+                  opacity: 0.8,
+                }}
+                onChange={(e) =>
+                  setDataVendor({
+                    ...dataVendor,
+                    pic_full_name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              <span>Email</span>
+              <input
+                style={{
+                  padding: 8,
+                  borderRadius: 4,
+                  border: 1,
+                  borderStyle: "solid",
+                  borderColor: "#8c8a8a",
+                  opacity: 0.8,
+                }}
+                onChange={(e) =>
+                  setDataVendor({
+                    ...dataVendor,
+                    pic_email: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: 52,
+            padding: "0 7%",
+          }}
+        >
+          <button
+            type="button"
+            className="btn btn-primary mx-1"
+            onClick={submitVendor}
           >
             Save
           </button>
@@ -287,7 +438,7 @@ const ReviewPage = ({
                     className="btn btn-primary mx-1"
                     onClick={showAddReviewer}
                   >
-                    + Review User
+                    + Reviewer User
                   </button>
                 )}
               </div>
@@ -324,6 +475,7 @@ const ReviewPage = ({
             style={{
               display: "flex",
               justifyContent: "space-between",
+              marginBottom: 8,
             }}
           >
             <h1
@@ -334,6 +486,15 @@ const ReviewPage = ({
             >
               Vendor
             </h1>
+            {isVendor && (
+              <button
+                type="button"
+                className="btn btn-primary mx-1"
+                onClick={showAddVendor}
+              >
+                + Reviewer Vendor
+              </button>
+            )}
           </div>
 
           <table border={1}>
@@ -354,7 +515,7 @@ const ReviewPage = ({
                       <td>{item.vendor_name}</td>
                       <td>{item.pic_full_name}</td>
                       <td>{item.pic_email}</td>
-                      {isVendor && <td>{actionButton}</td>}
+                      {isVendor && <td>{actionButtonVendor(item.id)}</td>}
                     </tr>
                   </>
                 );
@@ -368,7 +529,11 @@ const ReviewPage = ({
               marginTop: 40,
             }}
           >
-            <button type="button" className="btn btn-primary mx-1">
+            <button
+              type="button"
+              className="btn btn-primary mx-1"
+              onClick={sendAllEmail}
+            >
               Submit
             </button>
           </div>
