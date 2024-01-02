@@ -120,7 +120,7 @@ const DraftAddendumPage = ({
     getClientStatus("ADMIN_CONTRACT_UNIT") ||
     purch_group === data?.admin_purch_group_id;
   const isVendor = getClientStatus("VENDOR");
-  const isClient = getClientStatus("CLIENT");
+  const isClient = loginStatus === "client";
 
   const toPush = useRef();
   const setPush = (e) => {
