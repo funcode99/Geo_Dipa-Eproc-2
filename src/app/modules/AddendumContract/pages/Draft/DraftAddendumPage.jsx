@@ -1,18 +1,19 @@
 import SVG from "react-inlinesvg";
 import { connect } from "react-redux";
+import ReviewPage from "./ReviewPage";
 import Tabs from "app/components/tabs";
 import { useParams } from "react-router-dom";
-import { API_EPROC, DEV_NODE } from "redux/BaseHost";
 import { Grid, Button } from "@material-ui/core";
 import Subheader from "app/components/subheader";
 import { Formik, Field, FieldArray } from "formik";
 import { Card } from "_metronic/_partials/controls";
+import { CircularProgress } from "@material-ui/core";
+import { API_EPROC, DEV_NODE } from "redux/BaseHost";
 import { Col, Row, Container } from "react-bootstrap";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 import UploadInput from "app/components/input/UploadInput";
 import React, { useState, useRef, useEffect } from "react";
 import DialogGlobal from "app/components/modals/DialogGlobal";
-import { Paper, makeStyles, CircularProgress } from "@material-ui/core";
 import Steppers from "app/components/steppersCustom/Steppers";
 import TextAreaInput from "app/components/input/TextAreaInput";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
@@ -119,6 +120,7 @@ const DraftAddendumPage = ({
     getClientStatus("ADMIN_CONTRACT_UNIT") ||
     purch_group === data?.admin_purch_group_id;
   const isVendor = getClientStatus("VENDOR");
+  const isClient = getClientStatus("CLIENT");
 
   const toPush = useRef();
   const setPush = (e) => {
@@ -288,6 +290,67 @@ const DraftAddendumPage = ({
     });
   };
 
+  const [
+    listDataContactUserReviewer,
+    setListDataContactUserReviewer,
+  ] = useState();
+  const [listUserParticipantReview, setListUserParticipantReview] = useState();
+  const [
+    listDataContactVendorReviewer,
+    setListDataContactVendorReviewer,
+  ] = useState();
+  const [
+    listDataContractAdminReviewer,
+    setListDataContractAdminReviewer,
+  ] = useState();
+
+  // api 4.1
+  const getUserParticipantReview = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/user-participant-review`,
+      onSuccess: (res) => {
+        setListUserParticipantReview(res.data);
+      },
+    });
+  };
+  // api 4.2
+  const getAddContractAdminReviewer = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/review/admin-reviewer/${draft_id}`,
+      onSuccess: (res) => {
+        setListDataContractAdminReviewer(res.data);
+      },
+    });
+  };
+
+  // api 4.3
+  const getAddContactUserReviewer = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/review/add-user-reviewer/${draft_id}`,
+      onSuccess: (res) => {
+        setListDataContactUserReviewer(res.data);
+      },
+    });
+  };
+
+  // api 4.6
+  const getAddContactVendorReviewer = async () => {
+    fetch_api_sg({
+      key: keys.fetch,
+      type: "get",
+      url: `/adendum/review/vendor-reviewer/${draft_id}`,
+      onSuccess: (res) => {
+        setListDataContactVendorReviewer(res.data);
+      },
+    });
+  };
+
   if (!Array.isArray(authorizedOfficial)) {
     console.error("Data is not an array.");
   } else {
@@ -394,6 +457,11 @@ const DraftAddendumPage = ({
     getauthorizedOfficial();
     getJobDirector();
     getJobSupervisor();
+    // api reviewer
+    getUserParticipantReview();
+    getAddContactUserReviewer();
+    getAddContractAdminReviewer();
+    getAddContactVendorReviewer();
     // setInitialSubmitItems();
     // getAddContractDocument();
     // const refresh = () => {
@@ -1109,113 +1177,7 @@ const DraftAddendumPage = ({
           </div>
         </div>
       </DialogGlobal>
-      <DialogGlobal
-        ref={openCloseAddReviewer}
-        isCancel={false}
-        isSubmit={false}
-        yesButton={false}
-        noButton={false}
-        maxWidth={"sm"}
-      >
-        <div
-          style={{
-            padding: "0 17%",
-          }}
-        >
-          <h1
-            style={{
-              marginBottom: 40,
-              fontSize: 16,
-              fontWeight: 600,
-              textAlign: "center",
-            }}
-          >
-            Tambah Reviewer User
-          </h1>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 14,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <span>Name</span>
-              <input
-                style={{
-                  padding: 8,
-                  borderRadius: 4,
-                  border: 1,
-                  borderStyle: "solid",
-                  borderColor: "#8c8a8a",
-                  opacity: 0.8,
-                }}
-                value={"User 4"}
-              />
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <span>Jabatan</span>
-              <input
-                style={{
-                  padding: 8,
-                  borderRadius: 4,
-                  border: 1,
-                  borderStyle: "solid",
-                  borderColor: "#8c8a8a",
-                  opacity: 0.8,
-                }}
-                value={"Procurement Staff"}
-              />
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 10,
-              }}
-            >
-              <span>Email</span>
-              <input
-                style={{
-                  padding: 8,
-                  borderRadius: 4,
-                  border: 1,
-                  borderStyle: "solid",
-                  borderColor: "#8c8a8a",
-                  opacity: 0.8,
-                }}
-                value={"user.4@geodipa.co.id"}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: 52,
-            padding: "0 7%",
-          }}
-        >
-          <Button>Save</Button>
-        </div>
-      </DialogGlobal>
       <DialogGlobal
         ref={openCloseAddVendor}
         isCancel={false}
@@ -2294,198 +2256,16 @@ const DraftAddendumPage = ({
           </div>
 
           {reviewSequence === 0 && (
-            <div
-              style={{
-                padding: 28,
-                backgroundColor: "white",
-              }}
-            >
-              <div
-                style={{
-                  border: 1,
-                  borderColor: "black",
-                  borderStyle: "solid",
-                  padding: "14px 28px",
-                  backgroundColor: "white",
-                  borderRadius: 14,
-                }}
-              >
-                <h1
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 600,
-                  }}
-                >
-                  Reviewer Addendum
-                </h1>
-
-                <br
-                  style={{
-                    border: 1,
-                    borderColor: "black",
-                    borderStyle: "solid",
-                  }}
-                />
-
-                <h1
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 600,
-                  }}
-                >
-                  Admin Kontrak
-                </h1>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                    gap: 28,
-                    margin: "14px 0px 28px 0px",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                    }}
-                  >
-                    <span>Nama</span>
-                    <input
-                      type="text"
-                      value={"Zulfiqur Rahman"}
-                      style={{
-                        borderRadius: 4,
-                        padding: 8,
-                        backgroundColor: "#e8f4fb",
-                      }}
-                    />
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                    }}
-                  >
-                    <span>Jabatan</span>
-                    <input
-                      type="text"
-                      value={"Purchasing Staff"}
-                      style={{
-                        borderRadius: 4,
-                        padding: 8,
-                        backgroundColor: "#e8f4fb",
-                      }}
-                    />
-                  </div>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 4,
-                    }}
-                  >
-                    <span>Email</span>
-                    <input
-                      type="text"
-                      value={"zulfiqur.r@geodipa.co.id"}
-                      style={{
-                        borderRadius: 4,
-                        padding: 8,
-                        backgroundColor: "#e8f4fb",
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <h1
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 600,
-                    }}
-                  >
-                    User
-                  </h1>
-                  <Button size="medium" onClick={showAddReviewer}>
-                    <div>
-                      <span>Reviewer User</span>
-                    </div>
-                  </Button>
-                </div>
-
-                <table>
-                  <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Jabatan</th>
-                    <th>Email</th>
-                    <th>Aksi</th>
-                  </tr>
-
-                  {TableListsUser &&
-                    TableListsUser.map((item, index) => {
-                      return (
-                        <>
-                          <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{item.name}</td>
-                            <td>{item.position}</td>
-                            <td>{item.email}</td>
-                            <td>{actionButton}</td>
-                          </tr>
-                        </>
-                      );
-                    })}
-                </table>
-
-                <table>
-                  <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Jabatan</th>
-                    <th>Email</th>
-                    <th>Aksi</th>
-                  </tr>
-
-                  {TableListsVendor &&
-                    TableListsVendor.map((item, index) => {
-                      return (
-                        <>
-                          <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{item.name}</td>
-                            <td>{item.position}</td>
-                            <td>{item.email}</td>
-                            <td>{actionButton}</td>
-                          </tr>
-                        </>
-                      );
-                    })}
-                </table>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginTop: 40,
-                  }}
-                >
-                  <Button variant="contained" color="secondary">
-                    Submit
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <ReviewPage
+              isAdmin={isAdmin}
+              isVendor={isVendor}
+              isClient={isClient}
+              contract_id={draft_id}
+              listUserParticipantReview={listUserParticipantReview}
+              listDataContactUserReviewer={listDataContactUserReviewer}
+              listDataContractAdminReviewer={listDataContractAdminReviewer}
+              listDataContactVendorReviewer={listDataContactVendorReviewer}
+            />
           )}
 
           {reviewSequence === 1 && (
@@ -4297,5 +4077,4 @@ const mapState = (state) => ({
 const mapDispatch = {
   fetch_api_sg,
 };
-
 export default connect(mapState, mapDispatch)(DraftAddendumPage);

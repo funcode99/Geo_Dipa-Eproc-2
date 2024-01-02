@@ -20,7 +20,6 @@ const UploadDokumenPendukung = ({
     if (getDataList?.add_support_document_data) {
       return getDataList?.add_support_document_data?.map((item2) => {
         if (item2.seq == item.seq) {
-          console.log("masuk ke else");
           item.noDokumen = item2.noDokumen;
           item.tglDokumen = item2.tglDokumen;
           item.fileDokumen = item2.fileDokumen;
@@ -57,12 +56,6 @@ const UploadDokumenPendukung = ({
   const [supportingDocument, setSupportingDocument] = useState({
     data: supportDocumentFetch,
   });
-  // disini SLICE TIDAK MENGHAPUS ARRAY YANG SUDAH ADA
-  // console.log(
-  //   "isi supportingDocument",
-  //   supportDocumentFetch,
-  //   getDataList?.add_support_document_data
-  // );
 
   let kondisiA = supportDocumentFetch.slice(0, 4);
   let pelengkapA = supportDocumentFetch.slice(8);
