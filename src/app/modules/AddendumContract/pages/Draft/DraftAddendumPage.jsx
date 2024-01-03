@@ -2408,6 +2408,44 @@ const DraftAddendumPage = ({
         </>
       )}
 
+      {sequence === 0 && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 28,
+            padding: "2rem 2.25rem",
+          }}
+        >
+          <button
+            className="btn btn-outline-primary"
+            style={{
+              minWidth: 100,
+            }}
+            onClick={() =>
+              tabActive > 0
+                ? setTabActive(tabActive - 1)
+                : setTabActive(tabActive)
+            }
+          >
+            {`<< Back`}
+          </button>
+          <button
+            className="btn btn-primary"
+            style={{
+              minWidth: 100,
+            }}
+            onClick={() =>
+              setTabActive(
+                tabActive < TabLists.length - 1 ? tabActive + 1 : tabActive
+              )
+            }
+          >
+            Next
+          </button>
+        </div>
+      )}
+
       {sequence === 2 && (
         <>
           <div
@@ -2478,7 +2516,7 @@ const DraftAddendumPage = ({
             </div>
           </div>
 
-          {reviewSequence === 0 && (
+          {/* {reviewSequence === 0 && (
             <ReviewPage
               isAdmin={isAdmin}
               isVendor={isVendor}
@@ -2489,7 +2527,7 @@ const DraftAddendumPage = ({
               listDataContractAdminReviewer={listDataContractAdminReviewer}
               listDataContactVendorReviewer={listDataContactVendorReviewer}
             />
-          )}
+          )} */}
 
           {reviewSequence === 1 && (
             <>
@@ -4240,44 +4278,6 @@ const DraftAddendumPage = ({
             </>
           )}
         </>
-      )}
-
-      {sequence === 0 && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 28,
-            padding: "2rem 2.25rem",
-          }}
-        >
-          <button
-            className="btn btn-outline-primary"
-            style={{
-              minWidth: 100,
-            }}
-            onClick={() =>
-              tabActive > 0
-                ? setTabActive(tabActive - 1)
-                : setTabActive(tabActive)
-            }
-          >
-            {`<< Back`}
-          </button>
-          <button
-            className="btn btn-primary"
-            style={{
-              minWidth: 100,
-            }}
-            onClick={() =>
-              setTabActive(
-                tabActive < TabLists.length - 1 ? tabActive + 1 : tabActive
-              )
-            }
-          >
-            Next
-          </button>
-        </div>
       )}
     </>
   );
