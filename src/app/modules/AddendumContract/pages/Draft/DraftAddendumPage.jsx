@@ -99,41 +99,88 @@ const DraftAddendumPage = ({
   const isVendor = getClientStatus("VENDOR");
   const isClient = loginStatus === "client";
 
+  // const getAddendum = async () => {
+  //   fetch_api_sg({
+  //     key: keys.getAddendumDetail,
+  //     type: "get",
+  //     url: `/adendum/add-contracts/${draft_id}`,
+  //     onSuccess: (res) => {
+  //       setContract(res?.data?.contract);
+  //       setData(res?.data);
+  //       getContractById(res.data.contract_id);
+  //     },
+  //   });
+  // };
   const getAddendum = async () => {
-    fetch_api_sg({
-      key: keys.getAddendumDetail,
-      type: "get",
-      url: `/adendum/add-contracts/${draft_id}`,
-      onSuccess: (res) => {
-        setContract(res?.data?.contract);
-        setData(res?.data);
-        getContractById(res.data.contract_id);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.getAddendumDetail,
+        type: "get",
+        url: `/adendum/add-contracts/${draft_id}`,
+        onSuccess: (res) => {
+          setContract(res?.data?.contract);
+          setData(res?.data);
+          getContractById(res.data.contract_id);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching addendum:", error);
+    }
   };
 
   // api 1.2
+  // const getContractById = async (id) => {
+  //   fetch_api_sg({
+  //     key: keys.getAddendumDetail,
+  //     type: "get",
+  //     url: `/adendum/contract-released/${id}/show`,
+  //     onSuccess: (res) => {
+  //       setDataContractById(res?.data);
+  //       getSecondAuthorizedOfficial(res.data.vendor_id);
+  //     },
+  //   });
+  // };
+
+  // const getCurrencies = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/currencies`,
+  //     onSuccess: (res) => {
+  //       setDataCurrencies(res);
+  //     },
+  //   });
+  // };
+
   const getContractById = async (id) => {
-    fetch_api_sg({
-      key: keys.getAddendumDetail,
-      type: "get",
-      url: `/adendum/contract-released/${id}/show`,
-      onSuccess: (res) => {
-        setDataContractById(res?.data);
-        getSecondAuthorizedOfficial(res.data.vendor_id);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.getAddendumDetail,
+        type: "get",
+        url: `/adendum/contract-released/${id}/show`,
+        onSuccess: (res) => {
+          setDataContractById(res?.data);
+          getSecondAuthorizedOfficial(res.data.vendor_id);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching contract by ID:", error);
+    }
   };
 
   const getCurrencies = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/currencies`,
-      onSuccess: (res) => {
-        setDataCurrencies(res);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/currencies`,
+        onSuccess: (res) => {
+          setDataCurrencies(res);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching currencies:", error);
+    }
   };
 
   const toPush = useRef();
@@ -209,61 +256,124 @@ const DraftAddendumPage = ({
   // };
 
   // api 2.3
+  // const getDataContractHeader = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/add-contracts/${draft_id}`,
+  //     onSuccess: (res) => {
+  //       getFinalDraftData(res?.data?.contract_id);
+  //       setJsonData(res?.data);
+  //       localStorage.setItem(
+  //         "payment_method",
+  //         JSON.stringify(res?.data?.payment_method_data)
+  //       );
+  //       localStorage.setItem(
+  //         "fine",
+  //         JSON.stringify(res?.data?.penalty_fine_data)
+  //       );
+  //       localStorage.setItem(
+  //         "time_period",
+  //         JSON.stringify({
+  //           from_time: res?.data?.from_time,
+  //           thru_time: res?.data?.thru_time,
+  //           worked_start_date: res?.data?.worked_start_date,
+  //           worked_end_date: res?.data?.worked_end_date,
+  //           guarantee_start_date: res?.data?.guarantee_start_date,
+  //           guarantee_end_date: res?.data?.guarantee_end_date,
+  //           maintenance_start_date: res?.data?.maintenance_start_date,
+  //           maintenance_end_date: res?.data?.maintenance_end_date,
+  //           contract_period_type: res?.data?.contract_period_type,
+  //           work_period_type: res?.data?.work_period_type,
+  //           contract_period_range_day: res?.data?.contract_period_range_day,
+  //           contract_period_range_month: res?.data?.contract_period_range_month,
+  //           work_implement_period_day: res?.data?.work_implement_period_day,
+  //           work_implement_period_month: res?.data?.work_implement_period_month,
+  //           guarantee_period_day: res?.data?.guarantee_period_day,
+  //           guarantee_period_month: res?.data?.guarantee_period_month,
+  //           maintenance_period_day: res?.data?.maintenance_period_day,
+  //           maintenance_period_month: res?.data?.maintenance_period_month,
+  //         })
+  //       );
+  //       // let timePeriodData = JSON.parse(localStorage.getItem("time_period"));
+  //       // setTimePeriodData(timePeriodData);
+  //       // getSecondAuthorizedOfficial(res?.data?.vendor_id);
+  //     },
+  //   });
+  // };
+
   const getDataContractHeader = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/add-contracts/${draft_id}`,
-      onSuccess: (res) => {
-        getFinalDraftData(res?.data?.contract_id);
-        setJsonData(res?.data);
-        localStorage.setItem(
-          "payment_method",
-          JSON.stringify(res?.data?.payment_method_data)
-        );
-        localStorage.setItem(
-          "fine",
-          JSON.stringify(res?.data?.penalty_fine_data)
-        );
-        localStorage.setItem(
-          "time_period",
-          JSON.stringify({
-            from_time: res?.data?.from_time,
-            thru_time: res?.data?.thru_time,
-            worked_start_date: res?.data?.worked_start_date,
-            worked_end_date: res?.data?.worked_end_date,
-            guarantee_start_date: res?.data?.guarantee_start_date,
-            guarantee_end_date: res?.data?.guarantee_end_date,
-            maintenance_start_date: res?.data?.maintenance_start_date,
-            maintenance_end_date: res?.data?.maintenance_end_date,
-            contract_period_type: res?.data?.contract_period_type,
-            work_period_type: res?.data?.work_period_type,
-            contract_period_range_day: res?.data?.contract_period_range_day,
-            contract_period_range_month: res?.data?.contract_period_range_month,
-            work_implement_period_day: res?.data?.work_implement_period_day,
-            work_implement_period_month: res?.data?.work_implement_period_month,
-            guarantee_period_day: res?.data?.guarantee_period_day,
-            guarantee_period_month: res?.data?.guarantee_period_month,
-            maintenance_period_day: res?.data?.maintenance_period_day,
-            maintenance_period_month: res?.data?.maintenance_period_month,
-          })
-        );
-        // let timePeriodData = JSON.parse(localStorage.getItem("time_period"));
-        // setTimePeriodData(timePeriodData);
-        // getSecondAuthorizedOfficial(res?.data?.vendor_id);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/add-contracts/${draft_id}`,
+        onSuccess: (res) => {
+          getFinalDraftData(res?.data?.contract_id);
+          setJsonData(res?.data);
+          localStorage.setItem(
+            "payment_method",
+            JSON.stringify(res?.data?.payment_method_data)
+          );
+          localStorage.setItem(
+            "fine",
+            JSON.stringify(res?.data?.penalty_fine_data)
+          );
+          localStorage.setItem(
+            "time_period",
+            JSON.stringify({
+              from_time: res?.data?.from_time,
+              thru_time: res?.data?.thru_time,
+              worked_start_date: res?.data?.worked_start_date,
+              worked_end_date: res?.data?.worked_end_date,
+              guarantee_start_date: res?.data?.guarantee_start_date,
+              guarantee_end_date: res?.data?.guarantee_end_date,
+              maintenance_start_date: res?.data?.maintenance_start_date,
+              maintenance_end_date: res?.data?.maintenance_end_date,
+              contract_period_type: res?.data?.contract_period_type,
+              work_period_type: res?.data?.work_period_type,
+              contract_period_range_day: res?.data?.contract_period_range_day,
+              contract_period_range_month:
+                res?.data?.contract_period_range_month,
+              work_implement_period_day: res?.data?.work_implement_period_day,
+              work_implement_period_month:
+                res?.data?.work_implement_period_month,
+              guarantee_period_day: res?.data?.guarantee_period_day,
+              guarantee_period_month: res?.data?.guarantee_period_month,
+              maintenance_period_day: res?.data?.maintenance_period_day,
+              maintenance_period_month: res?.data?.maintenance_period_month,
+            })
+          );
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching data contract header:", error);
+    }
   };
 
+  // const getauthorizedOfficial = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/job-directors`,
+  //     onSuccess: (res) => {
+  //       setauthorizedOfficial(res.data);
+  //     },
+  //   });
+  // };
   const getauthorizedOfficial = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/job-directors`,
-      onSuccess: (res) => {
-        setauthorizedOfficial(res.data);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/job-directors`,
+        onSuccess: (res) => {
+          setauthorizedOfficial(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching authorized officials:", error);
+    }
   };
 
   // api 2.17
@@ -280,75 +390,174 @@ const DraftAddendumPage = ({
     });
   };
 
+  // const getJobDirector = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/direksi-pekerjaan`,
+  //     onSuccess: (res) => {
+  //       setJobDirector(res.data);
+  //     },
+  //   });
+  // };
   const getJobDirector = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/direksi-pekerjaan`,
-      onSuccess: (res) => {
-        setJobDirector(res.data);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/direksi-pekerjaan`,
+        onSuccess: (res) => {
+          setJobDirector(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching job directors:", error);
+    }
   };
 
+  // const getJobSupervisor = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/refference/get-all-plants`,
+  //     onSuccess: (res) => {
+  //       setJobSupervisor(res.data);
+  //       localStorage.setItem("job_supervisor", JSON.stringify(res.data));
+  //       setJobSupervisor2(JSON.parse(localStorage.getItem("job_supervisor")));
+  //     },
+  //   });
+  // };
+
   const getJobSupervisor = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/refference/get-all-plants`,
-      onSuccess: (res) => {
-        setJobSupervisor(res.data);
-        localStorage.setItem("job_supervisor", JSON.stringify(res.data));
-        setJobSupervisor2(JSON.parse(localStorage.getItem("job_supervisor")));
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/refference/get-all-plants`,
+        onSuccess: (res) => {
+          setJobSupervisor(res.data);
+          localStorage.setItem("job_supervisor", JSON.stringify(res.data));
+          setJobSupervisor2(JSON.parse(localStorage.getItem("job_supervisor")));
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching job supervisors:", error);
+    }
   };
+
+  // // api 4.1
+  // const getUserParticipantReview = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/user-participant-review`,
+  //     onSuccess: (res) => {
+  //       setListUserParticipantReview(res.data);
+  //     },
+  //   });
+  // };
+  // // api 4.2
+  // const getAddContractAdminReviewer = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/review/admin-reviewer/${draft_id}`,
+  //     onSuccess: (res) => {
+  //       setListDataContractAdminReviewer(res.data);
+  //     },
+  //   });
+  // };
+
+  // // api 4.3
+  // const getAddContactUserReviewer = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/review/add-user-reviewer/${draft_id}`,
+  //     onSuccess: (res) => {
+  //       setListDataContactUserReviewer(res.data);
+  //     },
+  //   });
+  // };
+
+  // // api 4.6
+  // const getAddContactVendorReviewer = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/review/vendor-reviewer/${draft_id}`,
+  //     onSuccess: (res) => {
+  //       setListDataContactVendorReviewer(res.data);
+  //     },
+  //   });
+  // };
 
   // api 4.1
   const getUserParticipantReview = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/user-participant-review`,
-      onSuccess: (res) => {
-        setListUserParticipantReview(res.data);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/user-participant-review`,
+        onSuccess: (res) => {
+          setListUserParticipantReview(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching user participant review:", error);
+      // Handle the error as needed, e.g., show a user-friendly message
+    }
   };
+
   // api 4.2
   const getAddContractAdminReviewer = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/review/admin-reviewer/${draft_id}`,
-      onSuccess: (res) => {
-        setListDataContractAdminReviewer(res.data);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/review/admin-reviewer/${draft_id}`,
+        onSuccess: (res) => {
+          setListDataContractAdminReviewer(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching admin reviewer:", error);
+      // Handle the error as needed
+    }
   };
 
   // api 4.3
   const getAddContactUserReviewer = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/review/add-user-reviewer/${draft_id}`,
-      onSuccess: (res) => {
-        setListDataContactUserReviewer(res.data);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/review/add-user-reviewer/${draft_id}`,
+        onSuccess: (res) => {
+          setListDataContactUserReviewer(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching add user reviewer:", error);
+      // Handle the error as needed
+    }
   };
 
   // api 4.6
   const getAddContactVendorReviewer = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/review/vendor-reviewer/${draft_id}`,
-      onSuccess: (res) => {
-        setListDataContactVendorReviewer(res.data);
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/review/vendor-reviewer/${draft_id}`,
+        onSuccess: (res) => {
+          setListDataContactVendorReviewer(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching vendor reviewer:", error);
+      // Handle the error as needed
+    }
   };
 
   if (!Array.isArray(authorizedOfficial)) {
@@ -449,20 +658,42 @@ const DraftAddendumPage = ({
     }
   }
 
-  useEffect(() => {
-    getAddendum();
-    getCurrencies();
-    getDataContractHeader();
-    getauthorizedOfficial();
-    getJobDirector();
-    getJobSupervisor();
-    // api reviewer
-    getUserParticipantReview();
-    getAddContactUserReviewer();
-    getAddContractAdminReviewer();
-    getAddContactVendorReviewer();
+  // useEffect(() => {
+  //   getAddendum();
+  //   getCurrencies();
+  //   getDataContractHeader();
+  //   getauthorizedOfficial();
+  //   getJobDirector();
+  //   getJobSupervisor();
+  //   // api reviewer
+  //   getUserParticipantReview();
+  //   getAddContactUserReviewer();
+  //   getAddContractAdminReviewer();
+  //   getAddContactVendorReviewer();
 
-    getDataPenalties();
+  //   getDataPenalties();
+  // }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getAddendum();
+        await getCurrencies();
+        await getJobDirector();
+        await getJobSupervisor();
+        await getDataPenalties();
+        await getDataContractHeader();
+        await getauthorizedOfficial();
+        await getUserParticipantReview();
+        await getAddContactUserReviewer();
+        await getAddContractAdminReviewer();
+        await getAddContactVendorReviewer();
+      } catch (error) {
+        console.error("Error in useEffect:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const actionButton = (
@@ -480,25 +711,41 @@ const DraftAddendumPage = ({
     />
   );
 
+  // const getDataPenalties = async () => {
+  //   fetch_api_sg({
+  //     key: keys.fetch,
+  //     type: "get",
+  //     url: `/adendum/refference/get-all-pinalties`,
+  //     onSuccess: (res) => {
+  //       setDataArr(
+  //         res.data.map((item) => ({
+  //           id: item.id,
+  //           name: item.pinalty_name,
+  //         }))
+  //       );
+  //     },
+  //   });
+  // };
   const getDataPenalties = async () => {
-    fetch_api_sg({
-      key: keys.fetch,
-      type: "get",
-      url: `/adendum/refference/get-all-pinalties`,
-      onSuccess: (res) => {
-        setDataArr(
-          res.data.map((item) => ({
-            id: item.id,
-            name: item.pinalty_name,
-          }))
-        );
-      },
-    });
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/refference/get-all-pinalties`,
+        onSuccess: (res) => {
+          setDataArr(
+            res.data.map((item) => ({
+              id: item.id,
+              name: item.pinalty_name,
+            }))
+          );
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching penalties data:", error);
+      // Handle the error as needed, e.g., show a user-friendly message
+    }
   };
-
-  // useEffect(() => {
-  //   getDataPenalties();
-  // }, []);
 
   const userReviewData = [
     {
