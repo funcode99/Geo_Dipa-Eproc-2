@@ -260,6 +260,10 @@ const HargaPekerjaan = ({
   );
 };
 
+const keys = {
+  getAddendumDetail: "get-addendum-contract-by-id ",
+};
+
 const mapDispatch = {
   fetch_api_sg,
 };
