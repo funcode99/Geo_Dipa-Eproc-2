@@ -159,7 +159,8 @@ const ReviewerPage = ({
     });
     alert("Berhasil tambah data!");
     openCloseAddReviewer.current.close();
-    // window.location.reload(true);
+    getAddContactUserReviewer();
+    window.location.reload(true);
   };
   const submitVendor = () => {
     submitAddContractVendorReviewer({
@@ -169,7 +170,8 @@ const ReviewerPage = ({
     });
     alert("Berhasil tambah data!");
     openCloseAddVendor.current.close();
-    // window.location.reload(true);
+    getAddContactVendorReviewer();
+    window.location.reload(true);
   };
   const sendAllEmail = () => {
     sendEmailAllReviewer(contract_id);
@@ -179,15 +181,17 @@ const ReviewerPage = ({
   };
   const deleteDataReviewerUser = (id) => {
     deleteReviewerUser(id);
+    getAddContactUserReviewer();
     alert("Berhasil hapus data!");
     openCloseAddVendor.current.close();
-    // window.location.reload(true);
+    window.location.reload(true);
   };
   const deleteDataReviewerVendor = (id) => {
     deleteReviewerVendor(id);
+    getAddContactVendorReviewer();
     alert("Berhasil hapus data!");
     openCloseAddVendor.current.close();
-    // window.location.reload(true);
+    window.location.reload(true);
   };
 
   useEffect(() => {
@@ -612,21 +616,23 @@ const ReviewerPage = ({
               })}
           </table>
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginTop: 40,
-            }}
-          >
-            <button
-              type="button"
-              className="btn btn-primary mx-1"
-              onClick={sendAllEmail}
+          {isAdmin && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: 40,
+              }}
             >
-              Submit
-            </button>
-          </div>
+              <button
+                type="button"
+                className="btn btn-primary mx-1"
+                onClick={sendAllEmail}
+              >
+                Submit
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>

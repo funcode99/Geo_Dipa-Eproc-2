@@ -22,12 +22,12 @@ import {
 } from "../Termin/TerminPageNew/STATIC_DATA";
 
 import DendaTab from "./tabs/Denda";
-import ReviewPage from "./ReviewPage";
 import SummaryTab from "./tabs/Summary";
 import JaminanTab from "./tabs/Jaminan";
 import LainnyaTab from "./tabs/Lainnya";
 import JangkaWaktuTab from "./tabs/JangkaWaktu";
 import TemplateKlausul from "./TemplateKlausul";
+import ReviewPage from "./ReviewPage/ReviewPage";
 import FinalDraftSection from "./FinalDraftSection";
 import NomorRekeningTab from "./tabs/NomorRekening";
 import MetodePembayaranTab from "./tabs/MetodePembayaran";
