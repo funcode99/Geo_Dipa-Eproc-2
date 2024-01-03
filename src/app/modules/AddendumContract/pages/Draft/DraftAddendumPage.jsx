@@ -482,21 +482,10 @@ const DraftAddendumPage = ({
     getDataPenalties();
     getDataContractHeader();
     getauthorizedOfficial();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getUserParticipantReview();
-        await getAddContactUserReviewer();
-        await getAddContractAdminReviewer();
-        await getAddContactVendorReviewer();
-      } catch (error) {
-        console.error("Error in useEffect:", error);
-      }
-    };
-
-    fetchData();
+    getUserParticipantReview();
+    getAddContactUserReviewer();
+    getAddContractAdminReviewer();
+    getAddContactVendorReviewer();
   }, []);
 
   const actionButton = (
@@ -2332,7 +2321,7 @@ const DraftAddendumPage = ({
             </div>
           </div>
 
-          {reviewSequence === 0 && (
+          {/* {reviewSequence === 0 && (
             <ReviewPage
               isAdmin={isAdmin}
               isVendor={isVendor}
@@ -2343,7 +2332,7 @@ const DraftAddendumPage = ({
               listDataContractAdminReviewer={listDataContractAdminReviewer}
               listDataContactVendorReviewer={listDataContactVendorReviewer}
             />
-          )}
+          )} */}
 
           {reviewSequence === 1 && (
             <>
