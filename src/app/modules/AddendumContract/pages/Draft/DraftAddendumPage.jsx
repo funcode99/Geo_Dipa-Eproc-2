@@ -48,6 +48,7 @@ const DraftAddendumPage = ({
   const { draft_id } = useParams();
   const [data, setData] = useState({});
   const [PICData, setPICData] = useState();
+  const [dataArr, setDataArr] = useState([]);
   const [jsonData, setJsonData] = useState();
   const [contract, setContract] = useState({});
   const [jobDirector, setJobDirector] = useState();
@@ -69,6 +70,19 @@ const DraftAddendumPage = ({
   const [distributionTabActive, setDistributionTabActive] = React.useState(0);
   const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0);
   const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
+  const [
+    listDataContactUserReviewer,
+    setListDataContactUserReviewer,
+  ] = useState();
+  const [listUserParticipantReview, setListUserParticipantReview] = useState();
+  const [
+    listDataContactVendorReviewer,
+    setListDataContactVendorReviewer,
+  ] = useState();
+  const [
+    listDataContractAdminReviewer,
+    setListDataContractAdminReviewer,
+  ] = useState();
 
   const getClientStatus = (val) => {
     const filteredData = rolesEproc?.filter(
@@ -76,6 +90,14 @@ const DraftAddendumPage = ({
     );
     return !!filteredData?.length > 0;
   };
+
+  const isAdmin =
+    getClientStatus("SUPERADMIN") ||
+    getClientStatus("ADMIN_CONTRACT") ||
+    getClientStatus("ADMIN_CONTRACT_UNIT") ||
+    purch_group === data?.admin_purch_group_id;
+  const isVendor = getClientStatus("VENDOR");
+  const isClient = loginStatus === "client";
 
   const getAddendum = async () => {
     fetch_api_sg({
@@ -113,14 +135,6 @@ const DraftAddendumPage = ({
       },
     });
   };
-
-  const isAdmin =
-    getClientStatus("SUPERADMIN") ||
-    getClientStatus("ADMIN_CONTRACT") ||
-    getClientStatus("ADMIN_CONTRACT_UNIT") ||
-    purch_group === data?.admin_purch_group_id;
-  const isVendor = getClientStatus("VENDOR");
-  const isClient = loginStatus === "client";
 
   const toPush = useRef();
   const setPush = (e) => {
@@ -290,20 +304,6 @@ const DraftAddendumPage = ({
     });
   };
 
-  const [
-    listDataContactUserReviewer,
-    setListDataContactUserReviewer,
-  ] = useState();
-  const [listUserParticipantReview, setListUserParticipantReview] = useState();
-  const [
-    listDataContactVendorReviewer,
-    setListDataContactVendorReviewer,
-  ] = useState();
-  const [
-    listDataContractAdminReviewer,
-    setListDataContractAdminReviewer,
-  ] = useState();
-
   // api 4.1
   const getUserParticipantReview = async () => {
     fetch_api_sg({
@@ -450,7 +450,6 @@ const DraftAddendumPage = ({
   }
 
   useEffect(() => {
-    // getContractById(draft_id);
     getAddendum();
     getCurrencies();
     getDataContractHeader();
@@ -464,16 +463,6 @@ const DraftAddendumPage = ({
     getAddContactVendorReviewer();
 
     getDataPenalties();
-    // setInitialSubmitItems();
-    // getAddContractDocument();
-    // const refresh = () => {
-    //   let isRefresh = localStorage.getItem("isRefresh");
-    //   if (isRefresh === "false") {
-    //     localStorage.setItem("isRefresh", true);
-    //     window.location.reload();
-    //   }
-    // };
-    // refresh();
   }, []);
 
   const actionButton = (
@@ -490,8 +479,6 @@ const DraftAddendumPage = ({
       ]}
     />
   );
-
-  const [dataArr, setDataArr] = useState([]);
 
   const getDataPenalties = async () => {
     fetch_api_sg({
