@@ -486,7 +486,11 @@ const DraftAddendumPage = ({
     getAddContactUserReviewer();
     getAddContractAdminReviewer();
     getAddContactVendorReviewer();
-  }, []);
+  }, [
+    listUserParticipantReview,
+    listDataContactUserReviewer,
+    listDataContactVendorReviewer,
+  ]);
 
   const actionButton = (
     <ButtonAction
@@ -503,21 +507,6 @@ const DraftAddendumPage = ({
     />
   );
 
-  // const getDataPenalties = async () => {
-  //   fetch_api_sg({
-  //     key: keys.fetch,
-  //     type: "get",
-  //     url: `/adendum/refference/get-all-pinalties`,
-  //     onSuccess: (res) => {
-  //       setDataArr(
-  //         res.data.map((item) => ({
-  //           id: item.id,
-  //           name: item.pinalty_name,
-  //         }))
-  //       );
-  //     },
-  //   });
-  // };
   const getDataPenalties = async () => {
     try {
       await fetch_api_sg({
@@ -535,7 +524,6 @@ const DraftAddendumPage = ({
       });
     } catch (error) {
       console.error("Error fetching penalties data:", error);
-      // Handle the error as needed, e.g., show a user-friendly message
     }
   };
 
