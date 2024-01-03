@@ -380,14 +380,14 @@ const DraftAddendumPage = ({
     }
   }
 
-  useEffect(() => {
-    getAddendum();
-    // para pihak
-    getJobDirector();
-    getJobSupervisor();
-    getauthorizedOfficial();
-    getDataContractHeader();
-  }, []);
+  // useEffect(() => {
+  //   getAddendum();
+  //   // para pihak
+  //   getJobDirector();
+  //   getJobSupervisor();
+  //   getauthorizedOfficial();
+  //   getDataContractHeader();
+  // }, []);
 
   const actionButton = (
     <ButtonAction
