@@ -48,7 +48,6 @@ const DraftAddendumPage = ({
   const { draft_id } = useParams();
   const [data, setData] = useState({});
   const [PICData, setPICData] = useState();
-  const [dataArr, setDataArr] = useState([]);
   const [jsonData, setJsonData] = useState();
   const [contract, setContract] = useState({});
   const [jobDirector, setJobDirector] = useState();
@@ -383,11 +382,11 @@ const DraftAddendumPage = ({
 
   useEffect(() => {
     getAddendum();
+    // para pihak
     getJobDirector();
     getJobSupervisor();
-    getDataPenalties();
-    getDataContractHeader();
     getauthorizedOfficial();
+    getDataContractHeader();
   }, []);
 
   const actionButton = (
@@ -404,26 +403,6 @@ const DraftAddendumPage = ({
       ]}
     />
   );
-
-  const getDataPenalties = async () => {
-    try {
-      await fetch_api_sg({
-        key: keys.fetch,
-        type: "get",
-        url: `/adendum/refference/get-all-pinalties`,
-        onSuccess: (res) => {
-          setDataArr(
-            res.data.map((item) => ({
-              id: item.id,
-              name: item.pinalty_name,
-            }))
-          );
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching penalties data:", error);
-    }
-  };
 
   const userReviewData = [
     {
@@ -2056,7 +2035,6 @@ const DraftAddendumPage = ({
           {tabActive === 6 && (
             <JaminanTab
               newData={data}
-              newJson={jsonData}
               contract_id={draft_id}
               fromWhere={"guarantee"}
               jsonData={dataContractById}

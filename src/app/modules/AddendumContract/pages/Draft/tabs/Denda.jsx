@@ -37,6 +37,7 @@ const Denda = ({
   dataNewClauseDrafting,
 }) => {
   const dispatch = useDispatch();
+  const [dataArr, setDataArr] = useState([]);
 
   useEffect(() => {
     if (fineCurrent !== null) {
@@ -186,6 +187,30 @@ const Denda = ({
   const createData = (id, pinalty_name, value, max_day, value_type) => {
     return { id, pinalty_name, value, max_day, value_type };
   };
+
+  const getDataPenalties = async () => {
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/refference/get-all-pinalties`,
+        onSuccess: (res) => {
+          setDataArr(
+            res.data.map((item) => ({
+              id: item.id,
+              name: item.pinalty_name,
+            }))
+          );
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching penalties data:", error);
+    }
+  };
+
+  useEffect(() => {
+    getDataPenalties();
+  }, []);
 
   return (
     <div className="bg-white p-10">
