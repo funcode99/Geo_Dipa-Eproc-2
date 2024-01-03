@@ -70,19 +70,6 @@ const DraftAddendumPage = ({
   const [distributionTabActive, setDistributionTabActive] = React.useState(0);
   const [reviewProcessTabActive, setReviewProcessTabActive] = React.useState(0);
   const [finalDraftSelectValue, setFinalDraftSelectValue] = useState("Kontrak");
-  const [
-    listDataContactUserReviewer,
-    setListDataContactUserReviewer,
-  ] = useState();
-  const [listUserParticipantReview, setListUserParticipantReview] = useState();
-  const [
-    listDataContactVendorReviewer,
-    setListDataContactVendorReviewer,
-  ] = useState();
-  const [
-    listDataContractAdminReviewer,
-    setListDataContractAdminReviewer,
-  ] = useState();
 
   const getClientStatus = (val) => {
     const filteredData = rolesEproc?.filter(
@@ -312,70 +299,6 @@ const DraftAddendumPage = ({
     }
   };
 
-  // api 4.1
-  const getUserParticipantReview = async () => {
-    try {
-      await fetch_api_sg({
-        key: keys.fetch,
-        type: "get",
-        url: `/adendum/user-participant-review`,
-        onSuccess: (res) => {
-          setListUserParticipantReview(res.data);
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching user participant review:", error);
-    }
-  };
-
-  // api 4.2
-  const getAddContractAdminReviewer = async () => {
-    try {
-      await fetch_api_sg({
-        key: keys.fetch,
-        type: "get",
-        url: `/adendum/review/admin-reviewer/${draft_id}`,
-        onSuccess: (res) => {
-          setListDataContractAdminReviewer(res.data);
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching admin reviewer:", error);
-    }
-  };
-
-  // api 4.3
-  const getAddContactUserReviewer = async () => {
-    try {
-      await fetch_api_sg({
-        key: keys.fetch,
-        type: "get",
-        url: `/adendum/review/add-user-reviewer/${draft_id}`,
-        onSuccess: (res) => {
-          setListDataContactUserReviewer(res.data);
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching add user reviewer:", error);
-    }
-  };
-
-  // api 4.6
-  const getAddContactVendorReviewer = async () => {
-    try {
-      await fetch_api_sg({
-        key: keys.fetch,
-        type: "get",
-        url: `/adendum/review/vendor-reviewer/${draft_id}`,
-        onSuccess: (res) => {
-          setListDataContactVendorReviewer(res.data);
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching vendor reviewer:", error);
-    }
-  };
-
   if (!Array.isArray(authorizedOfficial)) {
     console.error("Data is not an array.");
   } else {
@@ -482,10 +405,6 @@ const DraftAddendumPage = ({
     getDataPenalties();
     getDataContractHeader();
     getauthorizedOfficial();
-    // getUserParticipantReview();
-    // getAddContactUserReviewer();
-    // getAddContractAdminReviewer();
-    // getAddContactVendorReviewer();
   }, []);
 
   const actionButton = (
@@ -2311,10 +2230,6 @@ const DraftAddendumPage = ({
               isVendor={isVendor}
               isClient={isClient}
               contract_id={draft_id}
-              listUserParticipantReview={listUserParticipantReview}
-              listDataContactUserReviewer={listDataContactUserReviewer}
-              listDataContractAdminReviewer={listDataContractAdminReviewer}
-              listDataContactVendorReviewer={listDataContactVendorReviewer}
             />
           )}
 

@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { fetch_api_sg } from "redux/globalReducer";
 import { ReactSelect } from "percobaan/ReactSelect";
 import DialogGlobal from "app/components/modals/DialogGlobal";
@@ -17,10 +17,6 @@ const ReviewPage = ({
   isClient,
   contract_id,
   fetch_api_sg,
-  listUserParticipantReview,
-  listDataContactUserReviewer,
-  listDataContractAdminReviewer,
-  listDataContactVendorReviewer,
 }) => {
   const openCloseAddReviewer = React.useRef();
   const showAddReviewer = () => {
@@ -33,6 +29,19 @@ const ReviewPage = ({
 
   const [dataSubmit, setDataSubmit] = useState();
   const [dataVendor, setDataVendor] = useState();
+  const [
+    listDataContactUserReviewer,
+    setListDataContactUserReviewer,
+  ] = useState();
+  const [listUserParticipantReview, setListUserParticipantReview] = useState();
+  const [
+    listDataContactVendorReviewer,
+    setListDataContactVendorReviewer,
+  ] = useState();
+  const [
+    listDataContractAdminReviewer,
+    setListDataContractAdminReviewer,
+  ] = useState();
 
   const actionButton = (
     <ButtonAction
@@ -74,6 +83,70 @@ const ReviewPage = ({
     });
   };
 
+  // api 4.1
+  const getUserParticipantReview = async () => {
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/user-participant-review`,
+        onSuccess: (res) => {
+          setListUserParticipantReview(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching user participant review:", error);
+    }
+  };
+
+  // api 4.2
+  const getAddContractAdminReviewer = async () => {
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/review/admin-reviewer/${contract_id}`,
+        onSuccess: (res) => {
+          setListDataContractAdminReviewer(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching admin reviewer:", error);
+    }
+  };
+
+  // api 4.3
+  const getAddContactUserReviewer = async () => {
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/review/add-user-reviewer/${contract_id}`,
+        onSuccess: (res) => {
+          setListDataContactUserReviewer(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching add user reviewer:", error);
+    }
+  };
+
+  // api 4.6
+  const getAddContactVendorReviewer = async () => {
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/review/vendor-reviewer/${contract_id}`,
+        onSuccess: (res) => {
+          setListDataContactVendorReviewer(res.data);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching vendor reviewer:", error);
+    }
+  };
+
   const submitData = () => {
     submitAddContractUserReviewer({
       add_contract_id: contract_id,
@@ -106,6 +179,13 @@ const ReviewPage = ({
     openCloseAddVendor.current.close();
     // window.location.reload(true);
   };
+
+  useEffect(() => {
+    getUserParticipantReview();
+    getAddContactUserReviewer();
+    getAddContractAdminReviewer();
+    getAddContactVendorReviewer();
+  }, []);
   return (
     <>
       <DialogGlobal
