@@ -1,6 +1,51 @@
 import React from "react";
+import DialogGlobal from "app/components/modals/DialogGlobal";
+import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
 
 const ApprovalPage = ({ isAdmin }) => {
+  const openCloseDownloadUser = React.useRef();
+  const showDownloadUser = () => {
+    openCloseDownloadUser.current.open();
+  };
+  const openCloseDownloadVendor = React.useRef();
+  const showDownloadVendor = () => {
+    openCloseDownloadVendor.current.open();
+  };
+
+  const HeaderSection = () => {
+    return (
+      <>
+        <DialogGlobal
+          ref={openCloseDownloadUser}
+          isCancel={false}
+          isSubmit={false}
+          maxWidth={"xs"}
+        >
+          <div className="d-flex justify-content-center">
+            <img src={toAbsoluteUrl("/media/svg/icons/All/Vector.png")} />
+          </div>
+
+          <p className="text-center mt-3" style={{ fontWeight: 600 }}>
+            Unduh hasil approval user telah berhasil
+          </p>
+        </DialogGlobal>
+        <DialogGlobal
+          ref={openCloseDownloadVendor}
+          isCancel={false}
+          isSubmit={false}
+          maxWidth={"xs"}
+        >
+          <div className="d-flex justify-content-center">
+            <img src={toAbsoluteUrl("/media/svg/icons/All/Vector.png")} />
+          </div>
+
+          <p className="text-center mt-3" style={{ fontWeight: 600 }}>
+            Unduh hasil approval vendor telah berhasil
+          </p>
+        </DialogGlobal>
+      </>
+    );
+  };
   switch (isAdmin) {
     case false:
       return (
