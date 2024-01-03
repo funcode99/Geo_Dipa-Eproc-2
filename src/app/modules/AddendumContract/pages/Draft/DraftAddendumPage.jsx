@@ -658,32 +658,19 @@ const DraftAddendumPage = ({
     }
   }
 
-  // useEffect(() => {
-  //   getAddendum();
-  //   getCurrencies();
-  //   getDataContractHeader();
-  //   getauthorizedOfficial();
-  //   getJobDirector();
-  //   getJobSupervisor();
-  //   // api reviewer
-  //   getUserParticipantReview();
-  //   getAddContactUserReviewer();
-  //   getAddContractAdminReviewer();
-  //   getAddContactVendorReviewer();
-
-  //   getDataPenalties();
-  // }, []);
+  useEffect(() => {
+    getAddendum();
+    getCurrencies();
+    getJobDirector();
+    getJobSupervisor();
+    getDataPenalties();
+    getDataContractHeader();
+    getauthorizedOfficial();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getAddendum();
-        await getCurrencies();
-        await getJobDirector();
-        await getJobSupervisor();
-        await getDataPenalties();
-        await getDataContractHeader();
-        await getauthorizedOfficial();
         await getUserParticipantReview();
         await getAddContactUserReviewer();
         await getAddContractAdminReviewer();
