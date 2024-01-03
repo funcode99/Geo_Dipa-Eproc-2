@@ -5,6 +5,7 @@ import { ReactSelect } from "percobaan/ReactSelect";
 import DialogGlobal from "app/components/modals/DialogGlobal";
 import ButtonAction from "app/components/buttonAction/ButtonAction";
 import {
+  deleteReviewerUser,
   sendEmailAllReviewer,
   deleteReviewerVendor,
   submitAddContractUserReviewer,
@@ -43,8 +44,11 @@ const ReviewerPage = ({
     setListDataContractAdminReviewer,
   ] = useState();
 
-  const actionButton = (
+  const actionButton = (id) => (
     <ButtonAction
+      handleAction={(_, __, type) => {
+        deleteDataReviewerUser(id);
+      }}
       style={{
         backgroundColor: "#e8f4fb",
       }}
@@ -170,6 +174,12 @@ const ReviewerPage = ({
   const sendAllEmail = () => {
     sendEmailAllReviewer(contract_id);
     alert("Berhasil kirim email!");
+    openCloseAddVendor.current.close();
+    // window.location.reload(true);
+  };
+  const deleteDataReviewerUser = (id) => {
+    deleteReviewerUser(id);
+    alert("Berhasil hapus data!");
     openCloseAddVendor.current.close();
     // window.location.reload(true);
   };
@@ -541,7 +551,7 @@ const ReviewerPage = ({
                           <td>{item.full_name}</td>
                           <td>{item.position_name}</td>
                           <td>{item.email}</td>
-                          {isAdmin && <td>{actionButton}</td>}
+                          {isAdmin && <td>{actionButton(item.id)}</td>}
                         </tr>
                       </>
                     );
