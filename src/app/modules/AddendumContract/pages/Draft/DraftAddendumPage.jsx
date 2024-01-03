@@ -54,7 +54,6 @@ const DraftAddendumPage = ({
   const [jobDirector, setJobDirector] = useState();
   const [sequence, setSequence] = React.useState(0);
   const [tabActive, setTabActive] = React.useState(0);
-  const [currencies, setDataCurrencies] = useState([]);
   const [jobSupervisor, setJobSupervisor] = useState();
   const [linksGroup, setLinksGroup] = useState(dataGroup);
   // const [timePeriodData, setTimePeriodData] = useState();
@@ -117,21 +116,6 @@ const DraftAddendumPage = ({
       });
     } catch (error) {
       console.error("Error fetching contract by ID:", error);
-    }
-  };
-
-  const getCurrencies = async () => {
-    try {
-      await fetch_api_sg({
-        key: keys.fetch,
-        type: "get",
-        url: `/adendum/currencies`,
-        onSuccess: (res) => {
-          setDataCurrencies(res);
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching currencies:", error);
     }
   };
 
@@ -399,7 +383,6 @@ const DraftAddendumPage = ({
 
   useEffect(() => {
     getAddendum();
-    getCurrencies();
     getJobDirector();
     getJobSupervisor();
     getDataPenalties();
@@ -2022,7 +2005,6 @@ const DraftAddendumPage = ({
             <HargaPekerjaanTab
               contract_id={draft_id}
               dataAfterAdendum={data}
-              currencies={currencies}
               data={dataContractById}
               fromWhere={"job_price"}
               is_add_job_price={data?.is_add_job_price}

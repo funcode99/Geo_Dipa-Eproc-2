@@ -1,5 +1,6 @@
 import { Formik, Form } from "formik";
 import Title from "./Component/Title";
+import { fetch_api_sg } from "redux/globalReducer";
 import Currency from "./Component/Currency";
 import { FormattedMessage } from "react-intl";
 import { TableContainer } from "@material-ui/core";
@@ -19,7 +20,7 @@ import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/com
 const HargaPekerjaan = ({
   data,
   isDisable,
-  currencies,
+  // currencies,
   contract_id,
   dataNewClause,
   dataAfterAdendum,
@@ -36,6 +37,7 @@ const HargaPekerjaan = ({
   };
   const [item, setItem] = useState([]);
   const [grandTotal, setGrandTotal] = useState(0);
+  const [currencies, setDataCurrencies] = useState([]);
 
   let currenciesIndex = 0;
   const valueAfterAddendum = JSON.parse(
@@ -47,6 +49,21 @@ const HargaPekerjaan = ({
     }
     setGrandTotal(item?.reduce(sum, 0));
   }, [item]);
+
+  const getCurrencies = async () => {
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/currencies`,
+        onSuccess: (res) => {
+          setDataCurrencies(res);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching currencies:", error);
+    }
+  };
 
   useEffect(() => {
     if (add_contract_job_price?.attachment_clause_data !== null) {
@@ -75,6 +92,10 @@ const HargaPekerjaan = ({
       });
     }
   }, [add_contract_job_price]);
+
+  useEffect(() => {
+    getCurrencies();
+  }, []);
 
   const showAddDetail = () => {
     openCloseAddDetail.current.open();
@@ -239,9 +260,12 @@ const HargaPekerjaan = ({
   );
 };
 
+const mapDispatch = {
+  fetch_api_sg,
+};
 const mapState = (state) => ({
   dataNewClause: state.addendumContract.dataNewClause,
   dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
 
-export default connect(mapState, null)(HargaPekerjaan);
+export default connect(mapState, mapDispatch)(HargaPekerjaan);
