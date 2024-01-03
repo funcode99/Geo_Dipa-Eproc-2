@@ -2022,7 +2022,6 @@ const DraftAddendumPage = ({
           )}
           {tabActive === 5 && (
             <DendaTab
-              dataArr={dataArr}
               fromWhere={"fine"}
               contract_id={draft_id}
               jsonData={dataContractById}

@@ -26,7 +26,6 @@ import {
 } from "@material-ui/core";
 
 const Denda = ({
-  dataArr,
   jsonData,
   isDisable,
   fromWhere,
