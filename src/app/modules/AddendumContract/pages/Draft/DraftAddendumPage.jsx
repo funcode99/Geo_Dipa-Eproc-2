@@ -482,15 +482,11 @@ const DraftAddendumPage = ({
     getDataPenalties();
     getDataContractHeader();
     getauthorizedOfficial();
-    getUserParticipantReview();
-    getAddContactUserReviewer();
-    getAddContractAdminReviewer();
-    getAddContactVendorReviewer();
-  }, [
-    listUserParticipantReview,
-    listDataContactUserReviewer,
-    listDataContactVendorReviewer,
-  ]);
+    // getUserParticipantReview();
+    // getAddContactUserReviewer();
+    // getAddContractAdminReviewer();
+    // getAddContactVendorReviewer();
+  }, []);
 
   const actionButton = (
     <ButtonAction
