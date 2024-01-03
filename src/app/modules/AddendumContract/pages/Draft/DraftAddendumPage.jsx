@@ -449,7 +449,7 @@ const DraftAddendumPage = ({
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     // getContractById(draft_id);
     getAddendum();
     getCurrencies();
@@ -462,6 +462,8 @@ const DraftAddendumPage = ({
     getAddContactUserReviewer();
     getAddContractAdminReviewer();
     getAddContactVendorReviewer();
+
+    getDataPenalties();
     // setInitialSubmitItems();
     // getAddContractDocument();
     // const refresh = () => {
@@ -507,9 +509,9 @@ const DraftAddendumPage = ({
     });
   };
 
-  useEffect(() => {
-    getDataPenalties();
-  }, []);
+  // useEffect(() => {
+  //   getDataPenalties();
+  // }, []);
 
   const userReviewData = [
     {
