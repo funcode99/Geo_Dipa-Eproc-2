@@ -2321,7 +2321,7 @@ const DraftAddendumPage = ({
             </div>
           </div>
 
-          {/* {reviewSequence === 0 && (
+          {reviewSequence === 0 && (
             <ReviewPage
               isAdmin={isAdmin}
               isVendor={isVendor}
@@ -2332,7 +2332,7 @@ const DraftAddendumPage = ({
               listDataContractAdminReviewer={listDataContractAdminReviewer}
               listDataContactVendorReviewer={listDataContactVendorReviewer}
             />
-          )} */}
+          )}
 
           {reviewSequence === 1 && (
             <>
