@@ -1339,7 +1339,11 @@ const DraftAddendumPage = ({
 
       {sequence === 4 && (
         <>
-          <DistribusiPage isAdmin={isAdmin} loginStatus={loginStatus} />
+          <DistribusiPage
+            isAdmin={isAdmin}
+            loginStatus={loginStatus}
+            contract_id={draft_id}
+          />
         </>
       )}
     </>

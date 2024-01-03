@@ -45,7 +45,7 @@ const distributionTabLists = [
   },
 ];
 
-const DistribusiPage = ({ isAdmin, loginStatus }) => {
+const DistribusiPage = ({ isAdmin, loginStatus, contract_id }) => {
   const [dataSubmit, setDataSubmit] = useState();
   const [inputValue, setInputValue] = useState("Upload File");
   const [distributionSequence, setDistributionSequence] = React.useState(0);
