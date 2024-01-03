@@ -1184,16 +1184,18 @@ const DraftAddendumPage = ({
         ]}
       />
 
-      <Steppers
-        steps={
-          data?.steppers
-            ? DUMMY_STEPPER_CONTRACT
-            : data?.steppers?.map((el) => ({
-                label: el.label,
-                status: STATE_STEPPER[el.state],
-              }))
-        }
-      />
+      <div className="mb-4">
+        <Steppers
+          steps={
+            data?.steppers
+              ? DUMMY_STEPPER_CONTRACT
+              : data?.steppers?.map((el) => ({
+                  label: el.label,
+                  status: STATE_STEPPER[el.state],
+                }))
+          }
+        />
+      </div>
 
       <Card>
         <form
