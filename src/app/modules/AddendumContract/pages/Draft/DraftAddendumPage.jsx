@@ -1216,11 +1216,19 @@ const DraftAddendumPage = ({
                     }}
                     onClick={() => setSequence(0)}
                   >
-                    <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/form-parameter.svg"
-                      )}
-                    />
+                    {sequence === 0 ? (
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/form-parameter.svg"
+                        )}
+                      />
+                    ) : (
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/form-parameter-black.svg"
+                        )}
+                      />
+                    )}
                     <h1
                       style={{
                         fontSize: 14,
@@ -1246,11 +1254,19 @@ const DraftAddendumPage = ({
                     }}
                     onClick={() => setSequence(1)}
                   >
-                    <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/clause-template.svg"
-                      )}
-                    />
+                    {sequence === 1 ? (
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/clause-template.svg"
+                        )}
+                      />
+                    ) : (
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/clause-template-black.svg"
+                        )}
+                      />
+                    )}
                     <h1
                       style={{
                         fontSize: 14,
@@ -1275,7 +1291,17 @@ const DraftAddendumPage = ({
                   }}
                   onClick={() => setSequence(2)}
                 >
-                  <SVG src={toAbsoluteUrl("/media/svg/icons/All/review.svg")} />
+                  {sequence === 2 ? (
+                    <SVG
+                      src={toAbsoluteUrl("/media/svg/icons/All/review.svg")}
+                    />
+                  ) : (
+                    <SVG
+                      src={toAbsoluteUrl(
+                        "/media/svg/icons/All/review-black.svg"
+                      )}
+                    />
+                  )}
                   <h1
                     style={{
                       fontSize: 14,
@@ -1299,9 +1325,17 @@ const DraftAddendumPage = ({
                   }}
                   onClick={() => setSequence(3)}
                 >
-                  <SVG
-                    src={toAbsoluteUrl("/media/svg/icons/All/approval.svg")}
-                  />
+                  {sequence === 3 ? (
+                    <SVG
+                      src={toAbsoluteUrl("/media/svg/icons/All/approval.svg")}
+                    />
+                  ) : (
+                    <SVG
+                      src={toAbsoluteUrl(
+                        "/media/svg/icons/All/approval-black.svg"
+                      )}
+                    />
+                  )}
                   <h1
                     style={{
                       fontSize: 14,
@@ -1325,9 +1359,17 @@ const DraftAddendumPage = ({
                   }}
                   onClick={() => setSequence(4)}
                 >
-                  <SVG
-                    src={toAbsoluteUrl("/media/svg/icons/All/distribusi.svg")}
-                  />
+                  {sequence === 4 ? (
+                    <SVG
+                      src={toAbsoluteUrl("/media/svg/icons/All/distribusi.svg")}
+                    />
+                  ) : (
+                    <SVG
+                      src={toAbsoluteUrl(
+                        "/media/svg/icons/All/distribusi-black.svg"
+                      )}
+                    />
+                  )}
                   <h1
                     style={{
                       fontSize: 14,
