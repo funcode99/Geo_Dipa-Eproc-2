@@ -33,8 +33,6 @@ const ProsesReviewPage = ({
     getAddContactVendorReviewer();
   }, []);
 
-  console.log(dataList, "dataList");
-  console.log(contract_id, "contract_id");
   return (
     <>
       <div className="bg-white rounded">

@@ -1,8 +1,8 @@
 import SVG from "react-inlinesvg";
 import { connect } from "react-redux";
 import Tabs from "app/components/tabs";
+import { Button } from "@material-ui/core";
 import { useParams } from "react-router-dom";
-import { Grid, Button } from "@material-ui/core";
 import Subheader from "app/components/subheader";
 import { Card } from "_metronic/_partials/controls";
 import { Col, Row, Container } from "react-bootstrap";
@@ -21,18 +21,10 @@ import {
   STATE_STEPPER,
 } from "../Termin/TerminPageNew/STATIC_DATA";
 
-import DendaTab from "./tabs/Denda";
-import SummaryTab from "./tabs/Summary";
-import JaminanTab from "./tabs/Jaminan";
-import LainnyaTab from "./tabs/Lainnya";
-import JangkaWaktuTab from "./tabs/JangkaWaktu";
 import TemplateKlausul from "./TemplateKlausul";
 import ReviewPage from "./ReviewPage/ReviewPage";
 import FinalDraftSection from "./FinalDraftSection";
-import NomorRekeningTab from "./tabs/NomorRekening";
-import MetodePembayaranTab from "./tabs/MetodePembayaran";
-import HargaPekerjaanTab from "./tabs/HargaPekerjaan/HargaPekerjaan";
-import ParaPihakTab from "../../../../../app/modules/AddendumContract/pages/ContractDetail/components/FormAddendum/FormParameterSubTab/PartiesFormParameter";
+import FormParameter from "./FormParameter/FormParameter";
 
 const DraftAddendumPage = ({
   rolesEproc,
@@ -143,11 +135,6 @@ const DraftAddendumPage = ({
   const showDownloadVendor = () => {
     openCloseDownloadVendor.current.open();
   };
-
-  // sengaja dikasih event biar yang diambil value nya
-  function handleChangeTab(event, newTabActive) {
-    setTabActive(newTabActive);
-  }
 
   function handleChangeDistributionTab(event, newTabActive) {
     setDistributionTabActive(newTabActive);
@@ -368,52 +355,6 @@ const DraftAddendumPage = ({
       ]}
     />
   );
-
-  const TabLists = [
-    {
-      id: "summary",
-      label: "Summary",
-      addendum: true,
-    },
-    {
-      id: "kick-off",
-      label: "Para Pihak",
-      addendum: true,
-    },
-
-    {
-      id: "detail",
-      label: "Harga Pekerjaan",
-    },
-    {
-      id: "para-pihak",
-      label: "Jangka Waktu",
-    },
-    {
-      id: "dokumen-kontrak",
-      label: "Metode Pembayaran",
-    },
-
-    {
-      id: "harga-pekerjaan",
-      label: "Denda",
-    },
-    {
-      id: "jangka-waktu",
-      label: "Jaminan",
-      addendum: true,
-    },
-    {
-      id: "jaminan",
-      label: "Nomor Rekening",
-      addendum: true,
-    },
-    {
-      id: "other",
-      label: "Lainnya",
-      addendum: true,
-    },
-  ];
 
   const distributionTabLists = [
     {
@@ -1601,169 +1542,22 @@ const DraftAddendumPage = ({
 
       {sequence === 0 && (
         <>
-          <div
-            style={{
-              backgroundColor: "white",
-              borderTopLeftRadius: 14,
-              borderTopRightRadius: 14,
-              marginTop: "3px",
-            }}
-          >
-            <Tabs
-              tabActive={tabActive}
-              handleChange={handleChangeTab}
-              tabLists={TabLists}
-              variant="scrollable"
-            />
-          </div>
-          {tabActive === 0 && <SummaryTab data={data} />}
-          {tabActive === 1 && (
-            <ParaPihakTab
-              isDrafting={true}
-              PICData={PICData}
-              contract_id={draft_id}
-              jobDirector={jobDirector}
-              jsonData={dataContractById}
-              jobSupervisor={jobSupervisor}
-              jobSupervisor2={jobSupervisor2}
-              is_add_parties={data?.is_add_parties}
-              authorizedOfficialData={authorizedOfficial}
-              isDisable={!data?.is_add_parties && !isAdmin}
-              add_contract_party={data?.add_contract_party}
-              secondAuthorizedOfficial={secondAuthorizedOfficial}
-            />
-          )}
-          {tabActive === 2 && (
-            <HargaPekerjaanTab
-              contract_id={draft_id}
-              dataAfterAdendum={data}
-              data={dataContractById}
-              fromWhere={"job_price"}
-              is_add_job_price={data?.is_add_job_price}
-              isDisable={!data?.is_add_job_price || !isAdmin}
-              jobPriceCurrent={data?.add_contract_job_price}
-              add_contract_job_price={data?.add_contract_job_price}
-            />
-          )}
-          {tabActive === 3 && (
-            <JangkaWaktuTab
-              isAdmin={isAdmin}
-              contract_id={draft_id}
-              fromWhere={"time_period"}
-              dataNewClause={dataNewClause}
-              timePeriodData={dataContractById}
-              isDisable={!data?.is_add_time_period || !isAdmin}
-              is_add_time_period={data?.is_add_time_period}
-              timePeriodAddendumCurrent={data?.add_contract_time_period}
-              add_contract_time_period={data?.add_contract_time_period}
-            />
-          )}
-          {tabActive === 4 && (
-            <MetodePembayaranTab
-              data={data}
-              tes="ini tes"
-              isAdmin={isAdmin}
-              contract_id={draft_id}
-              jsonData={dataContractById}
-              fromWhere={"payment_method"}
-              dataNewClause={dataNewClause}
-              is_add_payment_method={data?.is_add_payment_method}
-              isDisable={!data?.is_add_payment_method || !isAdmin}
-              paymentMethodCurrent={data?.add_contract_payment_method}
-              add_contract_payment_method={data?.add_contract_payment_method}
-            />
-          )}
-          {tabActive === 5 && (
-            <DendaTab
-              fromWhere={"fine"}
-              contract_id={draft_id}
-              jsonData={dataContractById}
-              dataNewClause={dataNewClause}
-              is_add_fine={data?.is_add_fine}
-              fineCurrent={data?.add_contract_fine}
-              isDisable={!data?.is_add_fine || !isAdmin}
-            />
-          )}
-          {tabActive === 6 && (
-            <JaminanTab
-              newData={data}
-              contract_id={draft_id}
-              fromWhere={"guarantee"}
-              jsonData={dataContractById}
-              dataNewClause={dataNewClause}
-              is_add_guarantee={data?.is_add_guarantee}
-              dataNewClauseDrafting={dataNewClauseDrafting}
-              isDisable={!data?.is_add_guarantee || !isAdmin}
-              guaranteeCurrent={data?.add_contract_guarantee}
-              add_contract_guarantee={data?.add_contract_guarantee}
-            />
-          )}
-          {tabActive === 7 && (
-            <NomorRekeningTab
-              contract_id={draft_id}
-              jsonData={dataContractById}
-              dataNewClause={dataNewClause}
-              accountNumberBankData={accountNumberBankData}
-              isDisable={!data?.is_add_account_number || !isAdmin}
-              is_add_account_number={!data?.is_add_account_number}
-              accountNumberCurrent={data?.add_contract_account_number}
-              add_contract_account_number={data?.add_contract_account_number}
-            />
-          )}
-          {tabActive === 8 && (
-            <LainnyaTab
-              data={data}
-              fromWhere="other"
-              isDrafting={true}
-              isMandatory={true}
-              contract_id={draft_id}
-              jsonData={dataContractById}
-              dataNewClause={dataNewClause}
-              is_add_other={data?.is_add_other}
-              otherCurrent={data?.add_contract_others}
-              isDisable={!data?.other_note || !isAdmin}
-              add_contract_others={data?.add_contract_others}
-            />
-          )}
+          <FormParameter
+            data={data}
+            isAdmin={isAdmin}
+            PICData={PICData}
+            contract_id={draft_id}
+            jobDirector={jobDirector}
+            dataNewClause={dataNewClause}
+            jobSupervisor={jobSupervisor}
+            jobSupervisor2={jobSupervisor2}
+            dataContractById={dataContractById}
+            authorizedOfficial={authorizedOfficial}
+            dataNewClauseDrafting={dataNewClauseDrafting}
+            accountNumberBankData={accountNumberBankData}
+            secondAuthorizedOfficial={secondAuthorizedOfficial}
+          />
         </>
-      )}
-
-      {sequence === 0 && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            gap: 28,
-            padding: "2rem 2.25rem",
-          }}
-        >
-          <button
-            className="btn btn-outline-primary"
-            style={{
-              minWidth: 100,
-            }}
-            onClick={() =>
-              tabActive > 0
-                ? setTabActive(tabActive - 1)
-                : setTabActive(tabActive)
-            }
-          >
-            {`<< Back`}
-          </button>
-          <button
-            className="btn btn-primary"
-            style={{
-              minWidth: 100,
-            }}
-            onClick={() =>
-              setTabActive(
-                tabActive < TabLists.length - 1 ? tabActive + 1 : tabActive
-              )
-            }
-          >
-            Next
-          </button>
-        </div>
       )}
 
       {sequence === 1 && <TemplateKlausul />}

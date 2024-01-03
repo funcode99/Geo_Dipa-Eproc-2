@@ -20,12 +20,9 @@ import EditableTable from "app/modules/AddendumContract/pages/ContractDetail/com
 const HargaPekerjaan = ({
   data,
   isDisable,
-  // currencies,
   contract_id,
-  dataNewClause,
   dataAfterAdendum,
   jobPriceCurrent,
-  is_add_job_price,
   dataNewClauseDrafting,
   add_contract_job_price,
 }) => {
@@ -157,7 +154,7 @@ const HargaPekerjaan = ({
                   flexDirection: "column",
                   border: "1px solid #000000",
                   borderRadius: 8,
-                  padding: 16,
+                  padding: 8,
                 }}
               >
                 <div className="nilai-perjanjian-kontrak-awal">

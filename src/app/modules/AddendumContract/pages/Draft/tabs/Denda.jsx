@@ -31,8 +31,6 @@ const Denda = ({
   fromWhere,
   fineCurrent,
   contract_id,
-  dataNewClause,
-  is_add_fine,
   dataNewClauseDrafting,
 }) => {
   const dispatch = useDispatch();
@@ -651,7 +649,6 @@ const mapState = (state) => ({
     fetch: getLoading(state, keys.fetch),
   },
   status: state.auth.user.data.status,
-  dataNewClause: state.addendumContract.dataNewClause,
   dataNewClauseDrafting: state.addendumContract.dataNewClauseDrafting,
 });
 

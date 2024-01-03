@@ -10,16 +10,11 @@ import PerubahanKlausulKontrak from "app/modules/AddendumContract/pages/Contract
 import NewClause from "../../ContractDetail/components/FormAddendum/Components/Modal/NewClause";
 
 const MetodePembayaran = ({
-  tes,
-  data,
-  isAdmin,
   jsonData,
   isDisable,
   contract_id,
-  dataNewClause,
   paymentMethodCurrent,
   dataNewClauseDrafting,
-  is_add_payment_method,
   add_contract_payment_method,
 }) => {
   const dispatch = useDispatch();
