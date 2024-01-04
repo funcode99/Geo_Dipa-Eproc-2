@@ -2,13 +2,7 @@ import { connect } from "react-redux";
 import { fetch_api_sg } from "redux/globalReducer";
 import React, { useState, useEffect } from "react";
 import TitleComponent from "../components/TitleComponent";
-const ProsesReviewPage = ({
-  isAdmin,
-  isVendor,
-  isClient,
-  contract_id,
-  fetch_api_sg,
-}) => {
+const ProsesReviewPage = ({ contract_id, fetch_api_sg }) => {
   const Title = ["A. Addendum Perjanjian", "B. Lampiran 1", "C. Lampiran 2"];
 
   const [dataList, setDataList] = useState();

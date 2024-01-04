@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReviewerPage from "./ReviewerPage";
+import FinalDraftPage from "./FinalDraftPage";
 import ProsesReviewPage from "./ProsesReviewPage";
 
 const ReviewPage = ({ isAdmin, isVendor, isClient, contract_id }) => {
@@ -113,6 +114,21 @@ const ReviewPage = ({ isAdmin, isVendor, isClient, contract_id }) => {
         >
           <HeaderSection />
           <ProsesReviewPage contract_id={contract_id} />
+        </div>
+      );
+    case 2:
+      return (
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: 28,
+            marginTop: 24,
+            marginBottom: 24,
+            borderRadius: 5,
+          }}
+        >
+          <HeaderSection />
+          <FinalDraftPage contract_id={contract_id} isAdmin={isAdmin} />
         </div>
       );
     default:

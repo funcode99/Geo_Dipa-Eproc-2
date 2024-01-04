@@ -303,18 +303,15 @@ const FormParameter = ({
           }}
         >
           <HeaderSection />
-          <LainnyaTab
-            data={data}
-            fromWhere="other"
-            isDrafting={true}
-            isMandatory={true}
+          <NomorRekeningTab
             contract_id={contract_id}
             jsonData={dataContractById}
             dataNewClause={dataNewClause}
-            is_add_other={data?.is_add_other}
-            otherCurrent={data?.add_contract_others}
-            isDisable={!data?.other_note || !isAdmin}
-            add_contract_others={data?.add_contract_others}
+            accountNumberBankData={accountNumberBankData}
+            isDisable={!data?.is_add_account_number || !isAdmin}
+            is_add_account_number={!data?.is_add_account_number}
+            accountNumberCurrent={data?.add_contract_account_number}
+            add_contract_account_number={data?.add_contract_account_number}
           />
           <FooterSection />
         </div>
@@ -329,15 +326,18 @@ const FormParameter = ({
           }}
         >
           <HeaderSection />
-          <NomorRekeningTab
+          <LainnyaTab
+            data={data}
+            fromWhere="other"
+            isDrafting={true}
+            isMandatory={true}
             contract_id={contract_id}
             jsonData={dataContractById}
             dataNewClause={dataNewClause}
-            accountNumberBankData={accountNumberBankData}
-            isDisable={!data?.is_add_account_number || !isAdmin}
-            is_add_account_number={!data?.is_add_account_number}
-            accountNumberCurrent={data?.add_contract_account_number}
-            add_contract_account_number={data?.add_contract_account_number}
+            is_add_other={data?.is_add_other}
+            otherCurrent={data?.add_contract_others}
+            isDisable={!data?.other_note || !isAdmin}
+            add_contract_others={data?.add_contract_others}
           />
           <FooterSection />
         </div>
