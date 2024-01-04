@@ -1,20 +1,16 @@
-import SVG from "react-inlinesvg";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
 import Subheader from "app/components/subheader";
-import { Card } from "_metronic/_partials/controls";
-import { Col, Row, Container } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
 import SubBreadcrumbs from "app/components/SubBreadcrumbs";
-import React, { useState, useRef, useEffect } from "react";
-import DialogGlobal from "app/components/modals/DialogGlobal";
 import Steppers from "app/components/steppersCustom/Steppers";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
-import { toAbsoluteUrl } from "_metronic/_helpers/AssetsHelpers";
 import {
   DUMMY_STEPPER_CONTRACT,
   STATE_STEPPER,
 } from "../Termin/TerminPageNew/STATIC_DATA";
 
+import TabCard from "./TabCard";
 import TemplateKlausul from "./TemplateKlausul";
 import ReviewPage from "./ReviewPage/ReviewPage";
 import FinalDraftSection from "./FinalDraftSection";
@@ -93,18 +89,6 @@ const DraftAddendumPage = ({
       console.error("Error fetching contract by ID:", error);
     }
   };
-
-  const toPush = useRef();
-  const setPush = (e) => {
-    toPush.current.click();
-  };
-
-  const openCloseAddAttachment = React.useRef();
-  const showAddAttachment = () => {
-    openCloseAddAttachment.current.open();
-  };
-
-  const openCloseAddChecklistAddendum = React.useRef();
 
   // get api 2.23
   const getFinalDraftData = async (contract_id) => {
@@ -314,994 +298,58 @@ const DraftAddendumPage = ({
     getauthorizedOfficial();
     getDataContractHeader();
   }, []);
-  return (
-    <>
-      <DialogGlobal
-        ref={openCloseAddChecklistAddendum}
-        isCancel={false}
-        isSubmit={false}
-        maxWidth={"md"}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: 40,
-          }}
-        >
-          <p
-            style={{
-              fontSize: 16,
-              fontWeight: 600,
-            }}
-          >
-            Checklist Addendum Kontrak
-          </p>
-        </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 28,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">1. No Kontrak</div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                textAlign: "center",
-              }}
-            >
-              <div>{data?.add_doc_number}</div>
-              <div>Tanggal</div>
-              <div>14 Jan 2021</div>
-            </div>
-          </div>
+  const HeaderSection = () => {
+    return (
+      <>
+        <Subheader text={`No Dokumen Addendum : ${data?.add_doc_number}`} />
 
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">2. Jenis Kontrak</div>
-
-            <label
-              style={{
-                display: "flex",
-                gap: 8,
-              }}
-            >
-              <input type="checkbox" />
-              <span>Kontrak Unit Price</span>
-            </label>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">3. Nama Pekerjaan</div>
-
-            <span>Pengadaan Material Gasket Spiral Wound & Rupture Disk</span>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">4. Penyedia</div>
-
-            <span>PT. PANCA ENERGI MAKMUR</span>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">5. Pejabat Berwenang</div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  gap: 8,
-                }}
-              >
-                <input type="checkbox" />
-                Lien Kardani
-              </label>
-              <span>General Manager Unit Patuha</span>
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">6. Direksi Pekerjaan:</div>
-
-            <label
-              style={{
-                display: "flex",
-                gap: 8,
-              }}
-            >
-              <input type="checkbox" />
-              HSSE Manager
-            </label>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">7. Harga Pekerjaan (inc PPN):</div>
-
-            <i>IDR Rp 8.164.200.000,00</i>
-          </div>
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">8. Cara Pembayaran:</div>
-
-            <label
-              style={{
-                display: "flex",
-                gap: 8,
-              }}
-            >
-              <input type="checkbox" />
-              100%
-            </label>
-          </div>
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">9. Jangka Waktu:</div>
-
-            <div>
-              <label
-                style={{
-                  display: "flex",
-                  gap: 8,
-                }}
-              >
-                <input type="checkbox" />
-                Pelaksanaan Pekerjaan 29 Agustus 2023 - 27 Oktober 2023
-              </label>
-              <label
-                style={{
-                  display: "flex",
-
-                  gap: 8,
-                }}
-              >
-                <input type="checkbox" />
-                Garansi (Barang/Jasa) 28 Oktober 2023 - 27 Oktober 2024
-              </label>
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-            }}
-          >
-            <div className="col-sm-3">10. Denda:</div>
-
-            <div>
-              <label
-                style={{
-                  display: "flex",
-                  gap: 8,
-                }}
-              >
-                <input type="checkbox" />
-                Pelaksanaan Pekerjaan 29 Agustus 2023 - 27 Oktober 2023
-              </label>
-              <label
-                style={{
-                  display: "flex",
-
-                  gap: 8,
-                }}
-              >
-                <input type="checkbox" />
-                Garansi (Barang/Jasa) 28 Oktober 2023 - 27 Oktober 2024
-              </label>
-            </div>
-          </div>
-          <div className="col-sm-3">11. Jaminan:</div>
-          <div
-            style={{
-              padding: "0 12.5px",
-            }}
-          >
-            12. Addendum
-          </div>
-          <div
-            style={{
-              padding: "0 12.5px",
-            }}
-          >
-            <div
-              style={{
-                marginBottom: "14px",
-              }}
-            >
-              A. Perihal
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                columnGap: 8,
-              }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="checked"
-                  value="parties"
-                  style={{
-                    height: 20,
-                    width: 20,
-                  }}
-                />
-                Data Para Pihak
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="checked"
-                  value="payment_method"
-                  style={{
-                    height: 20,
-                    width: 20,
-                  }}
-                />
-                Metode Pembayaran
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="checked"
-                  value="fine"
-                  style={{
-                    height: 20,
-                    width: 20,
-                  }}
-                />
-                Denda
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="checked"
-                  value="account_number"
-                  style={{
-                    height: 20,
-                    width: 20,
-                  }}
-                />
-                Nomor Rekening
-              </label>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-                columnGap: 8,
-              }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="checked"
-                  value="job_price"
-                  style={{
-                    height: 20,
-                    width: 20,
-                  }}
-                />
-                Harga Pekerjaan
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="checked"
-                  value="time_period"
-                  style={{
-                    height: 20,
-                    width: 20,
-                  }}
-                />
-                Jangka Waktu
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
-                <input
-                  type="checkbox"
-                  name="checked"
-                  value="guarantee"
-                  style={{
-                    height: 20,
-                    width: 20,
-                  }}
-                />
-                Jaminan
-              </label>
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <div className="col-sm-5">B. Nilai Addendum (exc PPN)</div>
-            <input
-              className="col-sm-7"
-              style={{
-                padding: "10px 12px",
-                fontSize: "14px",
-                fontWeight: 500,
-                color: "#403f3f",
-                borderRadius: 4,
-              }}
-              value={"Rp 121.100.000,00"}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <div className="col-sm-5">
-              C. Nilai Perjanjian Setelah Addendum (exc PPN)
-            </div>
-            <input
-              className="col-sm-7"
-              type="text"
-              style={{
-                padding: "10px 12px",
-                fontSize: "14px",
-                fontWeight: 500,
-                color: "#403f3f",
-                borderRadius: 4,
-              }}
-              value={"Rp 7.300.900.000,00"}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <div className="col-sm-5">D. Kesimpulan</div>
-            <input
-              className="col-sm-7"
-              type="text"
-              style={{
-                padding: "10px 12px",
-                fontSize: "14px",
-                fontWeight: 500,
-                color: "#403f3f",
-                borderRadius: 4,
-              }}
-              value={
-                "Harga pekerjaan setelah addendum dibawah 10% dari harga pekerjaan awal"
-              }
-            />
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <div className="col-sm-5"></div>
-            <div
-              style={{
-                display: "flex",
-                gap: 20,
-              }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  gap: 8,
-                }}
-              >
-                <input type="checkbox" />
-                Justifikasi
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  gap: 8,
-                }}
-              >
-                <input type="checkbox" />
-                Justifikasi & Radir
-              </label>
-            </div>
-          </div>
-        </div>
-      </DialogGlobal>
-
-      <DialogGlobal
-        ref={openCloseAddAttachment}
-        isCancel={false}
-        isSubmit={true}
-        onYes={setPush}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-          }}
-        >
-          <Row>
-            <Col md={6}>
-              Nama Lampiran
-              <input
-                value={"Lampiran 3"}
-                style={{
-                  padding: 8,
-                  fontSize: 12,
-                  fontWeight: 500,
-                  width: "100%",
-                }}
-              />
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={12}>
-              Pilih File
-              <div
-                style={{
-                  padding: 8,
-                  border: 1,
-                  borderStyle: "solid",
-                  borderColor: "#8c8a8a",
-                  opacity: 0.8,
-                  borderRadius: 4,
-                }}
-              >
-                <a
-                  style={{
-                    color: "#3699ff",
-                    fontSize: 12,
-                    fontWeight: 400,
-                  }}
-                >
-                  001.KTR-DNG1.PBJ-GDE-I-2022.Lamp-2.Perjanjian.Admin_Zulfiqur_Rahman.07-08-2022
-                  1437.V0_ADD.docx
-                </a>
-              </div>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              Komentar*
-              <div>
-                <textarea
-                  name="comment"
-                  value={
-                    "Terlampir draft addendum kontrak, mohon user untuk direview"
-                  }
-                  rows="4"
-                  className="form-control"
-                ></textarea>
-              </div>
-            </Col>
-          </Row>
-        </div>
-      </DialogGlobal>
-
-      <Subheader text={`No Dokumen Addendum : ${data?.add_doc_number}`} />
-
-      <SubBreadcrumbs
-        items={[
-          {
-            label: `Addendum Contract`,
-          },
-          {
-            label: "List of Addendum",
-            to: `/client/addendum-contract/list-of-addendum`,
-          },
-          {
-            label: `${data?.add_doc_number} - ${data?.contract?.contract_name}`,
-          },
-        ]}
-      />
-
-      <div className="mb-4">
-        <Steppers
-          steps={
-            data?.steppers
-              ? DUMMY_STEPPER_CONTRACT
-              : data?.steppers?.map((el) => ({
-                  label: el.label,
-                  status: STATE_STEPPER[el.state],
-                }))
-          }
+        <SubBreadcrumbs
+          items={[
+            {
+              label: `Addendum Contract`,
+            },
+            {
+              label: "List of Addendum",
+              to: `/client/addendum-contract/list-of-addendum`,
+            },
+            {
+              label: `${data?.add_doc_number} - ${data?.contract?.contract_name}`,
+            },
+          ]}
         />
-      </div>
 
-      <Card>
-        <form
-          style={{
-            padding: 28,
-          }}
-        >
-          <Container>
-            <Row>
-              {!isVendor && (
-                <Col>
-                  <div
-                    className="d-flex flex-column align-items-center"
-                    style={{
-                      backgroundColor: "white",
-                      flexGrow: 1,
-                      borderTopLeftRadius: 14,
-                      cursor: "pointer",
-                      gap: 4,
-                    }}
-                    onClick={() => setSequence(0)}
-                  >
-                    {sequence === 0 ? (
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/All/form-parameter.svg"
-                        )}
-                      />
-                    ) : (
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/All/form-parameter-black.svg"
-                        )}
-                      />
-                    )}
-                    <h1
-                      style={{
-                        fontSize: 14,
-                        color: sequence === 0 ? "#3699ff" : "#8c8a8a",
-                      }}
-                    >
-                      Form Parameter
-                    </h1>
-                  </div>
-                </Col>
-              )}
+        <div className="mb-4">
+          <Steppers
+            steps={
+              data?.steppers
+                ? DUMMY_STEPPER_CONTRACT
+                : data?.steppers?.map((el) => ({
+                    label: el.label,
+                    status: STATE_STEPPER[el.state],
+                  }))
+            }
+          />
+        </div>
 
-              {isAdmin && (
-                <Col>
-                  <div
-                    className="d-flex flex-column align-items-center"
-                    style={{
-                      backgroundColor: "white",
-                      flexGrow: 1,
-                      cursor: "pointer",
-                      borderTopRightRadius: 14,
-                      gap: 4,
-                    }}
-                    onClick={() => setSequence(1)}
-                  >
-                    {sequence === 1 ? (
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/All/clause-template.svg"
-                        )}
-                      />
-                    ) : (
-                      <SVG
-                        src={toAbsoluteUrl(
-                          "/media/svg/icons/All/clause-template-black.svg"
-                        )}
-                      />
-                    )}
-                    <h1
-                      style={{
-                        fontSize: 14,
-                        color: sequence === 1 ? "#3699ff" : "#8c8a8a",
-                      }}
-                    >
-                      Template Klausul
-                    </h1>
-                  </div>
-                </Col>
-              )}
+        <TabCard
+          data={data}
+          isAdmin={isAdmin}
+          isVendor={isVendor}
+          contract={contract}
+          sequence={sequence}
+          setSequence={setSequence}
+        />
 
-              <Col>
-                <div
-                  className="d-flex flex-column align-items-center"
-                  style={{
-                    backgroundColor: "white",
-                    flexGrow: 1,
-                    cursor: "pointer",
-                    borderTopRightRadius: 14,
-                    gap: 4,
-                  }}
-                  onClick={() => setSequence(2)}
-                >
-                  {sequence === 2 ? (
-                    <SVG
-                      src={toAbsoluteUrl("/media/svg/icons/All/review.svg")}
-                    />
-                  ) : (
-                    <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/review-black.svg"
-                      )}
-                    />
-                  )}
-                  <h1
-                    style={{
-                      fontSize: 14,
-                      color: sequence === 2 ? "#3699ff" : "#8c8a8a",
-                    }}
-                  >
-                    Review
-                  </h1>
-                </div>
-              </Col>
-
-              <Col>
-                <div
-                  className="d-flex flex-column align-items-center"
-                  style={{
-                    backgroundColor: "white",
-                    flexGrow: 1,
-                    cursor: "pointer",
-                    borderTopRightRadius: 14,
-                    gap: 4,
-                  }}
-                  onClick={() => setSequence(3)}
-                >
-                  {sequence === 3 ? (
-                    <SVG
-                      src={toAbsoluteUrl("/media/svg/icons/All/approval.svg")}
-                    />
-                  ) : (
-                    <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/approval-black.svg"
-                      )}
-                    />
-                  )}
-                  <h1
-                    style={{
-                      fontSize: 14,
-                      color: sequence === 3 ? "#3699ff" : "#8c8a8a",
-                    }}
-                  >
-                    Approval
-                  </h1>
-                </div>
-              </Col>
-
-              <Col>
-                <div
-                  className="d-flex flex-column align-items-center"
-                  style={{
-                    backgroundColor: "white",
-                    flexGrow: 1,
-                    cursor: "pointer",
-                    borderTopRightRadius: 14,
-                    gap: 4,
-                  }}
-                  onClick={() => setSequence(4)}
-                >
-                  {sequence === 4 ? (
-                    <SVG
-                      src={toAbsoluteUrl("/media/svg/icons/All/distribusi.svg")}
-                    />
-                  ) : (
-                    <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/distribusi-black.svg"
-                      )}
-                    />
-                  )}
-                  <h1
-                    style={{
-                      fontSize: 14,
-                      color: sequence === 4 ? "#3699ff" : "#8c8a8a",
-                    }}
-                  >
-                    Distribusi
-                  </h1>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-
-          <div
-            style={{
-              display: "flex",
-              columnGap: 40,
-              flexWrap: "wrap",
-              marginBottom: "1rem",
-            }}
-          >
-            <div className="col-md-4">
-              <div className="form-group row">
-                <label
-                  htmlFor="agreement_number"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Nomor Perjanjian
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="agreement_number"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  value={contract?.contract_no}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="po_number"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Nomor PO
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="po_number"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  value={contract?.purch_order?.po_sap}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="agreement_format"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Format Perjanjian
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="agreement_format"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  onChange={(e) => {}}
-                  value={contract?.contract_format?.name}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="procurement_authority"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Kewenangan Pengadaan
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="procurement_authority"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  onChange={(e) => {}}
-                  value={contract?.authority?.facility?.name}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="user"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Pengguna
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="user"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  onChange={(e) => {}}
-                  value={contract?.user?.facility?.name}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="provider"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Penyedia
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="provider"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  onChange={(e) => {}}
-                  value={contract?.vendor?.party?.full_name}
-                />
-              </div>
-            </div>
-
-            <div className="col-md-7">
-              <div className="form-group row">
-                <label
-                  htmlFor="procurement_title"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Judul Pengadaan
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="procurement_title"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  onChange={(e) => {}}
-                  value={contract?.contract_name}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="po_number"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Keterangan PO
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="po_number"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  onChange={(e) => {}}
-                  value={contract?.purch_order?.name}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="agreement_type"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Jenis Perjanjian
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="agreement_type"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  value={data?.doc_type}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="po_number"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Grup Kewenangan Pengadaan
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="po_number"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  onChange={(e) => {}}
-                  value={contract?.authority_group?.party?.full_name}
-                />
-              </div>
-              <div className="form-group row">
-                <label
-                  htmlFor="user_group"
-                  className="col-form-label"
-                  style={{ fontWeight: 500, fontSize: 14 }}
-                >
-                  Grup Pengguna
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="user_group"
-                  style={{ backgroundColor: "#c7d2d8" }}
-                  disabled
-                  onChange={(e) => {}}
-                  value={contract?.user_group?.party?.full_name}
-                />
-              </div>
-            </div>
-          </div>
-        </form>
-      </Card>
-
-      <FinalDraftSection finalDraftData={finalDraftData} />
-
-      {sequence === 0 && (
-        <>
+        <FinalDraftSection finalDraftData={finalDraftData} />
+      </>
+    );
+  };
+  switch (sequence) {
+    case 0:
+      return (
+        <div>
+          <HeaderSection />
           <FormParameter
             data={data}
             isAdmin={isAdmin}
@@ -1317,37 +365,53 @@ const DraftAddendumPage = ({
             accountNumberBankData={accountNumberBankData}
             secondAuthorizedOfficial={secondAuthorizedOfficial}
           />
-        </>
-      )}
-
-      {sequence === 1 && <TemplateKlausul />}
-
-      {sequence === 2 && (
-        <ReviewPage
-          isAdmin={isAdmin}
-          isVendor={isVendor}
-          isClient={isClient}
-          contract_id={draft_id}
-        />
-      )}
-
-      {sequence === 3 && (
-        <>
+        </div>
+      );
+    case 1:
+      return (
+        <div>
+          <HeaderSection />
+          <TemplateKlausul />
+        </div>
+      );
+    case 2:
+      return (
+        <div>
+          <HeaderSection />
+          <ReviewPage
+            isAdmin={isAdmin}
+            isVendor={isVendor}
+            isClient={isClient}
+            contract_id={draft_id}
+          />
+        </div>
+      );
+    case 3:
+      return (
+        <div>
+          <HeaderSection />
           <ApprovalPage isAdmin={isAdmin} loginStatus={loginStatus} />
-        </>
-      )}
-
-      {sequence === 4 && (
-        <>
+        </div>
+      );
+    case 4:
+      return (
+        <div>
+          <HeaderSection />
           <DistribusiPage
             isAdmin={isAdmin}
             loginStatus={loginStatus}
             contract_id={draft_id}
           />
+        </div>
+      );
+    default:
+      return (
+        <>
+          <HeaderSection />
+          <p>hello wolrd</p>
         </>
-      )}
-    </>
-  );
+      );
+  }
 };
 
 const keys = {
