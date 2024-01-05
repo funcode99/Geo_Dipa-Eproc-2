@@ -99,6 +99,10 @@ export function deleteReviewerVendor(id) {
 export function sendEmailAllReviewer(contract_id) {
   return axios.post(`/adendum/review/send-email/${contract_id}`);
 }
+// api 4.11
+export function submitAddContractFinalDraft(params) {
+  return axios.post(`/adendum/final-draft`, params);
+}
 export function resetSupportDocument(contract_id) {
   return axios.post(`/adendum/add-contracts/${contract_id}/reset-document`);
 }
