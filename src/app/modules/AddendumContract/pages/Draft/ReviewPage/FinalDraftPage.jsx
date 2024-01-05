@@ -109,7 +109,9 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
   }, []);
   useEffect(() => {
     if (data) {
-      setDataSubmit(data);
+      data?.map((item) => {
+        setDataSubmit(item);
+      });
     }
   }, [data]);
 
