@@ -108,12 +108,11 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
     getAddContractFinalDraft();
   }, []);
   useEffect(() => {
-    data?.map((item) => {
-      setDataSubmit(item);
-    });
+    if (data) {
+      setDataSubmit(data);
+    }
   }, [data]);
 
-  console.log(dataSubmit, "data submit");
   return (
     <>
       <Formik
