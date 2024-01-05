@@ -42,7 +42,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
         type: "get",
         url: `/adendum/final-draft/${contract_id}`,
         onSuccess: (res) => {
-          setData(res.data);
+          setData(res.data[0]);
         },
       });
     } catch (error) {
@@ -109,9 +109,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
   }, []);
   useEffect(() => {
     if (data) {
-      data?.map((item) => {
-        setDataSubmit(item);
-      });
+      setDataSubmit(data);
     }
   }, [data]);
 
