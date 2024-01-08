@@ -103,6 +103,14 @@ export function sendEmailAllReviewer(contract_id) {
 export function submitAddContractFinalDraft(params) {
   return axios.post(`/adendum/final-draft`, params);
 }
+// api 5.1
+export function submitUpdateContractApprovedVendor(params, contract_id) {
+  return axios.post(`/adendum/approved-vendor/${contract_id}/update`, params);
+}
+// api 5.2
+export function submitUpdateContractApprovedUser(params, contract_id) {
+  return axios.post(`/adendum/approved-user/${contract_id}/update`, params);
+}
 export function resetSupportDocument(contract_id) {
   return axios.post(`/adendum/add-contracts/${contract_id}/reset-document`);
 }

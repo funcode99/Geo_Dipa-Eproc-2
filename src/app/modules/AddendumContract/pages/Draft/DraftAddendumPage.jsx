@@ -6,8 +6,8 @@ import SubBreadcrumbs from "app/components/SubBreadcrumbs";
 import Steppers from "app/components/steppersCustom/Steppers";
 import { fetch_api_sg, getLoading } from "redux/globalReducer";
 import {
-  DUMMY_STEPPER_CONTRACT,
   STATE_STEPPER,
+  DUMMY_STEPPER_CONTRACT,
 } from "../Termin/TerminPageNew/STATIC_DATA";
 
 import TabCard from "./TabCard";
@@ -30,9 +30,9 @@ const DraftAddendumPage = ({
   const [data, setData] = useState({});
   const [PICData, setPICData] = useState();
   const [jsonData, setJsonData] = useState();
+  const [sequence, setSequence] = useState(0);
   const [contract, setContract] = useState({});
   const [jobDirector, setJobDirector] = useState();
-  const [sequence, setSequence] = React.useState(0);
   const [jobSupervisor, setJobSupervisor] = useState();
   const [finalDraftData, setFinalDraftData] = useState();
   const [jobSupervisor2, setJobSupervisor2] = useState();
@@ -390,7 +390,13 @@ const DraftAddendumPage = ({
       return (
         <div>
           <HeaderSection />
-          <ApprovalPage isAdmin={isAdmin} loginStatus={loginStatus} />
+          <ApprovalPage
+            isAdmin={isAdmin}
+            isClient={isClient}
+            isVendor={isVendor}
+            contract_id={draft_id}
+            loginStatus={loginStatus}
+          />
         </div>
       );
     case 4:
@@ -399,8 +405,8 @@ const DraftAddendumPage = ({
           <HeaderSection />
           <DistribusiPage
             isAdmin={isAdmin}
-            loginStatus={loginStatus}
             contract_id={draft_id}
+            loginStatus={loginStatus}
           />
         </div>
       );

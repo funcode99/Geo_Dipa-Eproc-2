@@ -432,15 +432,6 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                       disabled={!isAdmin}
                     />
                   </div>
-                  {/* {!lampiran?.lampiran_file_name && (
-                    <button
-                      type="button"
-                      className="btn btn-danger mt-2"
-                      onClick={() => deleteItem(index)}
-                    >
-                      Delete
-                    </button>
-                  )} */}
                   {index >= originalLampiranCount && (
                     <button
                       type="button"
