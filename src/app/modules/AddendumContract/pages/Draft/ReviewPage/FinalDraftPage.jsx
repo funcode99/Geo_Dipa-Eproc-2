@@ -1,14 +1,25 @@
 import { connect } from "react-redux";
 import { Button, Upload } from "antd";
 import { DEV_NODE } from "redux/BaseHost";
+import { Row, Col } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import { fetch_api_sg } from "redux/globalReducer";
 import { UploadOutlined } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
 import TitleComponent from "../components/TitleComponent";
+import React, { useState, useEffect, useRef } from "react";
+import DialogGlobal from "app/components/modals/DialogGlobal";
 import { submitAddContractFinalDraft } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
+  const openCloseAddAttachment = React.useRef();
+  const showAddAttachment = () => {
+    openCloseAddAttachment.current.open();
+  };
+
+  const toPush = useRef();
+  const setPush = (e) => {
+    toPush.current.click();
+  };
   const [data, setData] = useState();
   const [dataSubmit, setDataSubmit] = useState({
     add_contract_id: contract_id,
@@ -16,10 +27,6 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
     body_link: "",
     body_comment: "",
     lampiran_data: [
-      {
-        lampiran_file_name: "",
-        lampiran_comment: "",
-      },
       {
         lampiran_file_name: "",
         lampiran_comment: "",
@@ -101,7 +108,9 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
     });
     submitAddContractFinalDraft(data_new);
     alert("Berhasil Tambah Data");
-    // window.location.reload(true);
+    setTimeout(() => {
+      window.location.reload(true);
+    }, 3000);
   };
 
   useEffect(() => {
@@ -113,8 +122,105 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
     }
   }, [data]);
 
+  // function to push array in data submit lampiran_data
+  const addModal = () => {
+    const newData = {
+      lampiran_file_name: "",
+      lampiran_comment: "",
+    };
+    setDataSubmit((prevData) => ({
+      ...prevData,
+      lampiran_data: [...prevData.lampiran_data, newData],
+    }));
+    openCloseAddAttachment.current.close();
+  };
+
+  const deleteItem = (index) => {
+    setDataSubmit((prevData) => {
+      const updatedLampiranData = [...prevData.lampiran_data];
+      updatedLampiranData.splice(index, 1);
+      return {
+        ...prevData,
+        lampiran_data: updatedLampiranData,
+      };
+    });
+  };
+
+  const originalLampiranCount = dataSubmit.lampiran_data.filter(
+    (item) => !!item.lampiran_file_name
+  ).length;
   return (
     <>
+      <DialogGlobal
+        ref={openCloseAddAttachment}
+        isCancel={false}
+        isSubmit={true}
+        onYes={addModal}
+        title="Tambah Lampiran"
+      >
+        <div className="lampiran-baru">
+          <div className="lampiran_data-section">
+            <>
+              <div
+                className="upload"
+                style={{
+                  padding: 16,
+                  display: "flex",
+                  borderRadius: 8,
+                  flexDirection: "column",
+                  border: "1px solid #000000",
+                }}
+              >
+                <Upload
+                  action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                  listType="picture"
+                  defaultFileList={[]}
+                  maxCount={1}
+                  accept=".docx"
+                  beforeUpload={(file) => {
+                    const isDocx =
+                      file.type ===
+                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                    if (!isDocx) {
+                      alert("Format file yang dapat diupload hanya .docx!");
+                    }
+                    return isDocx;
+                  }}
+                  onChange={(info) => {
+                    const fileList = info.fileList.slice(-1);
+                    // setFieldValue(
+                    //   `lampiran_data[${index}].lampiran_file_name`,
+                    //   fileList[0]
+                    // );
+                  }}
+                >
+                  <Button icon={<UploadOutlined />}>Pilih File</Button>
+                </Upload>
+              </div>
+              <p style={{ color: "red", marginTop: 2 }}>
+                Catatan : Format file yang dapat diupload hanya .docx
+              </p>
+            </>
+            <p className="mt-4">
+              Komentar<span style={{ color: "red" }}>*</span>
+            </p>
+            <textarea
+              className="form-control"
+              // as="textarea"
+              name={`lampiran_data[${2}].lampiran_comment`}
+              rows={3}
+              style={{
+                width: "100%",
+                border: "1px solid #000000",
+                borderRadius: 4,
+                marginTop: -3,
+              }}
+              // onChange={handleChange}
+              disabled={!isAdmin}
+            />
+          </div>
+        </div>
+      </DialogGlobal>
       <Formik
         enableReinitialize={true}
         initialValues={{
@@ -178,10 +284,24 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                         listType="picture"
                         defaultFileList={[]}
                         maxCount={1}
-                        beforeUpload={(file) => false}
-                        onChange={(info) =>
-                          setFieldValue("body_full_name", info.fileList[0])
-                        }
+                        accept=".docx"
+                        onChange={(info) => {
+                          const fileList = info.fileList.slice(-1);
+                          setFieldValue("body_full_name", fileList[0]);
+                        }}
+                        beforeUpload={(file) => {
+                          const isDocx =
+                            file.type ===
+                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                          if (!isDocx) {
+                            alert(
+                              "Format file yang dapat diupload hanya .docx!"
+                            );
+                            return false;
+                          }
+                          setFieldValue("body_full_name", file);
+                          return false;
+                        }}
                       >
                         <Button icon={<UploadOutlined />} disabled={!isAdmin}>
                           Pilih File
@@ -218,7 +338,11 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
               {dataSubmit.lampiran_data.map((lampiran, index) => (
                 <div key={index}>
                   <div className="title mt-8">
-                    <TitleComponent title={`Lampiran ${index + 1}`} />
+                    <TitleComponent
+                      title={`${String.fromCharCode(
+                        65 + index + 1
+                      )}. Lampiran ${index + 1}`}
+                    />
                   </div>
                   <div className="lampiran_data-section">
                     {lampiran?.lampiran_file_name ? (
@@ -257,13 +381,25 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                             listType="picture"
                             defaultFileList={[]}
                             maxCount={1}
-                            beforeUpload={(file) => false}
-                            onChange={(info) =>
+                            accept=".docx"
+                            beforeUpload={(file) => {
+                              const isDocx =
+                                file.type ===
+                                "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                              if (!isDocx) {
+                                alert(
+                                  "Format file yang dapat diupload hanya .docx!"
+                                );
+                              }
+                              return isDocx;
+                            }}
+                            onChange={(info) => {
+                              const fileList = info.fileList.slice(-1);
                               setFieldValue(
                                 `lampiran_data[${index}].lampiran_file_name`,
-                                info.fileList[0]
-                              )
-                            }
+                                fileList[0]
+                              );
+                            }}
                           >
                             <Button
                               icon={<UploadOutlined />}
@@ -296,12 +432,34 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                       disabled={!isAdmin}
                     />
                   </div>
+                  {/* {!lampiran?.lampiran_file_name && (
+                    <button
+                      type="button"
+                      className="btn btn-danger mt-2"
+                      onClick={() => deleteItem(index)}
+                    >
+                      Delete
+                    </button>
+                  )} */}
+                  {index >= originalLampiranCount && (
+                    <button
+                      type="button"
+                      className="btn btn-danger mt-2"
+                      onClick={() => deleteItem(index)}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               ))}
               {/* Handling full_add_contract */}
               <div className="full_add_contract-section">
                 <div className="title mt-8">
-                  <TitleComponent title="E. Full Addendum Perjanjian" />
+                  <TitleComponent
+                    title={`${String.fromCharCode(
+                      65 + dataSubmit?.lampiran_data?.length + 1
+                    )}. Full Addendum Perjanjian`}
+                  />
                 </div>
                 {dataSubmit?.full_add_contract_file_name ? (
                   <div className="view-link">
@@ -339,13 +497,21 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                         listType="picture"
                         defaultFileList={[]}
                         maxCount={1}
-                        beforeUpload={(file) => false}
-                        onChange={(info) =>
+                        accept=".pdf"
+                        beforeUpload={(file) => {
+                          const isPDF = file.type === "application/pdf";
+                          if (!isPDF) {
+                            alert("Format file yang dapat diupload hanya .pdf");
+                          }
+                          return isPDF;
+                        }}
+                        onChange={(info) => {
+                          const fileList = info.fileList.slice(-1);
                           setFieldValue(
                             "full_add_contract_full_name",
-                            info.fileList[0]
-                          )
-                        }
+                            fileList[0]
+                          );
+                        }}
                       >
                         <Button icon={<UploadOutlined />} disabled={!isAdmin}>
                           Pilih File
@@ -353,7 +519,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                       </Upload>
                     </div>
                     <p style={{ color: "red", marginTop: 2 }}>
-                      Catatan : Format file yang dapat diupload hanya .docx
+                      Catatan : Format file yang dapat diupload hanya .pdf
                     </p>
                   </>
                 )}
@@ -375,6 +541,22 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                   disabled={!isAdmin}
                 />
               </div>
+              {isAdmin && !dataSubmit?.body_file_name && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="btn btn-primary mt-8"
+                    onClick={addModal}
+                  >
+                    + Tambah Lampiran
+                  </button>
+                </div>
+              )}
               {isAdmin && !dataSubmit?.body_file_name && (
                 <div
                   style={{
