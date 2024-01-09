@@ -57,6 +57,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
   };
 
   const submitForm = (values) => {
+    console.log(values, "values");
     const comments = [
       values.body_comment,
       ...values.lampiran_data.map((item) => item.lampiran_comment),
@@ -115,18 +116,18 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
     data_new.append("spk_user_signed_link", values.spk_user_signed_link);
     data_new.append("spk_user_signed_comment", values.spk_user_signed_comment);
     if (values.body_full_name) {
-      data_new.append("body_full_name", values.body_full_name.originFileObj);
-      data_new.append("body_file_name", values.body_full_name.name);
+      data_new.append("body_file_name", values.body_full_name.originFileObj);
+      // data_new.append("body_file_name", values.body_full_name.name);
     }
     if (values.full_add_contract_full_name) {
       data_new.append(
-        "full_add_contract_full_name",
+        "full_add_contract_file_name",
         values.full_add_contract_full_name.originFileObj
       );
-      data_new.append(
-        "full_add_contract_file_name",
-        values.full_add_contract_full_name.name
-      );
+      // data_new.append(
+      //   "full_add_contract_file_name",
+      //   values.full_add_contract_full_name.name
+      // );
     }
     values.lampiran_data.forEach((lampiran, index) => {
       if (lampiran.lampiran_file_name) {
