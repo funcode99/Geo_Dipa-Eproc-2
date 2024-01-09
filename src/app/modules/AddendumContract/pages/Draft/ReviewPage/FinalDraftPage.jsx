@@ -57,7 +57,6 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
   };
 
   const submitForm = (values) => {
-    console.log(values, "values");
     const comments = [
       values.body_comment,
       ...values.lampiran_data.map((item) => item.lampiran_comment),

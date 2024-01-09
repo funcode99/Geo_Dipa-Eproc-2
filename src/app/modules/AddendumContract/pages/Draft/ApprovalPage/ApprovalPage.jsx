@@ -1,4 +1,5 @@
 import { connect } from "react-redux";
+import { DEV_NODE } from "redux/BaseHost";
 import React, { useEffect, useState } from "react";
 import { fetch_api_sg } from "redux/globalReducer";
 import DialogGlobal from "app/components/modals/DialogGlobal";
@@ -29,10 +30,38 @@ const ApprovalPage = ({
       },
     },
   ]);
-  const [note, setNote] = useState();
+  const [dataNew, setDataNew] = useState();
+  const [noteData, setNoteData] = useState({
+    note_vendor: "",
+    note_user: "",
+  });
+
+  useEffect(() => {
+    setNoteData({
+      ...noteData,
+      note_vendor: data?.[0]?.approved_vendor?.note,
+      note_user: data?.[1]?.approved_user?.note,
+    });
+  }, [data]);
   const openCloseDownloadVendor = React.useRef();
   const showDownloadVendor = () => {
     openCloseDownloadVendor.current.open();
+  };
+
+  // api 4.12
+  const getAddContractFinalDraft = async () => {
+    try {
+      await fetch_api_sg({
+        key: keys.fetch,
+        type: "get",
+        url: `/adendum/final-draft/${contract_id}`,
+        onSuccess: (res) => {
+          setDataNew(res.data[0]);
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching user participant review:", error);
+    }
   };
 
   // api 5.3
@@ -60,29 +89,34 @@ const ApprovalPage = ({
 
   useEffect(() => {
     getApprovalById();
+    getAddContractFinalDraft();
   }, []);
 
   // api 5.1
   const submitApprovalVendor = async () => {
     submitUpdateContractApprovedVendor(
       {
-        note: note,
+        note: noteData?.note_vendor,
       },
-      contract_id
+      data?.[0]?.approved_vendor?.id
     );
     alert("Berhasil Update Data");
-    window.location.reload(true);
+    setTimeout(() => {
+      window.location.reload(true);
+    }, 3000);
   };
   // api 5.2
   const submitApprovalUser = async () => {
     submitUpdateContractApprovedUser(
       {
-        note: note,
+        note: noteData?.note_user,
       },
-      contract_id
+      data?.[1]?.approved_user?.id
     );
     alert("Berhasil Update Data");
-    window.location.reload(true);
+    setTimeout(() => {
+      window.location.reload(true);
+    }, 3000);
   };
 
   const HeaderSection = () => {
@@ -227,8 +261,7 @@ const ApprovalPage = ({
                     fontWeight: 400,
                   }}
                 >
-                  Unduh Kontrak ini, di TTD sebagai persetujuan vendor dan
-                  kirimkan kembali hardcopy hasil TTD kepada Geodipa
+                  {dataNew?.full_add_contract_comment}
                 </span>
                 <div
                   style={{
@@ -237,16 +270,12 @@ const ApprovalPage = ({
                     border: "1px solid black",
                   }}
                 >
-                  <span
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: "#3699ff",
-                    }}
+                  <a
+                    href={`${DEV_NODE}/final_draft/${dataNew?.full_add_contract_file_name}`}
+                    target="_blank"
                   >
-                    001.KTR-DNG1.PBJ-GDE-I-2022.FULL-CONTRACT.Admin_Zulfiqur_Rahman.08-08-2022
-                    1437.DRAFT_FINAL_ADD_PDF.pdf
-                  </span>
+                    {dataNew?.full_add_contract_file_name}
+                  </a>
                 </div>
                 <div
                   style={{
@@ -255,7 +284,13 @@ const ApprovalPage = ({
                   }}
                 >
                   <button
-                    onClick={showDownloadVendor}
+                    onClick={() => {
+                      // showDownloadVendor();
+                      window.open(
+                        `${DEV_NODE}/final_draft/${dataNew?.full_add_contract_file_name}`,
+                        "_blank"
+                      );
+                    }}
                     className="btn btn-primary"
                   >
                     <svg
@@ -307,36 +342,43 @@ const ApprovalPage = ({
                       border: "1px solid #000000",
                       backgroundColor: "#ffffff",
                     }}
-                    onChange={(e) => setNote(e.target.value)}
+                    onChange={(e) =>
+                      setNoteData({ ...noteData, note_vendor: e.target.value })
+                    }
+                    value={noteData?.note_vendor}
                   />
                 </div>
-                <p style={{ color: "red" }}>
-                  *Mohon klik tombol setuju untuk menyelesaikan persetujuan
-                </p>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    onClick={submitApprovalVendor}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-check-lg"
-                      viewBox="0 0 16 16"
+                {!noteData?.note_vendor && (
+                  <>
+                    <p style={{ color: "red" }}>
+                      *Mohon klik tombol setuju untuk menyelesaikan persetujuan
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                      }}
                     >
-                      <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
-                    </svg>{" "}
-                    Setuju
-                  </button>
-                </div>
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                        onClick={submitApprovalVendor}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-check-lg"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                        </svg>{" "}
+                        Setuju
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -376,36 +418,43 @@ const ApprovalPage = ({
                     border: "1px solid #000000",
                     backgroundColor: "#ffffff",
                   }}
-                  onChange={(e) => setNote(e.target.value)}
+                  onChange={(e) =>
+                    setNoteData({ ...noteData, note_user: e.target.value })
+                  }
+                  value={noteData?.note_user}
                 />
               </div>
-              <p style={{ color: "red" }}>
-                *Mohon klik tombol setuju untuk menyelesaikan persetujuan
-              </p>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                }}
-              >
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  onClick={submitApprovalUser}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-check-lg"
-                    viewBox="0 0 16 16"
+              {!data?.[1]?.approved_user?.note && (
+                <>
+                  <p style={{ color: "red" }}>
+                    *Mohon klik tombol setuju untuk menyelesaikan persetujuan
+                  </p>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                    }}
                   >
-                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
-                  </svg>{" "}
-                  Setuju
-                </button>
-              </div>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      onClick={submitApprovalUser}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-check-lg"
+                        viewBox="0 0 16 16"
+                      >
+                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z" />
+                      </svg>{" "}
+                      Setuju
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         );
