@@ -390,11 +390,17 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                             border: "1px solid #000000",
                           }}
                         >
-                          <a
+                          {/* <a
                             href={`${DEV_NODE}/final_draft/lampiran/${lampiran?.lampiran_file_name}`}
                             target="_blank"
                           >
                             {lampiran?.lampiran_file_name}
+                          </a> */}
+                          <a
+                            href={`${DEV_NODE}/final_draft/lampiran/${lampiran?.lampiran_file_name?.name}`}
+                            target="_blank"
+                          >
+                            {lampiran?.lampiran_file_name?.name}
                           </a>
                         </div>
                       </div>
@@ -578,7 +584,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                     className="btn btn-primary mt-8"
                     onClick={() => {
                       setDataSubmit((prevData) => ({
-                        ...prevData,
+                        ...values,
                         lampiran_data: [
                           ...values.lampiran_data,
                           {
