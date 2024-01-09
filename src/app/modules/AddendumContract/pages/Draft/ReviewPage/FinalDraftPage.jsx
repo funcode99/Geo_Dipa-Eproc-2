@@ -116,7 +116,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
     data_new.append("spk_user_signed_comment", values.spk_user_signed_comment);
     if (values.body_full_name) {
       data_new.append("body_file_name", values.body_full_name.originFileObj);
-      data_new.append("body_full_name", values.body_full_name.name);
+      // data_new.append("body_full_name", values.body_full_name.name);
     }
     if (values.full_add_contract_full_name) {
       data_new.append(

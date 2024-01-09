@@ -277,7 +277,7 @@ const ApprovalPage = ({
                   }}
                 >
                   <a
-                    href={`${DEV_NODE}/final_draft/${dataNew?.full_add_contract_file_name}`}
+                    href={`${DEV_NODE}/final_draft/full/${dataNew?.full_add_contract_file_name}`}
                     target="_blank"
                   >
                     {dataNew?.full_add_contract_file_name}
@@ -293,7 +293,7 @@ const ApprovalPage = ({
                     onClick={() => {
                       // showDownloadVendor();
                       window.open(
-                        `${DEV_NODE}/final_draft/${dataNew?.full_add_contract_file_name}`,
+                        `${DEV_NODE}/final_draft/full/${dataNew?.full_add_contract_file_name}`,
                         "_blank"
                       );
                     }}
