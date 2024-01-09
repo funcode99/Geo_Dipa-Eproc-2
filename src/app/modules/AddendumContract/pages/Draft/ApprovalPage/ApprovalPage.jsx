@@ -173,7 +173,9 @@ const ApprovalPage = ({
                         alignItems: "center",
                         backgroundColor: "#e8f4fb",
                         border: "1px solid #000000",
-                        color: item?.approved_vendor?.is_vendor_approved
+                        color: (index === 0
+                        ? item?.approved_vendor?.is_vendor_approved
+                        : item?.approved_user?.is_user_approved)
                           ? "#3699ff"
                           : "red",
                       }}
@@ -185,7 +187,9 @@ const ApprovalPage = ({
                       >
                         Addendum{" "}
                         {`${
-                          item?.approved_vendor?.is_vendor_approved
+                          (index === 0
+                          ? item?.approved_vendor?.is_vendor_approved
+                          : item?.approved_user?.is_user_approved)
                             ? "disetujui"
                             : "belum disetujui"
                         }`}{" "}

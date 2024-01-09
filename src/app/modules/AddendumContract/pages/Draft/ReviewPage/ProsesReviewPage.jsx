@@ -40,25 +40,29 @@ const ProsesReviewPage = ({ contract_id, fetch_api_sg }) => {
             border: "1px solid #000000",
           }}
         >
-          {dataList?.link_review?.map((item, index) => (
-            <div className="field-pertama mt-4" key={index}>
-              <TitleComponent title={Title[index]} />
-              <p>Silahkan klik link dibawah ini untuk melakukan review :</p>
-              <div
-                className="field-template mt-4"
-                style={{
-                  padding: 8,
-                  borderRadius: 8,
-                  color: "#498FE4",
-                  border: "1px solid #000000",
-                }}
-              >
-                <a href={item.url_path} target="_blank">
-                  {item.url_path}
-                </a>
+          {dataList?.link_review?.length > 0 ? (
+            dataList?.link_review?.map((item, index) => (
+              <div className="field-pertama mt-4" key={index}>
+                <TitleComponent title={Title[index]} />
+                <p>Silahkan klik link dibawah ini untuk melakukan review :</p>
+                <div
+                  className="field-template mt-4"
+                  style={{
+                    padding: 8,
+                    borderRadius: 8,
+                    color: "#498FE4",
+                    border: "1px solid #000000",
+                  }}
+                >
+                  <a href={item.url_path} target="_blank">
+                    {item.url_path}
+                  </a>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>Link Belum Tersedia</p>
+          )}
         </div>
         <div
           className="bottom mt-4"
