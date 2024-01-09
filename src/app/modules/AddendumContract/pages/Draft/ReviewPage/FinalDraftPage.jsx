@@ -542,7 +542,18 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                   <button
                     type="button"
                     className="btn btn-primary mt-8"
-                    onClick={addModal}
+                    onClick={() => {
+                      setDataSubmit((prevData) => ({
+                        ...prevData,
+                        lampiran_data: [
+                          ...values.lampiran_data,
+                          {
+                            lampiran_file_name: "",
+                            lampiran_comment: "",
+                          },
+                        ],
+                      }));
+                    }}
                   >
                     + Tambah Lampiran
                   </button>
