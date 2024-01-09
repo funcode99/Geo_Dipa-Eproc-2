@@ -1,7 +1,6 @@
 import { connect } from "react-redux";
 import { Button, Upload } from "antd";
 import { DEV_NODE } from "redux/BaseHost";
-import { Row, Col } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import { fetch_api_sg } from "redux/globalReducer";
 import { UploadOutlined } from "@ant-design/icons";
@@ -66,6 +65,41 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
 
     if (comments.some((comment) => comment === null || !comment.trim())) {
       alert("Field Comment Wajib Diisi");
+      return;
+    }
+
+    // Validate file formats
+    const invalidFormats = values.lampiran_data.filter((lampiran) => {
+      return (
+        lampiran.lampiran_file_name &&
+        !lampiran.lampiran_file_name.name.endsWith(".docx")
+      );
+    });
+
+    if (invalidFormats.length > 0) {
+      alert("Format file yang dapat diupload hanya .docx untuk lampiran.");
+      return;
+    }
+
+    // Validate file formats
+    const invalidBodyFormat =
+      values.body_full_name && !values.body_full_name.name.endsWith(".docx");
+
+    const invalidFullFormat =
+      values.full_add_contract_full_name &&
+      !values.full_add_contract_full_name.name.endsWith(".pdf");
+
+    if (invalidBodyFormat) {
+      alert(
+        "Format file yang dapat diupload hanya .docx untuk Body Addendum Perjanjian"
+      );
+      return;
+    }
+
+    if (invalidFullFormat) {
+      alert(
+        "Format file yang dapat diupload hanya .pdf untuk Full Addendum Perjanjian"
+      );
       return;
     }
 
