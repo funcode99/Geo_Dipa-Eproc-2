@@ -116,7 +116,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
     data_new.append("spk_user_signed_comment", values.spk_user_signed_comment);
     if (values.body_full_name) {
       data_new.append("body_file_name", values.body_full_name.originFileObj);
-      // data_new.append("body_file_name", values.body_full_name.name);
+      data_new.append("body_full_name", values.body_full_name.name);
     }
     if (values.full_add_contract_full_name) {
       data_new.append(
@@ -379,7 +379,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                     />
                   </div>
                   <div className="lampiran_data-section">
-                    {lampiran?.lampiran_file_name ? (
+                    {data && lampiran?.lampiran_file_name ? (
                       <div className="view-link">
                         <div
                           style={{
@@ -390,18 +390,18 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                             border: "1px solid #000000",
                           }}
                         >
-                          {/* <a
+                          <a
                             href={`${DEV_NODE}/final_draft/lampiran/${lampiran?.lampiran_file_name}`}
                             target="_blank"
                           >
                             {lampiran?.lampiran_file_name}
-                          </a> */}
-                          <a
+                          </a>
+                          {/* <a
                             href={`${DEV_NODE}/final_draft/lampiran/${lampiran?.lampiran_file_name?.name}`}
                             target="_blank"
                           >
                             {lampiran?.lampiran_file_name?.name}
-                          </a>
+                          </a> */}
                         </div>
                       </div>
                     ) : (

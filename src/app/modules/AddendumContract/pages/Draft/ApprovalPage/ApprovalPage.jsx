@@ -194,20 +194,26 @@ const ApprovalPage = ({
                     </div>
                     <div className="catatan">
                       <h6>Catatan {index === 0 ? "Vendor" : "User"}</h6>
-                      <textarea
-                        rows={3}
-                        name={`catatan`}
-                        disabled={isAdmin}
-                        className="form-control"
-                        value={item?.approved_vendor?.note}
-                        style={{
-                          width: "100%",
-                          borderRadius: 8,
-                          color: "#3699ff",
-                          border: "1px solid #000000",
-                          backgroundColor: "#e8f4fb",
-                        }}
-                      />
+                      {item && (
+                        <textarea
+                          rows={3}
+                          name={`catatan`}
+                          disabled={isAdmin}
+                          className="form-control"
+                          value={
+                            item[
+                              index === 0 ? "approved_vendor" : "approved_user"
+                            ]?.note
+                          }
+                          style={{
+                            width: "100%",
+                            borderRadius: 8,
+                            color: "#3699ff",
+                            border: "1px solid #000000",
+                            backgroundColor: "#e8f4fb",
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -348,7 +354,8 @@ const ApprovalPage = ({
                     value={noteData?.note_vendor}
                   />
                 </div>
-                {!noteData?.note_vendor && (
+                {/* {!noteData?.note_vendor && ( */}
+                {!data?.[0]?.approved_vendor?.note && (
                   <>
                     <p style={{ color: "red" }}>
                       *Mohon klik tombol setuju untuk menyelesaikan persetujuan
@@ -439,6 +446,7 @@ const ApprovalPage = ({
                       type="submit"
                       className="btn btn-primary"
                       onClick={submitApprovalUser}
+                      disabled={!data?.[0]?.approved_vendor?.is_vendor_approved}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
