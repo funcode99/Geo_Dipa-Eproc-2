@@ -13,6 +13,7 @@ import {
 } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const DistribusiDokument = ({
+  data,
   isAdmin,
   isVendor,
   isClient,
@@ -30,7 +31,19 @@ const DistribusiDokument = ({
   };
 
   const [dataSubmit, setDataSubmit] = useState();
-  const [dataVendor, setDataVendor] = useState();
+  const [dataVendor, setDataVendor] = useState({
+    full_name: "",
+    email: "",
+    vendor_name: data?.contract?.vendor?.party?.full_name,
+  });
+  useEffect(() => {
+    if (data) {
+      setDataVendor({
+        ...dataVendor,
+        vendor_name: data?.contract?.vendor?.party?.full_name,
+      });
+    }
+  }, [data]);
   const [
     listDataContactUserReviewer,
     setListDataContactUserReviewer,
@@ -172,9 +185,9 @@ const DistribusiDokument = ({
   const submitVendor = () => {
     submitContractVendorDustribution({
       add_contract_id: contract_id,
-      //   user_id:dataVendor?.
-      pic_full_name: dataVendor.pic_full_name,
-      pic_email: dataVendor.pic_email,
+      full_name: dataVendor.full_name,
+      email: dataVendor.email,
+      vendor_name: dataVendor?.vendor_name,
     });
     alert("Berhasil tambah data!");
     openCloseAddVendor.current.close();
@@ -384,7 +397,7 @@ const DistribusiDokument = ({
                 onChange={(e) =>
                   setDataVendor({
                     ...dataVendor,
-                    pic_full_name: e.target.value,
+                    full_name: e.target.value,
                   })
                 }
               />
@@ -409,7 +422,7 @@ const DistribusiDokument = ({
                 onChange={(e) =>
                   setDataVendor({
                     ...dataVendor,
-                    pic_email: e.target.value,
+                    email: e.target.value,
                   })
                 }
               />
@@ -647,7 +660,7 @@ const DistribusiDokument = ({
                     <tr key={index}>
                       <td>{index + 1}</td>
                       <td>{item.vendor_name}</td>
-                      <td>{item.pic_full_name}</td>
+                      <td>{item.pic_name}</td>
                       <td>{item.pic_email}</td>
                       {isAdmin && status_code !== "90" && (
                         <td>{actionButtonVendor(item.id)}</td>
@@ -744,7 +757,6 @@ const mapDispatch = {
 };
 const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
-  data: auth.user.data,
   dataContractById: deliveryMonitoring.dataContractById,
 });
 
