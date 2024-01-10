@@ -65,7 +65,6 @@ const DistribusiPage = ({
   };
 
   const submitForm = (values) => {
-    console.log(values, "values");
     let data_new = new FormData();
     data_new.append("add_contract_id", contract_id);
     data_new.append("file_name", values.file_name.originFileObj);
