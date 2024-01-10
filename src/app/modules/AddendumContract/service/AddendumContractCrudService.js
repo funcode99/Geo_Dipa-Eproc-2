@@ -111,6 +111,30 @@ export function submitUpdateContractApprovedVendor(params, contract_id) {
 export function submitUpdateContractApprovedUser(params, contract_id) {
   return axios.post(`/adendum/approved-user/${contract_id}/update`, params);
 }
+// api 6.1
+export function submitContractDustribution(params) {
+  return axios.post(`/adendum/distribution/contract-distribution`, params);
+}
+// api 6.4
+export function submitContractUserDustribution(params) {
+  return axios.post(`/adendum/distribution/user-distribution`, params);
+}
+// api 6.5
+export function submitContractVendorDustribution(params) {
+  return axios.post(`/adendum/distribution/vendor-distribution`, params);
+}
+// api 6.6
+export function deleteContractUserDistribution(id) {
+  return axios.post(`/adendum/distribution/delete-user-distribution/${id}`);
+}
+// api 6.7
+export function deleteContractVendorDistribution(id) {
+  return axios.post(`/adendum/distribution/delete-vendor-distribution/${id}`);
+}
+// api 6.8
+export function sendEmailAllDistribution(contract_id) {
+  return axios.post(`/adendum/distribution/send-email/${contract_id}`);
+}
 export function resetSupportDocument(contract_id) {
   return axios.post(`/adendum/add-contracts/${contract_id}/reset-document`);
 }

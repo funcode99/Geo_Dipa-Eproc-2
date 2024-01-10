@@ -7,6 +7,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import TitleComponent from "../components/TitleComponent";
 import React, { useState, useEffect, useRef } from "react";
 import DialogGlobal from "app/components/modals/DialogGlobal";
+import UploadButton from "app/components/button/ButtonGlobal/UploadButton";
 import { submitAddContractFinalDraft } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
@@ -337,9 +338,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                           return false;
                         }}
                       >
-                        <Button icon={<UploadOutlined />} disabled={!isAdmin}>
-                          Pilih File
-                        </Button>
+                        <UploadButton disabled={!isAdmin} />
                       </Upload>
                     </div>
                     <p style={{ color: "red", marginTop: 2 }}>
@@ -441,12 +440,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                               );
                             }}
                           >
-                            <Button
-                              icon={<UploadOutlined />}
-                              disabled={!isAdmin}
-                            >
-                              Pilih File
-                            </Button>
+                            <UploadButton disabled={!isAdmin} />
                           </Upload>
                         </div>
                         <p style={{ color: "red", marginTop: 2 }}>
@@ -544,9 +538,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                           );
                         }}
                       >
-                        <Button icon={<UploadOutlined />} disabled={!isAdmin}>
-                          Pilih File
-                        </Button>
+                        <UploadButton disabled={!isAdmin} />
                       </Upload>
                     </div>
                     <p style={{ color: "red", marginTop: 2 }}>

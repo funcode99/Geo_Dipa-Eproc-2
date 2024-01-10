@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
     "& button.Mui-selected": {
       color: "#3699FF",
     },
+    justifyContent: "center", // Center the tabs
   },
   tabRoot: {
     minWidth: "max-content",
@@ -65,6 +66,7 @@ export default function Tabs({
       scrollButtons="auto"
       classes={{ root: classes.root, indicator: classes.customIndicatorColor }}
       {...other}
+      centered
     >
       {tabLists.map((item) => (
         <MuiTab

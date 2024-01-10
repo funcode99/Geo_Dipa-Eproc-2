@@ -405,6 +405,8 @@ const DraftAddendumPage = ({
           <HeaderSection />
           <DistribusiPage
             isAdmin={isAdmin}
+            isClient={isClient}
+            isVendor={isVendor}
             contract_id={draft_id}
             loginStatus={loginStatus}
           />
