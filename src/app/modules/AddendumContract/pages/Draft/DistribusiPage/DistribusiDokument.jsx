@@ -197,9 +197,12 @@ const DistribusiDokument = ({
     }, 3000);
   };
   const sendAllEmail = () => {
+    sendEmailAllDistribution(contract_id);
     alert("Berhasil kirim email!");
     openCloseAddVendor.current.close();
-    sendEmailAllDistribution(contract_id);
+    setTimeout(() => {
+      window.location.reload(true);
+    }, 3000);
   };
   const deleteDataReviewerUser = (id) => {
     deleteContractUserDistribution(id);
