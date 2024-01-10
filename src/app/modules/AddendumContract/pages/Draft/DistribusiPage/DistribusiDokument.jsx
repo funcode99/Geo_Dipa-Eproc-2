@@ -17,6 +17,7 @@ const DistribusiDokument = ({
   isVendor,
   isClient,
   contract_id,
+  status_code,
   fetch_api_sg,
 }) => {
   const openCloseAddReviewer = React.useRef();
@@ -110,7 +111,7 @@ const DistribusiDokument = ({
       await fetch_api_sg({
         key: keys.fetch,
         type: "get",
-        url: `/adendum/distribution/user-distribution/${contract_id}`,
+        url: `/adendum/review/admin-reviewer/${contract_id}`,
         onSuccess: (res) => {
           setListDataContractAdminReviewer(res.data);
         },
@@ -313,22 +314,24 @@ const DistribusiDokument = ({
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: 52,
-            padding: "0 7%",
-          }}
-        >
-          <button
-            type="button"
-            className="btn btn-primary mx-1"
-            onClick={submitData}
+        {status_code !== "90" && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 52,
+              padding: "0 7%",
+            }}
           >
-            Save
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={submitData}
+              className="btn btn-primary mx-1"
+            >
+              Save
+            </button>
+          </div>
+        )}
       </DialogGlobal>
       <DialogGlobal
         ref={openCloseAddVendor}
@@ -414,22 +417,24 @@ const DistribusiDokument = ({
           </div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: 52,
-            padding: "0 7%",
-          }}
-        >
-          <button
-            type="button"
-            className="btn btn-primary mx-1"
-            onClick={submitVendor}
+        {status_code !== "90" && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 52,
+              padding: "0 7%",
+            }}
           >
-            Save
-          </button>
-        </div>
+            <button
+              type="button"
+              className="btn btn-primary mx-1"
+              onClick={submitVendor}
+            >
+              Save
+            </button>
+          </div>
+        )}
       </DialogGlobal>
       <div
         style={{
@@ -559,7 +564,7 @@ const DistribusiDokument = ({
                 >
                   User
                 </h1>
-                {isAdmin && (
+                {isAdmin && status_code !== "90" && (
                   <button
                     type="button"
                     className="btn btn-primary mx-1"
@@ -576,7 +581,7 @@ const DistribusiDokument = ({
                   <th>Nama</th>
                   <th>Jabatan</th>
                   <th>Email</th>
-                  {isAdmin && <th>Aksi</th>}
+                  {isAdmin && status_code !== "90" && <th>Aksi</th>}
                 </tr>
 
                 {listDataContactUserReviewer &&
@@ -588,7 +593,9 @@ const DistribusiDokument = ({
                           <td>{item.full_name}</td>
                           <td>{item.position_name}</td>
                           <td>{item.email}</td>
-                          {isAdmin && <td>{actionButton(item.id)}</td>}
+                          {isAdmin && status_code !== "90" && (
+                            <td>{actionButton(item.id)}</td>
+                          )}
                         </tr>
                       </>
                     );
@@ -613,7 +620,7 @@ const DistribusiDokument = ({
             >
               Vendor
             </h1>
-            {isAdmin && (
+            {isAdmin && status_code !== "90" && (
               <button
                 type="button"
                 className="btn btn-primary mx-1"
@@ -630,7 +637,7 @@ const DistribusiDokument = ({
               <th>Nama</th>
               <th>PIC</th>
               <th>Email</th>
-              {isAdmin && <th>Aksi</th>}
+              {isAdmin && status_code !== "90" && <th>Aksi</th>}
             </tr>
 
             {listDataContactVendorReviewer &&
@@ -642,14 +649,71 @@ const DistribusiDokument = ({
                       <td>{item.vendor_name}</td>
                       <td>{item.pic_full_name}</td>
                       <td>{item.pic_email}</td>
-                      {isAdmin && <td>{actionButtonVendor(item.id)}</td>}
+                      {isAdmin && status_code !== "90" && (
+                        <td>{actionButtonVendor(item.id)}</td>
+                      )}
                     </tr>
                   </>
                 );
               })}
           </table>
+          {isVendor && listDataContactVendorReviewer && (
+            <div
+              className="status"
+              style={{
+                display: "flex",
+                borderRadius: 8,
+                padding: "12px 10px",
+                alignItems: "center",
+                backgroundColor: "#e8f4fb",
+                border: "1px solid #000000",
+                color: listDataContactVendorReviewer?.[0]?.status_distribution?.includes(
+                  "belum"
+                )
+                  ? "red"
+                  : "#3699ff",
+                marginTop: 10,
+              }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                }}
+              >
+                {" "}
+                {listDataContactVendorReviewer?.[0]?.status_distribution}
+              </p>
+            </div>
+          )}
+          {isClient && !isAdmin && listDataContactUserReviewer && (
+            <div
+              className="status"
+              style={{
+                display: "flex",
+                borderRadius: 8,
+                padding: "12px 10px",
+                alignItems: "center",
+                backgroundColor: "#e8f4fb",
+                border: "1px solid #000000",
+                color: listDataContactUserReviewer?.[0]?.status_distribution?.includes(
+                  "belum"
+                )
+                  ? "red"
+                  : "#3699ff",
+                marginTop: 10,
+              }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                }}
+              >
+                {listDataContactUserReviewer?.[0]?.status_distribution}
+              </p>
+            </div>
+          )}
 
-          {isAdmin && (
+          {isAdmin && status_code !== "90" && (
             <div
               style={{
                 display: "flex",

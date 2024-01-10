@@ -1,10 +1,11 @@
 import { Upload, Tabs } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DistribusiDokument from "./DistribusiDokument";
 import UploadButton from "app/components/button/ButtonGlobal/UploadButton";
 import { submitContractDustribution } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const DistribusiPage = ({
+  data,
   isAdmin,
   isClient,
   isVendor,
@@ -12,12 +13,23 @@ const DistribusiPage = ({
   contract_id,
 }) => {
   const [dataSubmit, setDataSubmit] = useState({
-    file_name: null,
-    link_name: null,
-    note: null,
+    file_name: data?.add_contract_distribution?.file_name || "",
+    link_name: data?.add_contract_distribution?.link_name || "",
+    note: data?.add_contract_distribution?.note || "",
   });
+  useEffect(() => {
+    if (data) {
+      setDataSubmit({
+        file_name: data?.add_contract_distribution?.file_name || "",
+        link_name: data?.add_contract_distribution?.link_name || "",
+        note: data?.add_contract_distribution?.note || "",
+      });
+    }
+  }, [data]);
   const [inputValue, setInputValue] = useState("Upload File");
-  const [distributionSequence, setDistributionSequence] = React.useState(1);
+  const [distributionSequence, setDistributionSequence] = React.useState(
+    isAdmin ? 1 : 2
+  );
 
   const HeaderSection = () => {
     return (
@@ -51,6 +63,7 @@ const DistribusiPage = ({
   };
 
   const submitData = () => {
+    console.log(dataSubmit, "dataSubmit");
     let data_new = new FormData();
     data_new.append("add_contract_id", contract_id);
     data_new.append("file_name", dataSubmit.file_name);
@@ -134,21 +147,34 @@ const DistribusiPage = ({
                       border: "1px solid #8C8A8A",
                     }}
                   >
-                    <Upload
-                      action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                      listType="picture"
-                      defaultFileList={[]}
-                      maxCount={1}
-                      onChange={(info) => {
-                        const fileList = info.fileList.slice(-1);
-                        setDataSubmit({
-                          ...dataSubmit,
-                          file_name: fileList[0],
-                        });
-                      }}
-                    >
-                      <UploadButton />
-                    </Upload>
+                    {!data?.add_contract_distribution?.file_name ? (
+                      <Upload
+                        action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                        listType="picture"
+                        defaultFileList={[]}
+                        maxCount={1}
+                        onChange={(info) => {
+                          const fileList = info.fileList.slice(-1);
+                          setDataSubmit({
+                            ...dataSubmit,
+                            file_name: fileList[0],
+                          });
+                        }}
+                      >
+                        <UploadButton />
+                      </Upload>
+                    ) : (
+                      <input
+                        className="form-control"
+                        onChange={(e) =>
+                          setDataSubmit({
+                            ...dataSubmit,
+                            link_name: e.target.value,
+                          })
+                        }
+                        value={dataSubmit?.file_name}
+                      />
+                    )}
                   </div>
                 </div>
               )}
@@ -169,6 +195,7 @@ const DistribusiPage = ({
                           link_name: e.target.value,
                         })
                       }
+                      value={dataSubmit?.link_name}
                     />
                   </div>
                 </div>
@@ -181,25 +208,28 @@ const DistribusiPage = ({
                   onChange={(e) =>
                     setDataSubmit({ ...dataSubmit, note: e.target.value })
                   }
+                  value={dataSubmit?.note}
                 />
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <button
-                  onClick={submitData}
-                  className="btn btn-primary"
+              {data?.status_code !== "90" && (
+                <div
                   style={{
-                    maxWidth: 100,
+                    display: "flex",
+                    justifyContent: "flex-end",
                   }}
                 >
-                  Submit
-                </button>
-              </div>
+                  <button
+                    onClick={submitData}
+                    className="btn btn-primary"
+                    style={{
+                      maxWidth: 100,
+                    }}
+                  >
+                    Submit
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </>
@@ -207,12 +237,13 @@ const DistribusiPage = ({
     case 2:
       return (
         <>
-          <HeaderSection />
+          {isAdmin && <HeaderSection />}
           <DistribusiDokument
             isAdmin={isAdmin}
             isClient={isClient}
             isVendor={isVendor}
             contract_id={contract_id}
+            status_code={data?.status_code}
           />
         </>
       );

@@ -56,6 +56,7 @@ const DraftAddendumPage = ({
   const isVendor = getClientStatus("VENDOR");
   const isClient = loginStatus === "client";
 
+  // api 2.3
   const getAddendum = async () => {
     try {
       await fetch_api_sg({
@@ -404,6 +405,7 @@ const DraftAddendumPage = ({
         <div>
           <HeaderSection />
           <DistribusiPage
+            data={data}
             isAdmin={isAdmin}
             isClient={isClient}
             isVendor={isVendor}
