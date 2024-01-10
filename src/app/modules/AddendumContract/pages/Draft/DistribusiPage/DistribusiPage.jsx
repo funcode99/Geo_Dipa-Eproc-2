@@ -227,25 +227,25 @@ const DistribusiPage = ({
                           onChange={handleChange}
                         />
                       </div>
-
-                      {data?.status_code !== "90" && (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <button
-                            type="submit"
-                            className="btn btn-primary"
+                      {!data?.add_contract_distribution?.file_name &&
+                        !data?.add_contract_distribution?.link_name && (
+                          <div
                             style={{
-                              maxWidth: 100,
+                              display: "flex",
+                              justifyContent: "flex-end",
                             }}
                           >
-                            Submit
-                          </button>
-                        </div>
-                      )}
+                            <button
+                              type="submit"
+                              className="btn btn-primary"
+                              style={{
+                                maxWidth: 100,
+                              }}
+                            >
+                              Submit
+                            </button>
+                          </div>
+                        )}
                     </div>
                   </div>
                 </Form>
