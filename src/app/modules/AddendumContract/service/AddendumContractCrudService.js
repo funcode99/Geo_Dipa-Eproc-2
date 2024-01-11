@@ -77,6 +77,14 @@ export function submitOther(params, contract_id) {
   return axios.post(`/adendum/add-contract-other/${contract_id}`, params);
 }
 
+// api 3.9
+export function submitGenerateTemplate(params) {
+  return axios.post(`/adendum/drafting-adendum`, params);
+}
+// api 3.10
+export function submitTemplateKlausul(params) {
+  return axios.post(`/adendum/link-review`, params);
+}
 // api 4.4
 export function submitAddContractUserReviewer(params) {
   return axios.post(`/adendum/review/user-reviewer`, params);

@@ -372,7 +372,7 @@ const DraftAddendumPage = ({
       return (
         <div>
           <HeaderSection />
-          <TemplateKlausul />
+          <TemplateKlausul data={data} contract_id={draft_id} />
         </div>
       );
     case 2:
