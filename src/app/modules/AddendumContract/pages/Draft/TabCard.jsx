@@ -102,33 +102,42 @@ const TabCard = ({
                 <div
                   className="d-flex flex-column align-items-center"
                   style={{
-                    backgroundColor: "white",
+                    gap: 4,
                     flexGrow: 1,
                     cursor: "pointer",
+                    backgroundColor: "white",
                     borderTopRightRadius: 14,
-                    gap: 4,
                   }}
-                  onClick={() => setSequence(2)}
                 >
-                  {sequence === 2 ? (
-                    <SVG
-                      src={toAbsoluteUrl("/media/svg/icons/All/review.svg")}
-                    />
-                  ) : (
-                    <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/review-black.svg"
-                      )}
-                    />
-                  )}
-                  <h1
+                  <button
+                    disabled={data?.status_code < 40}
+                    onClick={() => setSequence(2)}
                     style={{
-                      fontSize: 14,
-                      color: sequence === 2 ? "#3699ff" : "#8c8a8a",
+                      border: "none",
+                      outline: "none",
+                      backgroundColor: "white",
                     }}
                   >
-                    Review
-                  </h1>
+                    {sequence === 2 ? (
+                      <SVG
+                        src={toAbsoluteUrl("/media/svg/icons/All/review.svg")}
+                      />
+                    ) : (
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/review-black.svg"
+                        )}
+                      />
+                    )}
+                    <h1
+                      style={{
+                        fontSize: 14,
+                        color: sequence === 2 ? "#3699ff" : "#8c8a8a",
+                      }}
+                    >
+                      Review
+                    </h1>
+                  </button>
                 </div>
               </Col>
 
@@ -142,27 +151,36 @@ const TabCard = ({
                     borderTopRightRadius: 14,
                     gap: 4,
                   }}
-                  onClick={() => setSequence(3)}
                 >
-                  {sequence === 3 ? (
-                    <SVG
-                      src={toAbsoluteUrl("/media/svg/icons/All/approval.svg")}
-                    />
-                  ) : (
-                    <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/approval-black.svg"
-                      )}
-                    />
-                  )}
-                  <h1
+                  <button
+                    disabled={data?.status_code < 60}
+                    onClick={() => setSequence(3)}
                     style={{
-                      fontSize: 14,
-                      color: sequence === 3 ? "#3699ff" : "#8c8a8a",
+                      border: "none",
+                      outline: "none",
+                      backgroundColor: "white",
                     }}
                   >
-                    Approval
-                  </h1>
+                    {sequence === 3 ? (
+                      <SVG
+                        src={toAbsoluteUrl("/media/svg/icons/All/approval.svg")}
+                      />
+                    ) : (
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/approval-black.svg"
+                        )}
+                      />
+                    )}
+                    <h1
+                      style={{
+                        fontSize: 14,
+                        color: sequence === 3 ? "#3699ff" : "#8c8a8a",
+                      }}
+                    >
+                      Approval
+                    </h1>
+                  </button>
                 </div>
               </Col>
 
@@ -176,27 +194,38 @@ const TabCard = ({
                     borderTopRightRadius: 14,
                     gap: 4,
                   }}
-                  onClick={() => setSequence(4)}
                 >
-                  {sequence === 4 ? (
-                    <SVG
-                      src={toAbsoluteUrl("/media/svg/icons/All/distribusi.svg")}
-                    />
-                  ) : (
-                    <SVG
-                      src={toAbsoluteUrl(
-                        "/media/svg/icons/All/distribusi-black.svg"
-                      )}
-                    />
-                  )}
-                  <h1
+                  <button
+                    disabled={data?.status_code < 80}
+                    onClick={() => setSequence(4)}
                     style={{
-                      fontSize: 14,
-                      color: sequence === 4 ? "#3699ff" : "#8c8a8a",
+                      border: "none",
+                      outline: "none",
+                      backgroundColor: "white",
                     }}
                   >
-                    Distribusi
-                  </h1>
+                    {sequence === 4 ? (
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/distribusi.svg"
+                        )}
+                      />
+                    ) : (
+                      <SVG
+                        src={toAbsoluteUrl(
+                          "/media/svg/icons/All/distribusi-black.svg"
+                        )}
+                      />
+                    )}
+                    <h1
+                      style={{
+                        fontSize: 14,
+                        color: sequence === 4 ? "#3699ff" : "#8c8a8a",
+                      }}
+                    >
+                      Distribusi
+                    </h1>
+                  </button>
                 </div>
               </Col>
             </Row>
