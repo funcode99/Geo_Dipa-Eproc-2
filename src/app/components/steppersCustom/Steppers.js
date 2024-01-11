@@ -38,23 +38,16 @@ function getSteps() {
 }
 
 const Steppers = (props) => {
-  const { intl, steps = getSteps() } = props;
-  //  const [activeStep, setActiveStep] = React.useState(null);
-  //  React.useEffect(() => {
-  //    setActiveStep(
-  //      steps.findIndex((item) => {
-  //        return item.status === "ON PROGRESS";
-  //      })
-  //    );
-  //  }, [steps]);
-
+  const { drafting, steps = getSteps() } = props;
+  const slicedSteps = steps.slice(drafting ? 3 : 0);
   return (
     <React.Fragment>
       {steps && steps.length > 0 && (
         <Stepper alternativeLabel>
-          {steps.map((item, index) => (
+          {slicedSteps.map((item, index) => (
             <Step
               key={index.toString()}
+              // key={(index + 3).toString()}
               completed={
                 item.status === "COMPLETE" || item.status === "done"
                   ? true

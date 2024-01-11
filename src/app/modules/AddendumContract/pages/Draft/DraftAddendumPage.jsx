@@ -322,12 +322,13 @@ const DraftAddendumPage = ({
 
         <div className="mb-4">
           <Steppers
+            drafting={true}
             steps={
-              data?.steppers
+              !data?.steppers
                 ? DUMMY_STEPPER_CONTRACT
                 : data?.steppers?.map((el) => ({
                     label: el.label,
-                    status: STATE_STEPPER[el.state],
+                    status: el.status,
                   }))
             }
           />
