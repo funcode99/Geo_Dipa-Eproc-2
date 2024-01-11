@@ -13,6 +13,7 @@ import {
 } from "app/modules/AddendumContract/service/AddendumContractCrudService";
 
 const ReviewerPage = ({
+  data,
   isAdmin,
   isVendor,
   isClient,
@@ -526,7 +527,7 @@ const ReviewerPage = ({
                 >
                   User
                 </h1>
-                {isAdmin && (
+                {data?.status_code < 40 && isAdmin && (
                   <button
                     type="button"
                     className="btn btn-primary mx-1"
@@ -543,7 +544,7 @@ const ReviewerPage = ({
                   <th>Nama</th>
                   <th>Jabatan</th>
                   <th>Email</th>
-                  {isAdmin && <th>Aksi</th>}
+                  {data?.status_code < 40 && isAdmin && <th>Aksi</th>}
                 </tr>
 
                 {listDataContactUserReviewer &&
@@ -555,7 +556,9 @@ const ReviewerPage = ({
                           <td>{item.full_name}</td>
                           <td>{item.position_name}</td>
                           <td>{item.email}</td>
-                          {isAdmin && <td>{actionButton(item.id)}</td>}
+                          {data?.status_code < 40 && isAdmin && (
+                            <td>{actionButton(item.id)}</td>
+                          )}
                         </tr>
                       </>
                     );
@@ -580,7 +583,7 @@ const ReviewerPage = ({
             >
               Vendor
             </h1>
-            {isVendor && (
+            {data?.status_code < 40 && isVendor && (
               <button
                 type="button"
                 className="btn btn-primary mx-1"
@@ -609,14 +612,16 @@ const ReviewerPage = ({
                       <td>{item.vendor_name}</td>
                       <td>{item.pic_full_name}</td>
                       <td>{item.pic_email}</td>
-                      {isVendor && <td>{actionButtonVendor(item.id)}</td>}
+                      {data?.status_code < 40 && isVendor && (
+                        <td>{actionButtonVendor(item.id)}</td>
+                      )}
                     </tr>
                   </>
                 );
               })}
           </table>
 
-          {isAdmin && (
+          {data?.status_code < 40 && isAdmin && (
             <div
               style={{
                 display: "flex",
@@ -647,7 +652,6 @@ const mapDispatch = {
 };
 const mapState = ({ auth, deliveryMonitoring }) => ({
   authStatus: auth.user.data.status,
-  data: auth.user.data,
   dataContractById: deliveryMonitoring.dataContractById,
 });
 

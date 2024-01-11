@@ -380,6 +380,7 @@ const DraftAddendumPage = ({
         <div>
           <HeaderSection />
           <ReviewPage
+            data={data}
             isAdmin={isAdmin}
             isVendor={isVendor}
             isClient={isClient}

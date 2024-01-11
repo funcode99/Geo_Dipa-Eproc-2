@@ -3,7 +3,7 @@ import ReviewerPage from "./ReviewerPage";
 import FinalDraftPage from "./FinalDraftPage";
 import ProsesReviewPage from "./ProsesReviewPage";
 
-const ReviewPage = ({ isAdmin, isVendor, isClient, contract_id }) => {
+const ReviewPage = ({ isAdmin, isVendor, isClient, contract_id, data }) => {
   const [reviewSequence, setReviewSequence] = React.useState(0);
 
   const HeaderSection = () => {
@@ -94,6 +94,7 @@ const ReviewPage = ({ isAdmin, isVendor, isClient, contract_id }) => {
         >
           <HeaderSection />
           <ReviewerPage
+            data={data}
             isAdmin={isAdmin}
             isVendor={isVendor}
             isClient={isClient}
