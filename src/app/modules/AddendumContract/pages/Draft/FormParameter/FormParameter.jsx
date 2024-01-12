@@ -60,6 +60,8 @@ const FormParameter = ({
   data,
   isAdmin,
   PICData,
+  isCLient,
+  isDisable,
   contract_id,
   jobDirector,
   jobSupervisor,
@@ -166,6 +168,7 @@ const FormParameter = ({
           <ParaPihakTab
             isDrafting={true}
             PICData={PICData}
+            // isDisable={isDisable}
             contract_id={contract_id}
             jobDirector={jobDirector}
             jsonData={dataContractById}
@@ -173,7 +176,7 @@ const FormParameter = ({
             jobSupervisor2={jobSupervisor2}
             is_add_parties={data?.is_add_parties}
             authorizedOfficialData={authorizedOfficial}
-            isDisable={!data?.is_add_parties && !isAdmin}
+            isDisable={isAdmin ? !data?.is_add_parties && !isAdmin : !isDisable}
             add_contract_party={data?.add_contract_party}
             secondAuthorizedOfficial={secondAuthorizedOfficial}
           />
@@ -196,7 +199,9 @@ const FormParameter = ({
             fromWhere={"job_price"}
             contract_id={contract_id}
             jobPriceCurrent={data?.add_contract_job_price}
-            isDisable={!data?.is_add_job_price || !isAdmin}
+            isDisable={
+              isAdmin ? !data?.is_add_job_price || !isAdmin : isDisable
+            }
             add_contract_job_price={data?.add_contract_job_price}
           />
           <FooterSection />
@@ -220,7 +225,9 @@ const FormParameter = ({
             dataNewClause={dataNewClause}
             timePeriodData={dataContractById}
             is_add_time_period={data?.is_add_time_period}
-            isDisable={!data?.is_add_time_period || !isAdmin}
+            isDisable={
+              isAdmin ? !data?.is_add_time_period || !isAdmin : isDisable
+            }
             timePeriodAddendumCurrent={data?.add_contract_time_period}
             add_contract_time_period={data?.add_contract_time_period}
           />
@@ -241,7 +248,9 @@ const FormParameter = ({
             contract_id={contract_id}
             jsonData={dataContractById}
             fromWhere={"payment_method"}
-            isDisable={!data?.is_add_payment_method || !isAdmin}
+            isDisable={
+              isAdmin ? !data?.is_add_payment_method || !isAdmin : isDisable
+            }
             paymentMethodCurrent={data?.add_contract_payment_method}
             add_contract_payment_method={data?.add_contract_payment_method}
           />
@@ -263,7 +272,7 @@ const FormParameter = ({
             contract_id={contract_id}
             jsonData={dataContractById}
             fineCurrent={data?.add_contract_fine}
-            isDisable={!data?.is_add_fine || !isAdmin}
+            isDisable={isAdmin ? !data?.is_add_fine || !isAdmin : isDisable}
           />
           <FooterSection />
         </div>
@@ -286,7 +295,9 @@ const FormParameter = ({
             dataNewClause={dataNewClause}
             is_add_guarantee={data?.is_add_guarantee}
             dataNewClauseDrafting={dataNewClauseDrafting}
-            isDisable={!data?.is_add_guarantee || !isAdmin}
+            isDisable={
+              isAdmin ? !data?.is_add_guarantee || !isAdmin : isDisable
+            }
             guaranteeCurrent={data?.add_contract_guarantee}
             add_contract_guarantee={data?.add_contract_guarantee}
           />
@@ -308,7 +319,9 @@ const FormParameter = ({
             jsonData={dataContractById}
             dataNewClause={dataNewClause}
             accountNumberBankData={accountNumberBankData}
-            isDisable={!data?.is_add_account_number || !isAdmin}
+            isDisable={
+              isAdmin ? !data?.is_add_account_number || !isAdmin : isDisable
+            }
             is_add_account_number={!data?.is_add_account_number}
             accountNumberCurrent={data?.add_contract_account_number}
             add_contract_account_number={data?.add_contract_account_number}
@@ -336,7 +349,7 @@ const FormParameter = ({
             dataNewClause={dataNewClause}
             is_add_other={data?.is_add_other}
             otherCurrent={data?.add_contract_others}
-            isDisable={!data?.other_note || !isAdmin}
+            isDisable={isAdmin ? !data?.other_note || !isAdmin : isDisable}
             add_contract_others={data?.add_contract_others}
           />
           <FooterSection />

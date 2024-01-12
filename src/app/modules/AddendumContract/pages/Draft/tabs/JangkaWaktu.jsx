@@ -475,7 +475,8 @@ const JangkaWaktu = ({
                                     data.selectableStart) ||
                                   (data.title ===
                                     "Jangka Waktu Pelaksanaan Pekerjaan" &&
-                                    data.selectableStart)
+                                    data.selectableStart) ||
+                                  isDisable
                                 }
                                 onChange={(e) =>
                                   setTimePeriodAddendum((prev) => {
@@ -532,6 +533,7 @@ const JangkaWaktu = ({
                                     }
                                   });
                                 }}
+                                disabled={isDisable}
                               />
                             </div>
                           </div>
@@ -584,6 +586,7 @@ const JangkaWaktu = ({
                                     return newArr;
                                   })
                                 }
+                                disabled={isDisable}
                               />
                               <span>SKPP</span>
                             </div>
@@ -608,6 +611,7 @@ const JangkaWaktu = ({
                                     return newArr;
                                   })
                                 }
+                                disabled={isDisable}
                               />
                               <span>SPMK</span>
                             </div>

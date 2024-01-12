@@ -26,11 +26,25 @@ const DraftAddendumPage = ({
   dataNewClause,
   dataNewClauseDrafting,
 }) => {
+  const getClientStatus = (val) => {
+    const filteredData = rolesEproc?.filter(
+      ({ ident_name }) => ident_name === val
+    );
+    return !!filteredData?.length > 0;
+  };
+  const isAdmin =
+    getClientStatus("SUPERADMIN") ||
+    getClientStatus("ADMIN_CONTRACT") ||
+    getClientStatus("ADMIN_CONTRACT_UNIT") ||
+    purch_group === data?.admin_purch_group_id;
+  const isVendor = getClientStatus("VENDOR");
+  const isClient = loginStatus === "client";
+
   const { draft_id } = useParams();
   const [data, setData] = useState({});
   const [PICData, setPICData] = useState();
   const [jsonData, setJsonData] = useState();
-  const [sequence, setSequence] = useState(0);
+  const [sequence, setSequence] = useState(isVendor ? 2 : 0);
   const [contract, setContract] = useState({});
   const [jobDirector, setJobDirector] = useState();
   const [jobSupervisor, setJobSupervisor] = useState();
@@ -40,21 +54,6 @@ const DraftAddendumPage = ({
   const [authorizedOfficial, setauthorizedOfficial] = useState();
   const [accountNumberBankData, setAccountNumberBankData] = useState();
   const [secondAuthorizedOfficial, setSecondAuthorizedOfficial] = useState();
-
-  const getClientStatus = (val) => {
-    const filteredData = rolesEproc?.filter(
-      ({ ident_name }) => ident_name === val
-    );
-    return !!filteredData?.length > 0;
-  };
-
-  const isAdmin =
-    getClientStatus("SUPERADMIN") ||
-    getClientStatus("ADMIN_CONTRACT") ||
-    getClientStatus("ADMIN_CONTRACT_UNIT") ||
-    purch_group === data?.admin_purch_group_id;
-  const isVendor = getClientStatus("VENDOR");
-  const isClient = loginStatus === "client";
 
   // api 2.3
   const getAddendum = async () => {
@@ -356,6 +355,7 @@ const DraftAddendumPage = ({
             data={data}
             isAdmin={isAdmin}
             PICData={PICData}
+            isDisable={isClient}
             contract_id={draft_id}
             jobDirector={jobDirector}
             dataNewClause={dataNewClause}
