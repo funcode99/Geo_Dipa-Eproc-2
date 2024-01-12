@@ -15,7 +15,6 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
   const showAddAttachment = () => {
     openCloseAddAttachment.current.open();
   };
-
   const toPush = useRef();
   const setPush = (e) => {
     toPush.current.click();
@@ -338,7 +337,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                           return false;
                         }}
                       >
-                        <UploadButton disabled={!isAdmin} />
+                        <UploadButton isDisable={!isAdmin} />
                       </Upload>
                     </div>
                     <p style={{ color: "red", marginTop: 2 }}>
@@ -440,7 +439,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                               );
                             }}
                           >
-                            <UploadButton disabled={!isAdmin} />
+                            <UploadButton isDisable={!isAdmin} />
                           </Upload>
                         </div>
                         <p style={{ color: "red", marginTop: 2 }}>
@@ -471,6 +470,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                       type="button"
                       className="btn btn-danger mt-2"
                       onClick={() => deleteItem(index)}
+                      disabled={!isAdmin}
                     >
                       Delete
                     </button>
@@ -538,7 +538,7 @@ const FinalDraftPage = ({ isAdmin, contract_id, fetch_api_sg }) => {
                           );
                         }}
                       >
-                        <UploadButton disabled={!isAdmin} />
+                        <UploadButton isDisable={!isAdmin} />
                       </Upload>
                     </div>
                     <p style={{ color: "red", marginTop: 2 }}>

@@ -1,4 +1,5 @@
 import { connect } from "react-redux";
+import { DEV_NODE } from "redux/BaseHost";
 import React, { useState, useEffect } from "react";
 import { fetch_api_sg } from "redux/globalReducer";
 import { ReactSelect } from "percobaan/ReactSelect";
@@ -726,6 +727,28 @@ const DistribusiDokument = ({
               >
                 {listDataContactUserReviewer?.[0]?.status_distribution}
               </p>
+            </div>
+          )}
+          {(isClient || isVendor) && (
+            <div
+              className="status"
+              style={{
+                display: "flex",
+                borderRadius: 8,
+                padding: "12px 10px",
+                alignItems: "center",
+                backgroundColor: "#e8f4fb",
+                border: "1px solid #000000",
+                color: "#3699ff",
+                marginTop: 10,
+              }}
+            >
+              <a
+                href={`${DEV_NODE}/distribution/${data?.add_contract_distribution?.file_name}`}
+                target="_blank"
+              >
+                {data?.add_contract_distribution?.file_name}
+              </a>
             </div>
           )}
 
