@@ -215,7 +215,7 @@ export const AddendumRequestListPage = ({
 
   return (
     <>
-      <Subheader text="List of Addendum Request nya" />
+      <Subheader text="List of Addendum Request" />
 
       <Paper className={classes.root}>
         <Tables

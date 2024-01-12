@@ -312,7 +312,7 @@ export const ContractsAddendumPage = ({ fetch_api_sg, loadings, status }) => {
       {/* komponen sudah muncul, tapi data tidak muncul */}
       <Subheader
         // text={isClient? "List of Contract & PO" : "List of Addendum Request"}
-        text="List of Contract & SPK nya"
+        text="List of Contract & SPK"
       />
 
       <Paper className={classes.root}>

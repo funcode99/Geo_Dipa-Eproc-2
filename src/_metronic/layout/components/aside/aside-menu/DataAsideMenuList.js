@@ -223,7 +223,8 @@ export const DataAsideMenuListVendor = [
     title: "MENU.ADDENDUM_CONTRACT",
     subMenu: [
       {
-        rootPath: "/vendor/addendum-contract/list-addendum-request",
+        // rootPath: "/vendor/addendum-contract/list-addendum-request",
+        rootPath: "/vendor/addendum-contract/list-contract-po",
         title: "MENU.DELIVERY_MONITORING.LIST_CONTRACT_PO",
         subMenu: null,
       },
