@@ -606,7 +606,9 @@ const Denda = ({
                             </TableCell>
                             <TableCell align="left">{row.value}</TableCell>
                             <TableCell align="left">{row.max_day}</TableCell>
-                            <TableCell align="left">{row.value_type}</TableCell>
+                            <TableCell align="left">
+                              {row.type == 1 ? "%" : "Nilai"}
+                            </TableCell>
                             <TableCell align="left">
                               {actionButton(row.id, deleteFine)}
                             </TableCell>
