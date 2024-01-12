@@ -636,14 +636,6 @@ const FormParameter = ({
     // JSON.parse(localStorage.getItem("fine"))
     tabDisableLists?.add_contract_fine
   );
-  // const [addendumFine, setAddendumFine] = useState(
-  //   tabDisableLists?.add_contract_fine?.penalty_fine_data
-  // );
-
-  // console.log(
-  //   "ini isi nya apaan sih",
-  //   tabDisableLists?.add_contract_fine?.penalty_fine_data
-  // );
 
   const deleteFine = (id) => {
     setFine(() => {
@@ -2570,9 +2562,6 @@ const FormParameter = ({
                                         name={data.nameTitle}
                                         // onChange={(e) => {
                                         //   setInputDataGuarantee((state) => {
-                                        //     console.log(
-                                        //       "masuk update guarantee"
-                                        //     );
                                         //     let fieldName = data.nameTitle;
                                         //     let a = { ...state };
                                         //     a[fieldName] = e.target.value;

@@ -5,11 +5,6 @@ import { FormattedMessage } from "react-intl";
 import { TableRow, TableCell } from "@material-ui/core";
 import { connect } from "react-redux";
 
-import SVG from "react-inlinesvg";
-import { NavLink } from "react-router-dom";
-import { toAbsoluteUrl } from "_metronic/_helpers";
-import { formatDate } from "app/libs/date";
-
 import ButtonAction from "app/components/buttonAction/ButtonAction";
 import Subheader from "app/components/subheader";
 import Tables from "app/components/tableCustomV1/table";
@@ -174,51 +169,12 @@ export const AddendumRequestListPage = ({
             addnm_req_status: item?.add_status.status,
             admin_test: item?.admin_purch_group_id === purch_group_id,
             user_test: item?.user_purch_group_id === purch_group_id,
-
-            // add_request_date
-            // add_request_approval_date
-            // contract.contract_date
-            // contract.issued_date
-            // contract.from_time
-            // contract.thru_time
-            // guarantee_start_end_date
-            // maintenance_start_end_date
-            // worked_start_end_date
-
             action: (
               <ButtonAction
                 hoverLabel="More"
                 data={"1"}
                 exclude={["another"]}
                 ops={[
-                  // item?.admin_purch_group_id === purch_group_id
-                  //   ? {
-                  //       label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
-                  //       to: {
-                  //         url: `/${status}/addendum-contract/approval/${item.id}`,
-                  //         style: {
-                  //           color: "black",
-                  //         },
-                  //       },
-                  //     }
-                  //   : {
-                  //       label: "CONTRACT.TABLE_ACTION.DRAFTING",
-                  //       type: "another",
-                  //     },
-                  // item?.user_purch_group_id === purch_group_id
-                  //   ? {
-                  //       label: "CONTRACT.TABLE_ACTION.SEE_DETAILS",
-                  //       to: {
-                  //         url: `/${status}/addendum-contract/approval/${item.id}`,
-                  //         style: {
-                  //           color: "black",
-                  //         },
-                  //       },
-                  //     }
-                  //   : {
-                  //       label: "CONTRACT_DETAIL.LABEL.PO_DATE",
-                  //       type: "another",
-                  //     },
                   {
                     label: "CONTRACT.TABLE_ACTION.CONTRACT_DETAILS",
                     to: {
@@ -259,9 +215,7 @@ export const AddendumRequestListPage = ({
 
   return (
     <>
-      {/* terpakai disini, ada judul & icon yang dikirim ke komponen subheader */}
-      {/* komponen sudah muncul, tapi data tidak muncul */}
-      <Subheader text="List of Addendum Request" />
+      <Subheader text="List of Addendum Request nya" />
 
       <Paper className={classes.root}>
         <Tables

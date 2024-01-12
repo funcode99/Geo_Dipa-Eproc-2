@@ -12,6 +12,7 @@ import NewClause from "../../ContractDetail/components/FormAddendum/Components/M
 const MetodePembayaran = ({
   jsonData,
   isDisable,
+  dataContractById,
   contract_id,
   paymentMethodCurrent,
   dataNewClauseDrafting,
@@ -28,7 +29,7 @@ const MetodePembayaran = ({
   const showAddClause = () => {
     openCloseAddClause.current.open();
   };
-  const earlyStagePayment = null;
+  const earlyStagePayment = dataContractById?.payment_method_data;
   const [stagePayment, setStagePayment] = useState({
     payment: paymentMethodCurrent?.payment_method_data,
   });
@@ -324,7 +325,7 @@ const MetodePembayaran = ({
                     </label>
                   </div>
                   {earlyStagePayment &&
-                    earlyStagePayment?.payment?.map((item) => {
+                    earlyStagePayment?.map((item) => {
                       return (
                         <>
                           <div
@@ -362,7 +363,8 @@ const MetodePembayaran = ({
                                   }}
                                   type="text"
                                   placeholder="Persentase"
-                                  value={item.percentage}
+                                  // value={item.payment}
+                                  value=""
                                   disabled
                                 />
                               </div>
@@ -501,7 +503,7 @@ const MetodePembayaran = ({
                                   }}
                                   type="text"
                                   placeholder="Persentase"
-                                  value={item.percentage_value}
+                                  value={item.percentage}
                                   onChange={(e) =>
                                     changePaymentMethodField(
                                       index,
@@ -529,7 +531,7 @@ const MetodePembayaran = ({
                                     borderRadius: 4,
                                   }}
                                   placeholder="Deskripsi"
-                                  value={item.description}
+                                  value={item.value}
                                   onChange={(e) =>
                                     changePaymentMethodField(
                                       index,

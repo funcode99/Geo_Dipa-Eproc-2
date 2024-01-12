@@ -246,6 +246,7 @@ const FormParameter = ({
           <HeaderSection />
           <MetodePembayaranTab
             contract_id={contract_id}
+            dataContractById={dataContractById}
             jsonData={dataContractById}
             fromWhere={"payment_method"}
             isDisable={

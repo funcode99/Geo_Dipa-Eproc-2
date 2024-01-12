@@ -24,16 +24,6 @@ const initialAuthState = {
   isRefresh: false,
 };
 
-// Author: Jeffry Azhari Rosman
-// Email: Jeffryazhari@gmail.com
-// Penambahan Config Encryption pada Redux.
-// const encryptor = encryptTransform({
-//   secretKey: 'pt-geo-dipa-energi-persero-jakarta',
-//   onError: function (error) {
-//     console.error("REDUX_PERSIST -> encryptor: ", error);
-//   }
-// })
-
 export const reducer = persistReducer(
   PERSIST_REDUCER,
   (state = initialAuthState, action) => {
